@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'product/default/custom_theme.dart';
 import 'product/home/my_home_page.dart';
 
 void main() {
@@ -17,6 +18,11 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
+    // baseSize
+    final double baseSize = MediaQuery.of(context).size.shortestSide;
+    // ref.read(settingProvider.notifier).setBaseSize(baseSize);
+    final customTheme = CustomTheme(baseSize: baseSize);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
