@@ -36,7 +36,7 @@ class MyHomePage extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         // 상태 값을 변경
-        onPressed: () => ref.read(counterProvider.notifier).state++,
+        onPressed: () => ref.read(counterProvider.notifier).increment(),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
