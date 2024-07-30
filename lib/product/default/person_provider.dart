@@ -1,6 +1,5 @@
 // person_provider.dart
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -19,8 +18,6 @@ class PersonNotifier extends StateNotifier<List<Person>> {
   }
 
   Future<void> _init() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Hive.initFlutter();
     _personBox = await Hive.openBox<Person>('personBox');
     state = _personBox.values.toList();
   }
