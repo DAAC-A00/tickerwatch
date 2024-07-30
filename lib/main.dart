@@ -22,7 +22,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     // baseSize
     final double baseSize = MediaQuery.of(context).size.shortestSide;
-    // ref.read(settingProvider.notifier).setBaseSize(baseSize);
     final customTheme = CustomTheme(baseSize: baseSize);
 
     return MaterialApp.router(
