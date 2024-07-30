@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:tickerwatch/product/home/my_home_page.dart';
 
+import '../../person_screen.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -17,9 +19,10 @@ class _MainScreenState extends State<MainScreen> {
     MyHomePage(
       title: 'my home page',
     ),
+    PersonScreen(),
   ];
 
-// 앱 종료 직전 확인 팝업 노출
+  // 앱 종료 직전 확인 팝업 노출
   Future<bool> _showExitPopup(BuildContext context) async {
     return await showDialog(
           context: context,
@@ -64,6 +67,10 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Person',
             ),
           ],
           selectedItemColor: currentTheme.primary,
