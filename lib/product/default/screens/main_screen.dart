@@ -17,6 +17,9 @@ class _MainScreenState extends State<MainScreen> {
     MyHomePage(
       title: 'my home page',
     ),
+    MyHomePage(
+      title: 'my home page2',
+    ),
   ];
 
 // 앱 종료 직전 확인 팝업 노출
@@ -64,6 +67,10 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home2',
             ),
           ],
           selectedItemColor: currentTheme.primary,
