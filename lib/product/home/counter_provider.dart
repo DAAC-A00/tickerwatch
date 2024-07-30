@@ -14,13 +14,13 @@ class CounterNotifier extends StateNotifier<int> {
   }
 
   Future<void> _loadCounter() async {
-    final box = await Hive.openBox<int>('counterBox');
+    final Box<int> box = await Hive.openBox<int>('counterBox');
     state = box.get('counter', defaultValue: 0)!;
   }
 
   Future<void> increment() async {
     state++;
-    final box = await Hive.openBox<int>('counterBox');
+    final Box<int> box = await Hive.openBox<int>('counterBox');
     await box.put('counter', state);
   }
 }
