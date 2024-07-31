@@ -78,6 +78,8 @@ class _PersonDialog extends ConsumerStatefulWidget {
 class __PersonDialogState extends ConsumerState<_PersonDialog> {
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
+  String? _nameErrorText;
+  String? _ageErrorText;
 
   @override
   void initState() {
@@ -86,22 +88,56 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
       _nameController.text = widget.person!.name;
       _ageController.text = widget.person!.age.toString();
     }
+
+    _nameController.addListener(_validateInputs);
+    _ageController.addListener(_validateInputs);
+
+    // 초기 유효성 검사 호출
+    _validateInputs();
   }
+
+  @override
+  void dispose() {
+    _nameController.removeListener(_validateInputs);
+    _ageController.removeListener(_validateInputs);
+    _nameController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  void _validateInputs() {
+    setState(() {
+      _nameErrorText =
+          _nameController.text.isEmpty ? 'Name cannot be empty' : null;
+      _ageErrorText = int.tryParse(_ageController.text) == null
+          ? 'Please enter a valid number for age'
+          : null;
+    });
+  }
+
+  bool get _isFormValid => _nameErrorText == null && _ageErrorText == null;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: true,
       title: Text(widget.person == null ? 'Add Person' : 'Edit Person'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Name'),
+            decoration: InputDecoration(
+              labelText: 'Name',
+              errorText: _nameErrorText,
+            ),
           ),
           TextField(
             controller: _ageController,
-            decoration: const InputDecoration(labelText: 'Age'),
+            decoration: InputDecoration(
+              labelText: 'Age',
+              errorText: _ageErrorText,
+            ),
             keyboardType: TextInputType.number,
           ),
         ],
@@ -114,22 +150,28 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
           },
         ),
         ElevatedButton(
+          onPressed: _isFormValid
+              ? () {
+                  if (_nameErrorText == null && _ageErrorText == null) {
+                    final name = _nameController.text;
+                    final age = int.tryParse(_ageController.text) ?? 0;
+                    final person = Person(name: name, age: age);
+
+                    if (widget.index == null) {
+                      ref.read(personProvider.notifier).addPerson(person);
+                    } else {
+                      ref
+                          .read(personProvider.notifier)
+                          .updatePerson(widget.index!, person);
+                    }
+
+                    Navigator.of(context).pop();
+                  } else {
+                    _validateInputs();
+                  }
+                }
+              : null,
           child: const Text('Save'),
-          onPressed: () {
-            final name = _nameController.text;
-            final age = int.tryParse(_ageController.text) ?? 0;
-            final person = Person(name: name, age: age);
-
-            if (widget.index == null) {
-              ref.read(personProvider.notifier).addPerson(person);
-            } else {
-              ref
-                  .read(personProvider.notifier)
-                  .updatePerson(widget.index!, person);
-            }
-
-            Navigator.of(context).pop();
-          },
         ),
       ],
     );
