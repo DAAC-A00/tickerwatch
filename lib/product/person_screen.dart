@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'default/person.dart';
 import 'default/person_provider.dart';
 
@@ -136,6 +135,29 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
       _birthDateErrorText == null &&
       _genderErrorText == null;
 
+  void _showGenderBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: ['Male', 'Female', 'Other'].map((String value) {
+            return ListTile(
+              title: Text(value),
+              onTap: () {
+                setState(() {
+                  _selectedGender = value;
+                  _validateInputs();
+                });
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -167,23 +189,16 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
             ),
             keyboardType: TextInputType.number,
           ),
-          DropdownButtonFormField<String>(
-            value: _selectedGender,
-            items: ['Male', 'Female', 'Other'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                _selectedGender = newValue;
-                _validateInputs();
-              });
-            },
-            decoration: InputDecoration(
-              labelText: 'Gender',
-              errorText: _genderErrorText,
+          GestureDetector(
+            onTap: () => _showGenderBottomSheet(context),
+            child: AbsorbPointer(
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'Gender',
+                  errorText: _genderErrorText,
+                  hintText: _selectedGender ?? 'Select Gender',
+                ),
+              ),
             ),
           ),
         ],
