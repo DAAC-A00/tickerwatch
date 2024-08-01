@@ -34,7 +34,8 @@ class PersonScreen extends ConsumerWidget {
           final person = persons[index];
           return ListTile(
             title: Text(person.name),
-            subtitle: Text('Age: ${person.age}'),
+            subtitle: Text(
+                'Age: ${person.age}, Birth Date: ${person.birthDate}, Gender: ${person.gender}'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -78,8 +79,12 @@ class _PersonDialog extends ConsumerStatefulWidget {
 class __PersonDialogState extends ConsumerState<_PersonDialog> {
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
+  final _birthDateController = TextEditingController();
+  String? _selectedGender;
   String? _nameErrorText;
   String? _ageErrorText;
+  String? _birthDateErrorText;
+  String? _genderErrorText;
 
   @override
   void initState() {
@@ -87,10 +92,13 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
     if (widget.person != null) {
       _nameController.text = widget.person!.name;
       _ageController.text = widget.person!.age.toString();
+      _birthDateController.text = widget.person!.birthDate;
+      _selectedGender = widget.person!.gender;
     }
 
     _nameController.addListener(_validateInputs);
     _ageController.addListener(_validateInputs);
+    _birthDateController.addListener(_validateInputs);
 
     // 초기 유효성 검사 호출
     _validateInputs();
@@ -100,8 +108,10 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
   void dispose() {
     _nameController.removeListener(_validateInputs);
     _ageController.removeListener(_validateInputs);
+    _birthDateController.removeListener(_validateInputs);
     _nameController.dispose();
     _ageController.dispose();
+    _birthDateController.dispose();
     super.dispose();
   }
 
@@ -112,10 +122,19 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
       _ageErrorText = int.tryParse(_ageController.text) == null
           ? 'Please enter a valid number for age'
           : null;
+      _birthDateErrorText = _birthDateController.text.isEmpty
+          ? 'Birth Date cannot be empty'
+          : null;
+      _genderErrorText =
+          _selectedGender == null ? 'Gender cannot be empty' : null;
     });
   }
 
-  bool get _isFormValid => _nameErrorText == null && _ageErrorText == null;
+  bool get _isFormValid =>
+      _nameErrorText == null &&
+      _ageErrorText == null &&
+      _birthDateErrorText == null &&
+      _genderErrorText == null;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +159,33 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
             ),
             keyboardType: TextInputType.number,
           ),
+          TextField(
+            controller: _birthDateController,
+            decoration: InputDecoration(
+              labelText: 'Birth Date',
+              errorText: _birthDateErrorText,
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          DropdownButtonFormField<String>(
+            value: _selectedGender,
+            items: ['Male', 'Female', 'Other'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                _selectedGender = newValue;
+                _validateInputs();
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Gender',
+              errorText: _genderErrorText,
+            ),
+          ),
         ],
       ),
       actions: [
@@ -155,7 +201,13 @@ class __PersonDialogState extends ConsumerState<_PersonDialog> {
                   if (_nameErrorText == null && _ageErrorText == null) {
                     final name = _nameController.text;
                     final age = int.tryParse(_ageController.text) ?? 0;
-                    final person = Person(name: name, age: age);
+                    final birthDate = _birthDateController.text;
+                    final gender = _selectedGender!;
+                    final person = Person(
+                        name: name,
+                        age: age,
+                        birthDate: birthDate,
+                        gender: gender);
 
                     if (widget.index == null) {
                       ref.read(personProvider.notifier).addPerson(person);
