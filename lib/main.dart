@@ -6,10 +6,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
+import 'product/default/person.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+
+  // Register the PersonAdapter
+  Hive.registerAdapter(PersonAdapter());
+
   await Hive.openBox<int>('counterBox');
   runApp(const ProviderScope(child: MyApp()));
 }
