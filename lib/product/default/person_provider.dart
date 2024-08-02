@@ -22,17 +22,17 @@ class PersonNotifier extends StateNotifier<List<Person>> {
     state = _personBox.values.toList();
   }
 
-  void addPerson(Person person) {
+  void insertBox(Person person) {
     _personBox.add(person);
     state = _personBox.values.toList();
   }
 
-  void updatePerson(int index, Person person) {
+  void updateBox(int index, Person person) {
     _personBox.putAt(index, person);
     state = _personBox.values.toList();
   }
 
-  void deletePerson(int index) {
+  void deleteBox(int index) {
     _personBox.deleteAt(index);
     state = _personBox.values.toList();
   }

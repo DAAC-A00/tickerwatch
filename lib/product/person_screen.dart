@@ -46,7 +46,7 @@ class PersonScreen extends ConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    ref.read(personProvider.notifier).deletePerson(index);
+                    ref.read(personProvider.notifier).deleteBox(index);
                   },
                 ),
               ],

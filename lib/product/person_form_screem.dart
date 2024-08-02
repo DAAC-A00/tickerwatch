@@ -181,11 +181,11 @@ class __PersonFormState extends ConsumerState<PersonFormScreen> {
                               if (widget.index == null) {
                                 ref
                                     .read(personProvider.notifier)
-                                    .addPerson(person);
+                                    .insertBox(person);
                               } else {
                                 ref
                                     .read(personProvider.notifier)
-                                    .updatePerson(widget.index!, person);
+                                    .updateBox(widget.index!, person);
                               }
 
                               Navigator.of(context).pop();
