@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tickerwatch/product/person_screen.dart';
+import 'package:tickerwatch/product/sample_person/person_screen.dart';
 
-import '../person_form_screem.dart';
+import '../sample_person/person_form_screen.dart';
 import 'screens/main_screen.dart';
 import 'screens/route_error_screen.dart';
 

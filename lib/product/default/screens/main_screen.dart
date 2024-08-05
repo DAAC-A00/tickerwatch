@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:tickerwatch/product/home/my_home_page.dart';
 
-import '../../person_screen.dart';
+import '../../sample_person/person_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

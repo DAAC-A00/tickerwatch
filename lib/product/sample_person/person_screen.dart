@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'default/person_provider.dart';
+import 'person_provider.dart';
 
 class PersonScreen extends ConsumerWidget {
   const PersonScreen({super.key});
