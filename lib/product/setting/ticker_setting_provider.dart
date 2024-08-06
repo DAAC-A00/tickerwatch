@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tickerwatch/product/default/db/setting_box_key_enum.dart';
 import 'package:tickerwatch/product/setting/ticker_setting.dart';
 
 import '../default/db/box_enum.enum.dart';
@@ -28,23 +29,25 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
 
   Future<void> _init() async {
     _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
-    final String candleColor = _tickerSettingBox.get('candleColor',
+    final String candleColor = _tickerSettingBox.get(
+        SettingBoxKeyEnum.candleColor,
         defaultValue: defaultTickerSetting.candleColor)!;
-    final bool isBorderEnabled = _tickerSettingBox.get('isBorderEnabled',
+    final bool isBorderEnabled = _tickerSettingBox.get(
+            SettingBoxKeyEnum.isBorderEnabled,
             defaultValue: defaultTickerSetting.isBorderEnabled.toString())! ==
         'true';
     final bool isPriceBackgroundAlarmEnabled = _tickerSettingBox.get(
-            'isPriceBackgroundAlarmEnabled',
+            SettingBoxKeyEnum.isPriceBackgroundAlarmEnabled,
             defaultValue: defaultTickerSetting.isPriceBackgroundAlarmEnabled
                 .toString())! ==
         'true';
     final bool isQuoteUnitSignEnabled = _tickerSettingBox.get(
-            'isQuoteUnitSignEnabled',
+            SettingBoxKeyEnum.isQuoteUnitSignEnabled,
             defaultValue:
                 defaultTickerSetting.isQuoteUnitSignEnabled.toString())! ==
         'true';
     final bool isPercentSignEnabled = _tickerSettingBox.get(
-            'isPercentSignEnabled',
+            SettingBoxKeyEnum.isPercentSignEnabled,
             defaultValue:
                 defaultTickerSetting.isPercentSignEnabled.toString())! ==
         'true';
@@ -57,15 +60,16 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   }
 
   void updateBox(TickerSetting tickerSetting) {
-    _tickerSettingBox.put('candleColor', tickerSetting.candleColor);
     _tickerSettingBox.put(
-        'isBorderEnabled', tickerSetting.isBorderEnabled.toString());
-    _tickerSettingBox.put('isPriceBackgroundAlarmEnabled',
+        SettingBoxKeyEnum.candleColor, tickerSetting.candleColor);
+    _tickerSettingBox.put(SettingBoxKeyEnum.isBorderEnabled,
+        tickerSetting.isBorderEnabled.toString());
+    _tickerSettingBox.put(SettingBoxKeyEnum.isPriceBackgroundAlarmEnabled,
         tickerSetting.isPriceBackgroundAlarmEnabled.toString());
-    _tickerSettingBox.put('isQuoteUnitSignEnabled',
+    _tickerSettingBox.put(SettingBoxKeyEnum.isQuoteUnitSignEnabled,
         tickerSetting.isQuoteUnitSignEnabled.toString());
-    _tickerSettingBox.put(
-        'isPercentSignEnabled', tickerSetting.isPercentSignEnabled.toString());
+    _tickerSettingBox.put(SettingBoxKeyEnum.isPercentSignEnabled,
+        tickerSetting.isPercentSignEnabled.toString());
     state = tickerSetting;
   }
 
