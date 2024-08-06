@@ -9,18 +9,19 @@ final counterProvider = StateNotifierProvider<CounterNotifier, int>((ref) {
 });
 
 class CounterNotifier extends StateNotifier<int> {
+  late Box<int> box;
   CounterNotifier() : super(0) {
     _loadCounter();
   }
 
   Future<void> _loadCounter() async {
-    final Box<int> box = await Hive.openBox<int>('counterBox');
+    box = await Hive.openBox<int>('counterBox');
     state = box.get('counter', defaultValue: 0)!;
   }
 
   Future<void> increment() async {
     state++;
-    final Box<int> box = await Hive.openBox<int>('counterBox');
+    box = await Hive.openBox<int>('counterBox');
     await box.put('counter', state);
   }
 }

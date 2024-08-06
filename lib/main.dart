@@ -15,7 +15,6 @@ void main() async {
   // Register the PersonAdapter
   Hive.registerAdapter(PersonAdapter());
 
-  await Hive.openBox<int>('counterBox');
   runApp(const ProviderScope(child: MyApp()));
 }
 

@@ -11,27 +11,59 @@ final tickerSettingProvider =
 
 final defaultTickerSetting = TickerSetting(
   candleColor: 'red-blue',
-  isLightMode: true,
   isBorderEnabled: true,
   isPriceBackgroundAlarmEnabled: true,
-  isQuoteUnitSignEnabled: true,
+  isQuoteUnitSignEnabled: false,
   isPercentSignEnabled: true,
 );
 
 class TickerSettingNotifier extends StateNotifier<TickerSetting> {
-  late Box<TickerSetting> _tickerSettingBox;
+  late Box<String> _tickerSettingBox;
 
   TickerSettingNotifier() : super(defaultTickerSetting) {
     _init();
   }
 
   Future<void> _init() async {
-    _tickerSettingBox = await Hive.openBox<TickerSetting>('tickerSettingBox');
-    state = _tickerSettingBox.get('last', defaultValue: defaultTickerSetting)!;
+    _tickerSettingBox = await Hive.openBox<String>('settingBox');
+    final String candleColor = _tickerSettingBox.get('candleColor',
+        defaultValue: defaultTickerSetting.candleColor)!;
+    final bool isBorderEnabled = _tickerSettingBox.get('isBorderEnabled',
+            defaultValue: defaultTickerSetting.isBorderEnabled.toString())! ==
+        'true';
+    final bool isPriceBackgroundAlarmEnabled = _tickerSettingBox.get(
+            'isPriceBackgroundAlarmEnabled',
+            defaultValue: defaultTickerSetting.isPriceBackgroundAlarmEnabled
+                .toString())! ==
+        'true';
+    final bool isQuoteUnitSignEnabled = _tickerSettingBox.get(
+            'isQuoteUnitSignEnabled',
+            defaultValue:
+                defaultTickerSetting.isQuoteUnitSignEnabled.toString())! ==
+        'true';
+    final bool isPercentSignEnabled = _tickerSettingBox.get(
+            'isPercentSignEnabled',
+            defaultValue:
+                defaultTickerSetting.isPercentSignEnabled.toString())! ==
+        'true';
+    state = TickerSetting(
+        candleColor: candleColor,
+        isBorderEnabled: isBorderEnabled,
+        isPriceBackgroundAlarmEnabled: isPriceBackgroundAlarmEnabled,
+        isQuoteUnitSignEnabled: isQuoteUnitSignEnabled,
+        isPercentSignEnabled: isPercentSignEnabled);
   }
 
   void updateBox(TickerSetting tickerSetting) {
-    _tickerSettingBox.put('last', tickerSetting);
+    _tickerSettingBox.put('candleColor', tickerSetting.candleColor);
+    _tickerSettingBox.put(
+        'isBorderEnabled', tickerSetting.isBorderEnabled.toString());
+    _tickerSettingBox.put('isPriceBackgroundAlarmEnabled',
+        tickerSetting.isPriceBackgroundAlarmEnabled.toString());
+    _tickerSettingBox.put('isQuoteUnitSignEnabled',
+        tickerSetting.isQuoteUnitSignEnabled.toString());
+    _tickerSettingBox.put(
+        'isPercentSignEnabled', tickerSetting.isPercentSignEnabled.toString());
     state = tickerSetting;
   }
 
