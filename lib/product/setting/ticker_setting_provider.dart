@@ -9,45 +9,42 @@ final tickerSettingProvider =
   return TickerSettingNotifier();
 });
 
+final defaultTickerSetting = TickerSetting(
+  candleColor: 'red-blue',
+  isLightMode: true,
+  isBorderEnabled: true,
+  isPriceBackgroundAlarmEnabled: true,
+  isQuoteUnitSignEnabled: true,
+  isPercentSignEnabled: true,
+);
+
 class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   late Box<TickerSetting> _tickerSettingBox;
 
-  TickerSettingNotifier()
-      : super(TickerSetting(
-          candleColor: 'red-blue',
-          isLightMode: true,
-          isBorderEnabled: true,
-          isPriceBackgroundAlarmEnabled: true,
-          isQuoteUnitSignEnabled: true,
-          isPercentSignEnabled: true,
-        )) {
+  TickerSettingNotifier() : super(defaultTickerSetting) {
     _init();
   }
 
   Future<void> _init() async {
     _tickerSettingBox = await Hive.openBox<TickerSetting>('tickerSettingBox');
     if (_tickerSettingBox.isNotEmpty) {
-      state = _tickerSettingBox.get(0)!;
+      state = _tickerSettingBox.get('last')!;
     } else {
-      _tickerSettingBox.put(0, state);
+      state = defaultTickerSetting;
+      _tickerSettingBox.put('first', state);
+      _tickerSettingBox.put('last', state);
     }
   }
 
   void updateBox(TickerSetting tickerSetting) {
-    _tickerSettingBox.put(0, tickerSetting);
+    _tickerSettingBox.put('last', tickerSetting);
     state = tickerSetting;
   }
 
-  void resetBox() {
+  void deleteBox() {
     _tickerSettingBox.clear();
-    state = TickerSetting(
-      candleColor: 'red-blue',
-      isLightMode: true,
-      isBorderEnabled: true,
-      isPriceBackgroundAlarmEnabled: true,
-      isQuoteUnitSignEnabled: true,
-      isPercentSignEnabled: true,
-    );
-    _tickerSettingBox.put(0, state);
+    state = defaultTickerSetting;
+    _tickerSettingBox.put('first', state);
+    _tickerSettingBox.put('last', state);
   }
 }
