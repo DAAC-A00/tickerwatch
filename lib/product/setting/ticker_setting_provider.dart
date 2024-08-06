@@ -27,7 +27,7 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   }
 
   Future<void> _init() async {
-    _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.boxName);
+    _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
     final String candleColor = _tickerSettingBox.get('candleColor',
         defaultValue: defaultTickerSetting.candleColor)!;
     final bool isBorderEnabled = _tickerSettingBox.get('isBorderEnabled',

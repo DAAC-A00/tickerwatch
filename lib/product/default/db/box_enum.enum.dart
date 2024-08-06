@@ -7,7 +7,7 @@ enum BoxEnum {
 }
 
 extension BoxEnumExtension on BoxEnum {
-  String get boxName {
+  String get name {
     switch (this) {
       case BoxEnum.setting:
         return 'setting';
