@@ -9,7 +9,7 @@ final tickerSettingProvider =
   return TickerSettingNotifier();
 });
 
-final defaultTickerSetting = TickerSetting(
+final TickerSetting defaultTickerSetting = TickerSetting(
   candleColor: 'red-blue',
   isBorderEnabled: true,
   isPriceBackgroundAlarmEnabled: true,
