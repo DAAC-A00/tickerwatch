@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/setting/ticker_setting.dart';
 
+import '../default/db/box_enum.enum.dart';
+
 final tickerSettingProvider =
     StateNotifierProvider<TickerSettingNotifier, TickerSetting>((ref) {
   return TickerSettingNotifier();
@@ -25,7 +27,7 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   }
 
   Future<void> _init() async {
-    _tickerSettingBox = await Hive.openBox<String>('settingBox');
+    _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.boxName);
     final String candleColor = _tickerSettingBox.get('candleColor',
         defaultValue: defaultTickerSetting.candleColor)!;
     final bool isBorderEnabled = _tickerSettingBox.get('isBorderEnabled',

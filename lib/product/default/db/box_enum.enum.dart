@@ -1,20 +1,20 @@
 // box_enum.enum
 
 enum BoxEnum {
-  settingBox,
-  counterBox,
-  personBox,
+  setting,
+  counter,
+  person,
 }
 
 extension BoxEnumExtension on BoxEnum {
-  String get name {
+  String get boxName {
     switch (this) {
-      case BoxEnum.settingBox:
-        return 'settingBox';
-      case BoxEnum.counterBox:
-        return 'counterBox';
-      case BoxEnum.personBox:
-        return 'personBox';
+      case BoxEnum.setting:
+        return 'setting';
+      case BoxEnum.counter:
+        return 'counter';
+      case BoxEnum.person:
+        return 'person';
       default:
         return '';
     }
