@@ -27,13 +27,7 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
 
   Future<void> _init() async {
     _tickerSettingBox = await Hive.openBox<TickerSetting>('tickerSettingBox');
-    if (_tickerSettingBox.isNotEmpty) {
-      state = _tickerSettingBox.get('last')!;
-    } else {
-      state = defaultTickerSetting;
-      _tickerSettingBox.put('first', state);
-      _tickerSettingBox.put('last', state);
-    }
+    state = _tickerSettingBox.get('last', defaultValue: defaultTickerSetting)!;
   }
 
   void updateBox(TickerSetting tickerSetting) {
@@ -44,7 +38,5 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   void deleteBox() {
     _tickerSettingBox.clear();
     state = defaultTickerSetting;
-    _tickerSettingBox.put('first', state);
-    _tickerSettingBox.put('last', state);
   }
 }
