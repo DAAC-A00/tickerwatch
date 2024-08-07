@@ -5,14 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ticker_setting_screen.dart';
 import 'exchange_setting_screen.dart';
 
-class SettingScreen extends ConsumerStatefulWidget {
-  const SettingScreen({super.key});
+class SettingMainScreen extends ConsumerStatefulWidget {
+  const SettingMainScreen({super.key});
 
   @override
-  ConsumerState<SettingScreen> createState() => _SettingScreenState();
+  ConsumerState<SettingMainScreen> createState() => _SettingMainScreenState();
 }
 
-class _SettingScreenState extends ConsumerState<SettingScreen> {
+class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
   @override
   Widget build(BuildContext context) {
     // final currentTheme = Theme.of(context).colorScheme;
@@ -20,9 +20,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
     // final settings = ref.watch(tickerSettingProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

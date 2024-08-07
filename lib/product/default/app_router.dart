@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tickerwatch/product/sample_person/person_screen.dart';
-import 'package:tickerwatch/product/setting/screens/setting_screen.dart';
+import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
+import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 
+import '../home/home_main_screen.dart';
 import '../sample_person/person_form_screen.dart';
 import 'screens/default_screen.dart';
 import 'screens/route_error_screen.dart';
@@ -18,9 +19,14 @@ final GoRouter appRouter = GoRouter(
           const DefaultScreen(),
       routes: [
         GoRoute(
+          path: 'home',
+          builder: (BuildContext context, GoRouterState state) =>
+              const HomeMainScreen(),
+        ),
+        GoRoute(
           path: 'person',
           builder: (BuildContext context, GoRouterState state) =>
-              const PersonScreen(),
+              const PersonMainScreen(),
           routes: [
             GoRoute(
               path: 'add',
@@ -49,7 +55,7 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: 'setting',
           builder: (BuildContext context, GoRouterState state) =>
-              const SettingScreen(),
+              const SettingMainScreen(),
         ),
       ],
     ),

@@ -1,12 +1,12 @@
-// my_home_page.dart
+// home_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'counter_provider.dart';
 
-class MyHomePage extends ConsumerWidget {
-  const MyHomePage({super.key});
+class HomeMainScreen extends ConsumerWidget {
+  const HomeMainScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,7 +16,6 @@ class MyHomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('my home page'),
       ),
       body: Center(
         child: Column(

@@ -1,10 +1,10 @@
 // default_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:tickerwatch/product/home/my_home_page.dart';
-import 'package:tickerwatch/product/setting/screens/setting_screen.dart';
+import 'package:tickerwatch/product/home/home_main_screen.dart';
+import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 
-import '../../sample_person/person_screen.dart';
+import '../../sample_person/person_main_screen.dart';
 
 class DefaultScreen extends StatefulWidget {
   const DefaultScreen({super.key});
@@ -17,9 +17,9 @@ class _DefaultScreenState extends State<DefaultScreen> {
   int _selectedTabIndex = 0;
 
   final List<Widget> _tabScreens = const [
-    MyHomePage(),
-    PersonScreen(),
-    SettingScreen()
+    HomeMainScreen(),
+    PersonMainScreen(),
+    SettingMainScreen(),
   ];
 
   // 앱 종료 직전 확인 팝업 노출
