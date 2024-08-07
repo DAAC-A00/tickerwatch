@@ -50,7 +50,7 @@ class _DefaultScreenState extends State<DefaultScreen> {
     _isDialogShowing = true;
     await showDialog<void>(
       context: context,
-      barrierDismissible: false, // 다이얼로그 밖을 터치해도 닫히지 않도록 설정
+      barrierDismissible: true, // 다이얼로그 밖을 터치해도 닫히도록 설정
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('앱 종료'),
@@ -65,13 +65,13 @@ class _DefaultScreenState extends State<DefaultScreen> {
             TextButton(
               child: const Text('아니오'),
               onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.of(context).pop(); // 다이얼로그만 닫기
               },
             ),
             TextButton(
               child: const Text('예'),
               onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.of(context).pop(); // 다이얼로그 닫고
                 SystemNavigator.pop(); // 앱 종료
               },
             ),
