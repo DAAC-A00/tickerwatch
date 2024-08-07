@@ -20,34 +20,35 @@ class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
     // final settings = ref.watch(tickerSettingProvider);
 
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TickerSettingScreen()),
-                );
-              },
-              child: const Text('Ticker Settings'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ExchangeSettingScreen()),
-                );
-              },
-              child: const Text('Exchange Settings'),
-            ),
-          ],
-        ),
+      body: ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.candlestick_chart),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('Ticker Settings'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TickerSettingScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.currency_exchange),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('Exchange Settings'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ExchangeSettingScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
