@@ -1,25 +1,25 @@
-// main_screen.dart
+// default_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:tickerwatch/product/home/my_home_page.dart';
+import 'package:tickerwatch/product/setting/screens/setting_screen.dart';
 
 import '../../sample_person/person_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class DefaultScreen extends StatefulWidget {
+  const DefaultScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<DefaultScreen> createState() => _DefaultScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _DefaultScreenState extends State<DefaultScreen> {
   int _selectedTabIndex = 0;
 
   final List<Widget> _tabScreens = const [
-    MyHomePage(
-      title: 'my home page',
-    ),
+    MyHomePage(),
     PersonScreen(),
+    SettingScreen()
   ];
 
   // 앱 종료 직전 확인 팝업 노출
@@ -69,8 +69,12 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.person),
               label: 'Person',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Setting',
             ),
           ],
           selectedItemColor: currentTheme.primary,
