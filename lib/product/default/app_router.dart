@@ -6,6 +6,8 @@ import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 import '../home/home_main_screen.dart';
 import '../sample_person/person_form_screen.dart';
+import '../setting/screens/exchange_setting_screen.dart';
+import '../setting/screens/ticker_setting_screen.dart';
 import 'screens/default_screen.dart';
 import 'screens/route_error_screen.dart';
 
@@ -36,6 +38,18 @@ List<RouteBase> _buildRoutes() {
           path: 'setting',
           builder: (BuildContext context, GoRouterState state) =>
               const SettingMainScreen(),
+          routes: [
+            GoRoute(
+              path: 'ticker',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const TickerSettingScreen(),
+            ),
+            GoRoute(
+              path: 'exchange',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const ExchangeSettingScreen(),
+            ),
+          ],
         ),
         GoRoute(
           path: 'person',

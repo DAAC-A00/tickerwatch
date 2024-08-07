@@ -10,7 +10,6 @@ class HomeMainScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 상태 값을 읽음
     final counter = ref.watch(counterProvider);
 
     return Scaffold(
