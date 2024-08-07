@@ -4,15 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
-
 import '../home/home_main_screen.dart';
 import '../sample_person/person_form_screen.dart';
 import 'screens/default_screen.dart';
 import 'screens/route_error_screen.dart';
 
+// GoRouter 인스턴스를 생성하고 초기 위치를 '/'로 설정
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
-  routes: <RouteBase>[
+  routes: _buildRoutes(),
+  errorBuilder: (context, state) => RouteErrorScreen(
+    errorMsg: state.error.toString(),
+    key: state.pageKey,
+  ),
+);
+
+// 라우트 설정을 별도의 함수로 분리
+List<RouteBase> _buildRoutes() {
+  return [
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) =>
@@ -22,6 +31,11 @@ final GoRouter appRouter = GoRouter(
           path: 'home',
           builder: (BuildContext context, GoRouterState state) =>
               const HomeMainScreen(),
+        ),
+        GoRoute(
+          path: 'setting',
+          builder: (BuildContext context, GoRouterState state) =>
+              const SettingMainScreen(),
         ),
         GoRoute(
           path: 'person',
@@ -52,16 +66,7 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
-        GoRoute(
-          path: 'setting',
-          builder: (BuildContext context, GoRouterState state) =>
-              const SettingMainScreen(),
-        ),
       ],
     ),
-  ],
-  errorBuilder: (context, state) => RouteErrorScreen(
-    errorMsg: state.error.toString(),
-    key: state.pageKey,
-  ),
-);
+  ];
+}
