@@ -17,6 +17,7 @@ class DefaultScreen extends StatefulWidget {
 
 class _DefaultScreenState extends State<DefaultScreen> {
   int _selectedTabIndex = 0;
+  bool _isDialogShowing = false;
 
   final List<Widget> _tabScreens = const [
     HomeMainScreen(),
@@ -37,12 +38,17 @@ class _DefaultScreenState extends State<DefaultScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    _showExitDialog();
+    if (_isDialogShowing) {
+      Navigator.of(context).pop(); // 다이얼로그 닫기
+    } else {
+      _showExitDialog();
+    }
     return true; // 뒤로가기 버튼의 기본 동작을 막습니다.
   }
 
   Future<void> _showExitDialog() async {
-    return showDialog<void>(
+    _isDialogShowing = true;
+    await showDialog<void>(
       context: context,
       barrierDismissible: false, // 다이얼로그 밖을 터치해도 닫히지 않도록 설정
       builder: (BuildContext context) {
@@ -73,6 +79,7 @@ class _DefaultScreenState extends State<DefaultScreen> {
         );
       },
     );
+    _isDialogShowing = false;
   }
 
   @override
