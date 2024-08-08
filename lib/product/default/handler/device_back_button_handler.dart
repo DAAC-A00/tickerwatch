@@ -6,9 +6,14 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 
 class DeviceBackButtonHandler {
   static bool _isDialogShowing = false;
+  static bool _isEnable = true;
 
   static void addInterceptor(BuildContext context) {
     BackButtonInterceptor.add((bool stopDefaultButtonEvent, RouteInfo info) {
+      if (!_isEnable) {
+        return false; // 비활성화된 경우 기본 동작을 실행합니다.
+      }
+
       if (_isDialogShowing) {
         Navigator.of(context).pop(); // 다이얼로그 닫기
       } else {
@@ -58,5 +63,13 @@ class DeviceBackButtonHandler {
       },
     );
     _isDialogShowing = false;
+  }
+
+  static void enable() {
+    _isEnable = true;
+  }
+
+  static void disable() {
+    _isEnable = false;
   }
 }

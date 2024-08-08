@@ -17,12 +17,6 @@ class DefaultScreen extends StatefulWidget {
 class _DefaultScreenState extends State<DefaultScreen> {
   int _selectedTabIndex = 0;
 
-  final List<Widget> _tabScreens = const [
-    HomeMainScreen(),
-    PersonMainScreen(),
-    SettingMainScreen(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -40,10 +34,7 @@ class _DefaultScreenState extends State<DefaultScreen> {
     final ColorScheme currentTheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedTabIndex,
-        children: _tabScreens,
-      ),
+      body: _getBodyWidget(_selectedTabIndex),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTabIndex,
         onTap: (index) {
@@ -69,5 +60,18 @@ class _DefaultScreenState extends State<DefaultScreen> {
         unselectedItemColor: currentTheme.secondary,
       ),
     );
+  }
+
+  Widget _getBodyWidget(int index) {
+    switch (index) {
+      case 0:
+        return const HomeMainScreen();
+      case 1:
+        return const PersonMainScreen();
+      case 2:
+        return const SettingMainScreen();
+      default:
+        return const HomeMainScreen();
+    }
   }
 }

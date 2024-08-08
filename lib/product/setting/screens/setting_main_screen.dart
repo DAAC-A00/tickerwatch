@@ -1,7 +1,8 @@
-// setting_screen.dart
+// setting_main_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../default/handler/device_back_button_handler.dart';
 import 'ticker_setting_screen.dart';
 import 'exchange_setting_screen.dart';
 
@@ -27,12 +28,15 @@ class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
             trailing: const Icon(Icons.arrow_forward_ios),
             title: const Text('Ticker Settings'),
             onTap: () {
+              DeviceBackButtonHandler.disable();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const TickerSettingScreen(),
                 ),
-              );
+              ).then((_) {
+                DeviceBackButtonHandler.enable();
+              });
             },
           ),
           ListTile(
@@ -40,12 +44,15 @@ class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
             trailing: const Icon(Icons.arrow_forward_ios),
             title: const Text('Exchange Settings'),
             onTap: () {
+              DeviceBackButtonHandler.disable();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ExchangeSettingScreen(),
                 ),
-              );
+              ).then((_) {
+                DeviceBackButtonHandler.enable();
+              });
             },
           ),
         ],
