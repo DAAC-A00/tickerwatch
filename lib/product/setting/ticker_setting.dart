@@ -9,12 +9,31 @@ class TickerSetting {
   bool isQuoteUnitSignEnabled;
   bool isPercentSignEnabled;
 
-  TickerSetting(
-      {required this.candleColor,
-      required this.isBorderEnabled,
-      required this.isPriceBackgroundAlarmEnabled,
-      required this.isQuoteUnitSignEnabled,
-      required this.isPercentSignEnabled});
+  TickerSetting({
+    required this.candleColor,
+    required this.isBorderEnabled,
+    required this.isPriceBackgroundAlarmEnabled,
+    required this.isQuoteUnitSignEnabled,
+    required this.isPercentSignEnabled,
+  });
+
+  TickerSetting copyWith({
+    String? candleColor,
+    bool? isBorderEnabled,
+    bool? isPriceBackgroundAlarmEnabled,
+    bool? isQuoteUnitSignEnabled,
+    bool? isPercentSignEnabled,
+  }) {
+    return TickerSetting(
+      candleColor: candleColor ?? this.candleColor,
+      isBorderEnabled: isBorderEnabled ?? this.isBorderEnabled,
+      isPriceBackgroundAlarmEnabled:
+          isPriceBackgroundAlarmEnabled ?? this.isPriceBackgroundAlarmEnabled,
+      isQuoteUnitSignEnabled:
+          isQuoteUnitSignEnabled ?? this.isQuoteUnitSignEnabled,
+      isPercentSignEnabled: isPercentSignEnabled ?? this.isPercentSignEnabled,
+    );
+  }
 }
 
 // class TickerSettingAdapter extends TypeAdapter<TickerSetting> {
