@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tickerwatch/product/default/db/box_enum.enum.dart';
 
 import 'person.dart';
 
@@ -18,7 +19,7 @@ class PersonNotifier extends StateNotifier<List<Person>> {
   }
 
   Future<void> _init() async {
-    _personBox = await Hive.openBox<Person>('personBox');
+    _personBox = await Hive.openBox<Person>(BoxEnum.person.name);
     state = _personBox.values.toList();
   }
 

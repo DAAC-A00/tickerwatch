@@ -1,12 +1,12 @@
-// person_screen.dart
+// person_main_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'default/person_provider.dart';
+import 'person_provider.dart';
 
-class PersonScreen extends ConsumerWidget {
-  const PersonScreen({super.key});
+class PersonMainScreen extends ConsumerWidget {
+  const PersonMainScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,7 +14,6 @@ class PersonScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Person List'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
