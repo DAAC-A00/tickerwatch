@@ -1,18 +1,25 @@
 // setting_box_key_enum.dart
 
 enum SettingBoxKeyEnum {
-  candleColor,
+  // Ticker Setting
+  longColor,
+  shortColor,
   isBorderEnabled,
   isPriceBackgroundAlarmEnabled,
   isQuoteUnitSignEnabled,
-  isPercentSignEnabled
+  isPercentSignEnabled,
+  // Common Setting
+  isDarkMode
 }
 
 extension SettingBoxKeyEnumExtension on SettingBoxKeyEnum {
   String get name {
     switch (this) {
-      case SettingBoxKeyEnum.candleColor:
-        return 'candleColor';
+      // Ticker Setting
+      case SettingBoxKeyEnum.longColor:
+        return 'longColor';
+      case SettingBoxKeyEnum.shortColor:
+        return 'shortColor';
       case SettingBoxKeyEnum.isBorderEnabled:
         return 'isBorderEnabled';
       case SettingBoxKeyEnum.isPriceBackgroundAlarmEnabled:
@@ -21,6 +28,9 @@ extension SettingBoxKeyEnumExtension on SettingBoxKeyEnum {
         return 'isQuoteUnitSignEnabled';
       case SettingBoxKeyEnum.isPercentSignEnabled:
         return 'isPercentSignEnabled';
+      // Common Setting
+      case SettingBoxKeyEnum.isDarkMode:
+        return 'isDarkMode';
       default:
         return '';
     }
