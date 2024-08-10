@@ -1,7 +1,5 @@
 // ticker_setting_screen.dart
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,8 +18,6 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
   Widget build(BuildContext context) {
     final tickerSetting = ref.watch(tickerSettingProvider);
     final tickerSettingNotifier = ref.read(tickerSettingProvider.notifier);
-
-    log('${colorToString(tickerSetting.longColor)}-${colorToString(tickerSetting.shortColor)}');
 
     Widget buildRadioListTile({
       required String value,
