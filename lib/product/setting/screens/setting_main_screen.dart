@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../default/handler/device_back_button_handler.dart';
+import 'common_setting_screen.dart';
 import 'ticker_setting_screen.dart';
 import 'exchange_setting_screen.dart';
 
@@ -26,7 +27,7 @@ class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
           ListTile(
             leading: const Icon(Icons.candlestick_chart),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('Ticker Settings'),
+            title: const Text('가격 표기 설정'),
             onTap: () {
               DeviceBackButtonHandler.disable();
               Navigator.push(
@@ -42,13 +43,29 @@ class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
           ListTile(
             leading: const Icon(Icons.currency_exchange),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('Exchange Settings'),
+            title: const Text('거래소 설정'),
             onTap: () {
               DeviceBackButtonHandler.disable();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ExchangeSettingScreen(),
+                ),
+              ).then((_) {
+                DeviceBackButtonHandler.enable();
+              });
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.mobile_friendly),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('앱 설정'),
+            onTap: () {
+              DeviceBackButtonHandler.disable();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CommonSettingScreen(),
                 ),
               ).then((_) {
                 DeviceBackButtonHandler.enable();

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
 
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
@@ -28,6 +29,7 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
+    final commonSettingState = ref.watch(commonSettingProvider);
     // baseSize
     final double baseSize = MediaQuery.of(context).size.shortestSide;
     final customTheme = CustomTheme(baseSize: baseSize);
@@ -41,7 +43,8 @@ class _MyAppState extends ConsumerState<MyApp> {
           .routerDelegate, // routeInformationParser에서 변환된 값을 어떤 라우트로 보여줄 지 정하는 함수
       theme: customTheme.lightThemeData,
       darkTheme: customTheme.darkThemeData,
-      themeMode: ThemeMode.dark,
+      themeMode:
+          commonSettingState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
     );
   }
 }
