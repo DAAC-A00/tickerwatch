@@ -13,7 +13,16 @@ class ExchangeSettingScreen extends ConsumerWidget {
         title: const Text('Exchange Settings'),
       ),
       body: const Center(
-        child: Text('Exchange Settings Detail'),
+        child: Column(
+          children: [
+            Text(
+              '상세 페이지 적용O',
+            ),
+            Text(
+              '상세 페이지 적용X',
+            ),
+          ],
+        ),
       ),
     );
   }

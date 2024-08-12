@@ -11,28 +11,30 @@ class CustomTheme {
   // static final Color toastBackgroundDark = Colors.grey.shade900;
 
   static TextStyle _getTitleStyle(double baseSize) =>
-      TextStyle(fontSize: baseSize * 0.075);
+      TextStyle(fontSize: baseSize * 0.07);
   static TextStyle _getDisplayStyle(double baseSize) =>
       TextStyle(fontSize: baseSize * 0.06);
   static TextStyle _getBodyStyle(double baseSize) =>
       TextStyle(fontSize: baseSize * 0.05);
+  // , fontFamily: 'Pretendard'
 
   static TextTheme _getTextTheme(double baseSize) {
     return TextTheme(
       titleLarge: _getTitleStyle(baseSize),
-      titleMedium: _getTitleStyle(baseSize * 0.8),
-      titleSmall: _getTitleStyle(baseSize * 0.6),
+      titleMedium: _getTitleStyle(baseSize),
+      titleSmall: _getTitleStyle(baseSize),
       displayLarge: _getDisplayStyle(baseSize * 0.7),
       displayMedium: _getDisplayStyle(baseSize * 0.6),
       displaySmall: _getDisplayStyle(baseSize * 0.5),
       bodyLarge: _getBodyStyle(baseSize * 0.9),
       bodyMedium: _getBodyStyle(baseSize * 0.75),
-      bodySmall: _getBodyStyle(baseSize * 0.5),
+      bodySmall: _getBodyStyle(baseSize * 0.6),
     );
   }
 
   ThemeData get lightThemeData => ThemeData(
         useMaterial3: true,
+        fontFamily: 'Pretendard',
         textTheme: _getTextTheme(baseSize),
         colorScheme: const ColorScheme.light(
           brightness: Brightness.light,
@@ -57,6 +59,7 @@ class CustomTheme {
 
   ThemeData get darkThemeData => ThemeData(
         useMaterial3: true,
+        fontFamily: 'Pretendard',
         textTheme: _getTextTheme(baseSize),
         colorScheme: const ColorScheme.dark(
           brightness: Brightness.dark,
