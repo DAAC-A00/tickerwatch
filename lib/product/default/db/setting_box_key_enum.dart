@@ -9,7 +9,7 @@ enum SettingBoxKeyEnum {
   isQuoteUnitSignEnabled,
   isPercentSignEnabled,
   // Common Setting
-  isDarkMode
+  isLightMode
 }
 
 extension SettingBoxKeyEnumExtension on SettingBoxKeyEnum {
@@ -29,8 +29,8 @@ extension SettingBoxKeyEnumExtension on SettingBoxKeyEnum {
       case SettingBoxKeyEnum.isPercentSignEnabled:
         return 'isPercentSignEnabled';
       // Common Setting
-      case SettingBoxKeyEnum.isDarkMode:
-        return 'isDarkMode';
+      case SettingBoxKeyEnum.isLightMode:
+        return 'isLightMode';
       default:
         return '';
     }

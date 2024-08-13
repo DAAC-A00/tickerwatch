@@ -13,7 +13,7 @@ final commonSettingProvider =
 });
 
 final CommonSetting defaultCommonSetting = CommonSetting(
-  isDarkMode: true,
+  isLightMode: true,
 );
 
 class CommonSettingNotifier extends StateNotifier<CommonSetting> {
@@ -25,18 +25,18 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
 
   Future<void> _init() async {
     _CommonSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
-    final bool isDarkMode = _CommonSettingBox.get(
-          SettingBoxKeyEnum.isDarkMode.name,
-          defaultValue: defaultCommonSetting.isDarkMode.toString(),
+    final bool isLightMode = _CommonSettingBox.get(
+          SettingBoxKeyEnum.isLightMode.name,
+          defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
-        'true';
+        'false'; // true면 기본값이 Light Mode, false면 기본값이 Dark Mode
 
-    state = CommonSetting(isDarkMode: isDarkMode);
+    state = CommonSetting(isLightMode: isLightMode);
   }
 
   void updateBox(CommonSetting commonSetting) {
-    _CommonSettingBox.put(
-        SettingBoxKeyEnum.isDarkMode.name, commonSetting.isDarkMode.toString());
+    _CommonSettingBox.put(SettingBoxKeyEnum.isLightMode.name,
+        commonSetting.isLightMode.toString());
     state = commonSetting;
   }
 }

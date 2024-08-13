@@ -44,7 +44,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       theme: customTheme.lightThemeData,
       darkTheme: customTheme.darkThemeData,
       themeMode:
-          commonSettingState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          commonSettingState.isLightMode ? ThemeMode.light : ThemeMode.dark,
     );
   }
 }

@@ -23,12 +23,12 @@ class CommonSettingScreen extends ConsumerWidget {
           SwitchListTile(
             title: const Text('테마 설정'),
             subtitle: Text(
-              commonSetting.isDarkMode ? '🌑 Dark' : '☀️ Light',
+              commonSetting.isLightMode ? '☀️ Light' : '🌑 Dark',
             ),
-            value: commonSetting.isDarkMode,
+            value: commonSetting.isLightMode,
             onChanged: (bool value) {
               commonSettingNotifier.updateBox(
-                CommonSetting(isDarkMode: value),
+                CommonSetting(isLightMode: value),
               );
             },
           ),
