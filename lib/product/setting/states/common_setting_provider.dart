@@ -17,15 +17,15 @@ final CommonSetting defaultCommonSetting = CommonSetting(
 );
 
 class CommonSettingNotifier extends StateNotifier<CommonSetting> {
-  late Box<String> _CommonSettingBox;
+  late Box<String> _commonSettingBox;
 
   CommonSettingNotifier() : super(defaultCommonSetting) {
     _init();
   }
 
   Future<void> _init() async {
-    _CommonSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
-    final bool isLightMode = _CommonSettingBox.get(
+    _commonSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
+    final bool isLightMode = _commonSettingBox.get(
           SettingBoxKeyEnum.isLightMode.name,
           defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
@@ -35,7 +35,7 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
   }
 
   void updateBox(CommonSetting commonSetting) {
-    _CommonSettingBox.put(SettingBoxKeyEnum.isLightMode.name,
+    _commonSettingBox.put(SettingBoxKeyEnum.isLightMode.name,
         commonSetting.isLightMode.toString());
     state = commonSetting;
   }
