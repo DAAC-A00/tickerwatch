@@ -27,7 +27,9 @@ class _SettingMainScreenState extends ConsumerState<SettingMainScreen> {
           ListTile(
             leading: const Icon(Icons.candlestick_chart),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('가격 표기 설정'),
+            title: const Text(
+              '가격 표기 설정',
+            ),
             onTap: () {
               DeviceBackButtonHandler.disable();
               Navigator.push(
