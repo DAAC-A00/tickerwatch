@@ -13,7 +13,7 @@ final commonSettingProvider =
 });
 
 final CommonSetting defaultCommonSetting = CommonSetting(
-  isLightMode: true,
+  isLightMode: false, // true면 기본값이 Dark Mode, false면 기본값이 Light Mode
 );
 
 class CommonSettingNotifier extends StateNotifier<CommonSetting> {
@@ -29,7 +29,7 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
           SettingBoxKeyEnum.isLightMode.name,
           defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
-        'false'; // true면 기본값이 Light Mode, false면 기본값이 Dark Mode
+        'true';
 
     state = CommonSetting(isLightMode: isLightMode);
   }
