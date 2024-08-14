@@ -2,7 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:tickerwatch/product/default/db/box_enum.enum.dart';
+import 'package:tickerwatch/product/default/db/box_enum.dart';
 
 import 'person.dart';
 

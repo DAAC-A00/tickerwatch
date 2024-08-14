@@ -3,8 +3,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
-import '../../default/db/box_enum.enum.dart';
-import '../../default/db/setting_box_key_enum.dart';
+import '../../default/db/box_enum.dart';
+import '../../default/db/box_setting_enum.dart';
 import '../entities/common_setting.dart';
 
 final commonSettingProvider =
@@ -26,7 +26,7 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
   Future<void> _init() async {
     _commonSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
     final bool isLightMode = _commonSettingBox.get(
-          SettingBoxKeyEnum.isLightMode.name,
+          BoxSettingEnum.isLightMode.name,
           defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
         'true';
@@ -35,8 +35,8 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
   }
 
   void updateBox(CommonSetting commonSetting) {
-    _commonSettingBox.put(SettingBoxKeyEnum.isLightMode.name,
-        commonSetting.isLightMode.toString());
+    _commonSettingBox.put(
+        BoxSettingEnum.isLightMode.name, commonSetting.isLightMode.toString());
     state = commonSetting;
   }
 }

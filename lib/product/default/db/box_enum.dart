@@ -1,4 +1,4 @@
-// box_enum.enum
+// box_enum.dart
 
 enum BoxEnum {
   setting,

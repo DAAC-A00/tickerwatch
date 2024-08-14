@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:tickerwatch/product/default/db/setting_box_key_enum.dart';
+import 'package:tickerwatch/product/default/db/box_setting_enum.dart';
 import 'package:tickerwatch/product/setting/entities/ticker_setting.dart';
 
-import '../../default/db/box_enum.enum.dart';
+import '../../default/db/box_enum.dart';
 import 'common_setting_provider.dart';
 
 // Color와 String 간 변환 함수
@@ -70,30 +70,30 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   Future<void> _init() async {
     _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
     final String longColorString = _tickerSettingBox.get(
-      SettingBoxKeyEnum.longColor.name,
+      BoxSettingEnum.longColor.name,
       defaultValue: colorToString(Colors.red),
     )!;
     final String shortColorString = _tickerSettingBox.get(
-      SettingBoxKeyEnum.shortColor.name,
+      BoxSettingEnum.shortColor.name,
       defaultValue: colorToString(Colors.blue),
     )!;
     final bool isBorderEnabled = _tickerSettingBox.get(
-          SettingBoxKeyEnum.isBorderEnabled.name,
+          BoxSettingEnum.isBorderEnabled.name,
           defaultValue: true.toString(),
         )! ==
         true.toString();
     final bool isPriceBackgroundAlarmEnabled = _tickerSettingBox.get(
-          SettingBoxKeyEnum.isPriceBackgroundAlarmEnabled.name,
+          BoxSettingEnum.isPriceBackgroundAlarmEnabled.name,
           defaultValue: true.toString(),
         )! ==
         true.toString();
     final bool isQuoteUnitSignEnabled = _tickerSettingBox.get(
-          SettingBoxKeyEnum.isQuoteUnitSignEnabled.name,
+          BoxSettingEnum.isQuoteUnitSignEnabled.name,
           defaultValue: false.toString(),
         )! ==
         true.toString();
     final bool isPercentSignEnabled = _tickerSettingBox.get(
-          SettingBoxKeyEnum.isPercentSignEnabled.name,
+          BoxSettingEnum.isPercentSignEnabled.name,
           defaultValue: true.toString(),
         )! ==
         true.toString();
@@ -111,8 +111,8 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   void updateCandleColor(String newColor) {
     String longColorString = newColor.split('-').firstOrNull ?? 'red';
     String shortColorString = newColor.split('-').lastOrNull ?? 'blue';
-    _tickerSettingBox.put(SettingBoxKeyEnum.longColor.name, longColorString);
-    _tickerSettingBox.put(SettingBoxKeyEnum.shortColor.name, shortColorString);
+    _tickerSettingBox.put(BoxSettingEnum.longColor.name, longColorString);
+    _tickerSettingBox.put(BoxSettingEnum.shortColor.name, shortColorString);
     state = state.copyWith(
       longColor: _stringToColor(longColorString, isLightMode),
       shortColor: _stringToColor(shortColorString, isLightMode),
@@ -121,27 +121,27 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
 
   void updateBox(TickerSetting tickerSetting) {
     _tickerSettingBox.put(
-      SettingBoxKeyEnum.longColor.name,
+      BoxSettingEnum.longColor.name,
       colorToString(tickerSetting.longColor),
     );
     _tickerSettingBox.put(
-      SettingBoxKeyEnum.shortColor.name,
+      BoxSettingEnum.shortColor.name,
       colorToString(tickerSetting.shortColor),
     );
     _tickerSettingBox.put(
-      SettingBoxKeyEnum.isBorderEnabled.name,
+      BoxSettingEnum.isBorderEnabled.name,
       tickerSetting.isBorderEnabled.toString(),
     );
     _tickerSettingBox.put(
-      SettingBoxKeyEnum.isPriceBackgroundAlarmEnabled.name,
+      BoxSettingEnum.isPriceBackgroundAlarmEnabled.name,
       tickerSetting.isPriceBackgroundAlarmEnabled.toString(),
     );
     _tickerSettingBox.put(
-      SettingBoxKeyEnum.isQuoteUnitSignEnabled.name,
+      BoxSettingEnum.isQuoteUnitSignEnabled.name,
       tickerSetting.isQuoteUnitSignEnabled.toString(),
     );
     _tickerSettingBox.put(
-      SettingBoxKeyEnum.isPercentSignEnabled.name,
+      BoxSettingEnum.isPercentSignEnabled.name,
       tickerSetting.isPercentSignEnabled.toString(),
     );
     state = tickerSetting;
