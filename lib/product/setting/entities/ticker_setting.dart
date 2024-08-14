@@ -28,8 +28,8 @@ class TickerSetting {
     bool? isPercentSignEnabled,
   }) {
     return TickerSetting(
-      longColor: longColor ?? Colors.red,
-      shortColor: shortColor ?? Colors.blue,
+      longColor: longColor ?? this.longColor,
+      shortColor: shortColor ?? this.shortColor,
       isBorderEnabled: isBorderEnabled ?? this.isBorderEnabled,
       isPriceBackgroundAlarmEnabled:
           isPriceBackgroundAlarmEnabled ?? this.isPriceBackgroundAlarmEnabled,

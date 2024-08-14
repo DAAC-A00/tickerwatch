@@ -119,6 +119,22 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
     );
   }
 
+  void updateIsQuoteUnitSignEnabled(bool isEnable) {
+    _tickerSettingBox.put(
+        BoxSettingEnum.isQuoteUnitSignEnabled.name, isEnable.toString());
+    state = state.copyWith(
+      isQuoteUnitSignEnabled: isEnable,
+    );
+  }
+
+  void updateIsBorderEnabled(bool isEnable) {
+    _tickerSettingBox.put(
+        BoxSettingEnum.isBorderEnabled.name, isEnable.toString());
+    state = state.copyWith(
+      isBorderEnabled: isEnable,
+    );
+  }
+
   void updateBox(TickerSetting tickerSetting) {
     _tickerSettingBox.put(
       BoxSettingEnum.longColor.name,
