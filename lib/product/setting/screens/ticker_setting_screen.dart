@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/setting/entities/ticker_setting.dart';
 
 import '../states/ticker_setting_provider.dart';
 import '../widgets/change_percent_sample_widget.dart';
@@ -16,7 +17,7 @@ class TickerSettingScreen extends ConsumerStatefulWidget {
 class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
   @override
   Widget build(BuildContext context) {
-    final tickerSetting = ref.watch(tickerSettingProvider);
+    final TickerSetting tickerSetting = ref.watch(tickerSettingProvider);
     final tickerSettingNotifier = ref.read(tickerSettingProvider.notifier);
 
     Widget buildRadioListTile({

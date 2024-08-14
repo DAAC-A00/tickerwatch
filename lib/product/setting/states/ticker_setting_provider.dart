@@ -10,7 +10,7 @@ import '../../default/db/box_enum.enum.dart';
 import 'common_setting_provider.dart';
 
 // Color와 String 간 변환 함수
-Color stringToColor(String colorString, {bool isLightMode = false}) {
+Color _stringToColor(String colorString, bool isLightMode) {
   switch (colorString) {
     case 'red':
       return Colors.red;
@@ -26,7 +26,7 @@ Color stringToColor(String colorString, {bool isLightMode = false}) {
   }
 }
 
-String colorToString(Color color, {bool isLightMode = false}) {
+String colorToString(Color? color) {
   if (color == Colors.red) {
     return 'red';
   } else if (color == Colors.blue) {
@@ -35,9 +35,11 @@ String colorToString(Color color, {bool isLightMode = false}) {
     return 'green';
   } else if (color == Colors.grey) {
     return 'grey';
-    // normal
-  } else {
+  } else if (color == Colors.white || color == Colors.black) {
     return 'primary';
+  } else {
+    // normal
+    return '';
   }
 }
 
@@ -48,12 +50,12 @@ final tickerSettingProvider =
 });
 
 final TickerSetting defaultTickerSetting = TickerSetting(
-  longColor: Colors.red,
-  shortColor: Colors.blue,
-  isBorderEnabled: true,
-  isPriceBackgroundAlarmEnabled: true,
-  isQuoteUnitSignEnabled: false,
-  isPercentSignEnabled: true,
+  longColor: null,
+  shortColor: null,
+  isBorderEnabled: null,
+  isPriceBackgroundAlarmEnabled: null,
+  isQuoteUnitSignEnabled: null,
+  isPercentSignEnabled: null,
 );
 
 class TickerSettingNotifier extends StateNotifier<TickerSetting> {
@@ -69,39 +71,36 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
     _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
     final String longColorString = _tickerSettingBox.get(
       SettingBoxKeyEnum.longColor.name,
-      defaultValue: colorToString(defaultTickerSetting.longColor,
-          isLightMode: isLightMode),
+      defaultValue: colorToString(Colors.red),
     )!;
     final String shortColorString = _tickerSettingBox.get(
       SettingBoxKeyEnum.shortColor.name,
-      defaultValue: colorToString(defaultTickerSetting.shortColor,
-          isLightMode: isLightMode),
+      defaultValue: colorToString(Colors.blue),
     )!;
     final bool isBorderEnabled = _tickerSettingBox.get(
           SettingBoxKeyEnum.isBorderEnabled.name,
-          defaultValue: defaultTickerSetting.isBorderEnabled.toString(),
+          defaultValue: true.toString(),
         )! ==
-        'true';
+        true.toString();
     final bool isPriceBackgroundAlarmEnabled = _tickerSettingBox.get(
           SettingBoxKeyEnum.isPriceBackgroundAlarmEnabled.name,
-          defaultValue:
-              defaultTickerSetting.isPriceBackgroundAlarmEnabled.toString(),
+          defaultValue: true.toString(),
         )! ==
-        'true';
+        true.toString();
     final bool isQuoteUnitSignEnabled = _tickerSettingBox.get(
           SettingBoxKeyEnum.isQuoteUnitSignEnabled.name,
-          defaultValue: defaultTickerSetting.isQuoteUnitSignEnabled.toString(),
+          defaultValue: false.toString(),
         )! ==
-        'true';
+        true.toString();
     final bool isPercentSignEnabled = _tickerSettingBox.get(
           SettingBoxKeyEnum.isPercentSignEnabled.name,
-          defaultValue: defaultTickerSetting.isPercentSignEnabled.toString(),
+          defaultValue: true.toString(),
         )! ==
-        'true';
+        true.toString();
 
     state = TickerSetting(
-      longColor: stringToColor(longColorString, isLightMode: isLightMode),
-      shortColor: stringToColor(shortColorString, isLightMode: isLightMode),
+      longColor: _stringToColor(longColorString, isLightMode),
+      shortColor: _stringToColor(shortColorString, isLightMode),
       isBorderEnabled: isBorderEnabled,
       isPriceBackgroundAlarmEnabled: isPriceBackgroundAlarmEnabled,
       isQuoteUnitSignEnabled: isQuoteUnitSignEnabled,
@@ -115,19 +114,19 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
     _tickerSettingBox.put(SettingBoxKeyEnum.longColor.name, longColorString);
     _tickerSettingBox.put(SettingBoxKeyEnum.shortColor.name, shortColorString);
     state = state.copyWith(
-      longColor: stringToColor(longColorString, isLightMode: isLightMode),
-      shortColor: stringToColor(shortColorString, isLightMode: isLightMode),
+      longColor: _stringToColor(longColorString, isLightMode),
+      shortColor: _stringToColor(shortColorString, isLightMode),
     );
   }
 
   void updateBox(TickerSetting tickerSetting) {
     _tickerSettingBox.put(
       SettingBoxKeyEnum.longColor.name,
-      colorToString(tickerSetting.longColor, isLightMode: isLightMode),
+      colorToString(tickerSetting.longColor),
     );
     _tickerSettingBox.put(
       SettingBoxKeyEnum.shortColor.name,
-      colorToString(tickerSetting.shortColor, isLightMode: isLightMode),
+      colorToString(tickerSetting.shortColor),
     );
     _tickerSettingBox.put(
       SettingBoxKeyEnum.isBorderEnabled.name,
