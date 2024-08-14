@@ -1,5 +1,7 @@
 // ticker_setting_provider.dart
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -109,14 +111,18 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   }
 
   void updateCandleColor(String newColor) {
-    String longColorString = newColor.split('-').firstOrNull ?? 'red';
-    String shortColorString = newColor.split('-').lastOrNull ?? 'blue';
-    _tickerSettingBox.put(BoxSettingEnum.longColor.name, longColorString);
-    _tickerSettingBox.put(BoxSettingEnum.shortColor.name, shortColorString);
-    state = state.copyWith(
-      longColor: _stringToColor(longColorString, isLightMode),
-      shortColor: _stringToColor(shortColorString, isLightMode),
-    );
+    String? longColorString = newColor.split('-').firstOrNull;
+    String? shortColorString = newColor.split('-').lastOrNull;
+    if (longColorString != null && shortColorString != null) {
+      _tickerSettingBox.put(BoxSettingEnum.longColor.name, longColorString);
+      _tickerSettingBox.put(BoxSettingEnum.shortColor.name, shortColorString);
+      state = state.copyWith(
+        longColor: _stringToColor(longColorString, isLightMode),
+        shortColor: _stringToColor(shortColorString, isLightMode),
+      );
+    } else {
+      log('[WARN][TickerSettingNotifier.updateCandleColor] longColorString or shortColorString is null. So BoxSetting not updated.');
+    }
   }
 
   void updateIsQuoteUnitSignEnabled(bool isEnable) {
