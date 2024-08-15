@@ -3,7 +3,7 @@
 // StateProvider를 사용하여 상태 관리
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:tickerwatch/product/default/db/box_enum.enum.dart';
+import 'package:tickerwatch/product/default/db/box_enum.dart';
 
 final counterProvider = StateNotifierProvider<CounterNotifier, int>((ref) {
   return CounterNotifier();

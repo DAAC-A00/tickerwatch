@@ -3,8 +3,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
-import '../../default/db/box_enum.enum.dart';
-import '../../default/db/setting_box_key_enum.dart';
+import '../../default/db/box_enum.dart';
+import '../../default/db/box_setting_enum.dart';
 import '../entities/common_setting.dart';
 
 final commonSettingProvider =
@@ -13,30 +13,30 @@ final commonSettingProvider =
 });
 
 final CommonSetting defaultCommonSetting = CommonSetting(
-  isDarkMode: true,
+  isLightMode: false, // true면 기본값이 Dark Mode, false면 기본값이 Light Mode
 );
 
 class CommonSettingNotifier extends StateNotifier<CommonSetting> {
-  late Box<String> _CommonSettingBox;
+  late Box<String> _commonSettingBox;
 
   CommonSettingNotifier() : super(defaultCommonSetting) {
     _init();
   }
 
   Future<void> _init() async {
-    _CommonSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
-    final bool isDarkMode = _CommonSettingBox.get(
-          SettingBoxKeyEnum.isDarkMode.name,
-          defaultValue: defaultCommonSetting.isDarkMode.toString(),
+    _commonSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
+    final bool isLightMode = _commonSettingBox.get(
+          BoxSettingEnum.isLightMode.name,
+          defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
         'true';
 
-    state = CommonSetting(isDarkMode: isDarkMode);
+    state = CommonSetting(isLightMode: isLightMode);
   }
 
   void updateBox(CommonSetting commonSetting) {
-    _CommonSettingBox.put(
-        SettingBoxKeyEnum.isDarkMode.name, commonSetting.isDarkMode.toString());
+    _commonSettingBox.put(
+        BoxSettingEnum.isLightMode.name, commonSetting.isLightMode.toString());
     state = commonSetting;
   }
 }

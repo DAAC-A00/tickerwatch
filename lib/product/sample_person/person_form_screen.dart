@@ -13,10 +13,10 @@ class PersonFormScreen extends ConsumerStatefulWidget {
   const PersonFormScreen({super.key, this.person, this.index});
 
   @override
-  __PersonFormState createState() => __PersonFormState();
+  PersonFormScreenState createState() => PersonFormScreenState();
 }
 
-class __PersonFormState extends ConsumerState<PersonFormScreen> {
+class PersonFormScreenState extends ConsumerState<PersonFormScreen> {
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _birthDateController = TextEditingController();

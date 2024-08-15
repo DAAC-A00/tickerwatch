@@ -12,7 +12,7 @@ class ChangePercentSampleWidget extends StatelessWidget {
   });
 
   final IconData sampleIcon;
-  final Color sampleColor;
+  final Color? sampleColor;
   final String sampleText;
   final bool isPercentEnabled;
 

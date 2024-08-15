@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 
 class PriceSampleWidget extends StatelessWidget {
   final String sampleText;
-  final Color color;
-  final bool isQuoteUnitEnabled;
-  final bool isBorderEnabled;
-  final double baseSize;
+  final Color? color;
+  final bool? isQuoteUnitEnabled;
+  final bool? isBorderEnabled;
 
   const PriceSampleWidget({
     super.key,
@@ -15,15 +14,15 @@ class PriceSampleWidget extends StatelessWidget {
     required this.color,
     required this.isQuoteUnitEnabled,
     required this.isBorderEnabled,
-    required this.baseSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context).colorScheme;
-
-    String changePercentText =
-        isQuoteUnitEnabled ? sampleText : sampleText.replaceAll('\$ ', '');
+    String changePercentText = isQuoteUnitEnabled != null
+        ? isQuoteUnitEnabled!
+            ? sampleText
+            : sampleText.replaceAll('\$ ', '')
+        : '';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,11 +35,15 @@ class PriceSampleWidget extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Container(
             decoration: BoxDecoration(
-                border: isBorderEnabled
-                    ? Border.all(color: color)
-                    : Border.all(
-                        color: currentTheme.primary
-                            .withOpacity(0))), // Apply decoration conditionally
+              border: isBorderEnabled != null
+                  ? isBorderEnabled!
+                      ? Border.all(
+                          color: color != null
+                              ? color!
+                              : Colors.transparent.withOpacity(0))
+                      : Border.all(color: Colors.transparent.withOpacity(0))
+                  : Border.all(),
+            ), // Apply decoration conditionally
             child: Text(
               changePercentText,
               style: TextStyle(

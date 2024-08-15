@@ -1,9 +1,9 @@
 // common_setting.dart
 
 class CommonSetting {
-  bool isDarkMode;
+  bool isLightMode;
 
   CommonSetting({
-    required this.isDarkMode,
+    required this.isLightMode,
   });
 }

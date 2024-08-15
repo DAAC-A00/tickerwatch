@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 
 class TickerSetting {
-  Color longColor;
-  Color shortColor;
-  bool isBorderEnabled;
-  bool isPriceBackgroundAlarmEnabled;
-  bool isQuoteUnitSignEnabled;
-  bool isPercentSignEnabled;
+  Color? longColor;
+  Color? shortColor;
+  bool? isBorderEnabled;
+  bool? isPriceBackgroundAlarmEnabled;
+  bool? isQuoteUnitSignEnabled;
+  bool? isPercentSignEnabled;
 
   TickerSetting({
     required this.longColor,
@@ -28,8 +28,8 @@ class TickerSetting {
     bool? isPercentSignEnabled,
   }) {
     return TickerSetting(
-      longColor: longColor ?? Colors.red,
-      shortColor: shortColor ?? Colors.blue,
+      longColor: longColor ?? this.longColor,
+      shortColor: shortColor ?? this.shortColor,
       isBorderEnabled: isBorderEnabled ?? this.isBorderEnabled,
       isPriceBackgroundAlarmEnabled:
           isPriceBackgroundAlarmEnabled ?? this.isPriceBackgroundAlarmEnabled,
