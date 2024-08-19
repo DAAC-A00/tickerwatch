@@ -5,14 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'counter_provider.dart';
 
-class HomeMainScreen extends ConsumerStatefulWidget {
-  const HomeMainScreen({super.key});
+class CounterMainScreen extends ConsumerStatefulWidget {
+  const CounterMainScreen({super.key});
 
   @override
-  ConsumerState<HomeMainScreen> createState() => _HomeMainScreenState();
+  ConsumerState<CounterMainScreen> createState() => _CounterMainScreenState();
 }
 
-class _HomeMainScreenState extends ConsumerState<HomeMainScreen> {
+class _CounterMainScreenState extends ConsumerState<CounterMainScreen> {
   @override
   Widget build(BuildContext context) {
     final counter = ref.watch(counterProvider);

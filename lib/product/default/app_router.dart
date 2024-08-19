@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
-import '../home/home_main_screen.dart';
+import '../counter/counter_main_screen.dart';
 import '../sample_person/person_form_screen.dart';
 import '../setting/screens/exchange_setting_screen.dart';
 import '../setting/screens/ticker_setting_screen.dart';
@@ -30,9 +30,9 @@ List<RouteBase> _buildRoutes() {
           const DefaultScreen(),
       routes: [
         GoRoute(
-          path: 'home',
+          path: 'counter',
           builder: (BuildContext context, GoRouterState state) =>
-              const HomeMainScreen(),
+              const CounterMainScreen(),
         ),
         GoRoute(
           path: 'setting',
