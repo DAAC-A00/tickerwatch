@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:tickerwatch/product/counter/counter_main_screen.dart';
+import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 
 import '../../sample_person/person_main_screen.dart';
@@ -44,6 +45,10 @@ class _DefaultScreenState extends State<DefaultScreen> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.onetwothree),
             label: 'Counter',
           ),
@@ -65,13 +70,15 @@ class _DefaultScreenState extends State<DefaultScreen> {
   Widget _getBodyWidget(int index) {
     switch (index) {
       case 0:
-        return const CounterMainScreen();
+        return const HomeMainScreen();
       case 1:
-        return const PersonMainScreen();
+        return const CounterMainScreen();
       case 2:
+        return const PersonMainScreen();
+      case 3:
         return const SettingMainScreen();
       default:
-        return const CounterMainScreen();
+        return const HomeMainScreen();
     }
   }
 }
