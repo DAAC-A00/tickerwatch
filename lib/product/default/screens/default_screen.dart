@@ -1,7 +1,8 @@
 // default_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:tickerwatch/product/home/home_main_screen.dart';
+import 'package:tickerwatch/product/counter/counter_main_screen.dart';
+import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 
 import '../../sample_person/person_main_screen.dart';
@@ -48,6 +49,10 @@ class _DefaultScreenState extends State<DefaultScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.onetwothree),
+            label: 'Counter',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Person',
           ),
@@ -67,8 +72,10 @@ class _DefaultScreenState extends State<DefaultScreen> {
       case 0:
         return const HomeMainScreen();
       case 1:
-        return const PersonMainScreen();
+        return const CounterMainScreen();
       case 2:
+        return const PersonMainScreen();
+      case 3:
         return const SettingMainScreen();
       default:
         return const HomeMainScreen();
