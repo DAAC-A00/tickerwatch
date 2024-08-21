@@ -1,5 +1,7 @@
 // watch_main_screen.dart
 
+import 'dart:developer';
+
 import 'package:analog_clock/analog_clock.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +11,18 @@ class WatchMainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme currentTheme = Theme.of(context).colorScheme;
+
+    // MediaQuery를 사용하여 화면 크기를 얻습니다.
+    final screenSize = MediaQuery.of(context).size;
+
+    // 화면의 width가 height보다 큰지 판단합니다.
+    // -- landscape : 가로모드
+    // -- portrait : 세로모드
+    final bool isLandscape = screenSize.width > screenSize.height;
+    final double minSideSize =
+        isLandscape ? screenSize.height : screenSize.width;
+    log('minSideSize : $minSideSize');
+    final tickerClickSize = minSideSize / 10;
 
     return Scaffold(
       // 내용
@@ -31,21 +45,64 @@ class WatchMainScreen extends StatelessWidget {
           digitalClockColor: Theme.of(context).hintColor, // 색
         ),
       ),
-      // 나가기 버튼
-      floatingActionButton: RawMaterialButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        shape: const CircleBorder(),
-        fillColor: Colors.transparent,
-        elevation: 0, // 그림자 제거
-        child: Icon(
-          Icons.output,
-          color: currentTheme.secondary,
-        ),
+      // 나가기 버튼 및 문구
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 좌측 상단
+              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 우측 상단
+            ],
+          ),
+          const Spacer(), // 중간 공간
+          // 나가기 버튼
+          isLandscape
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _buildExitActionButton(context),
+                  ],
+                )
+              : const Spacer(),
+          !isLandscape ? _buildExitActionButton(context) : const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 좌측 하단
+              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 우측 하단
+            ],
+          ),
+        ],
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerFloat, // 중앙 하단에 배치
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Widget _buildExitActionButton(BuildContext context) {
+    final ColorScheme currentTheme = Theme.of(context).colorScheme;
+
+    return RawMaterialButton(
+      onPressed: () {
+        Navigator.of(context).pop(); // 나가기 버튼의 기능
+      },
+      shape: const CircleBorder(),
+      fillColor: Colors.transparent,
+      elevation: 0, // 그림자 제거
+      child: Icon(
+        Icons.output,
+        color: currentTheme.secondary,
+      ),
+    );
+  }
+
+  Widget _buildTextWidget(String text, double tickerClickSize) {
+    return Container(
+      padding: EdgeInsets.only(top: tickerClickSize),
+      child: Text(
+        text,
+      ),
     );
   }
 }

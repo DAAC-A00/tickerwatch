@@ -35,7 +35,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> {
           );
         },
         tooltip: 'Go to New Screen',
-        child: const Icon(Icons.navigate_next),
+        child: const Icon(Icons.watch_later_outlined),
       ),
     );
   }
