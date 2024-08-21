@@ -52,8 +52,10 @@ class WatchMainScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 좌측 상단
-              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 우측 상단
+              _buildTextWidget(
+                  "60,240.16  +3.15%", tickerClickSize, true, true), // 좌측 상단
+              _buildTextWidget(
+                  "60,240.16  +3.15%", tickerClickSize, true, false), // 우측 상단
             ],
           ),
           const Spacer(), // 중간 공간
@@ -62,16 +64,18 @@ class WatchMainScreen extends StatelessWidget {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _buildExitActionButton(context),
+                    _buildExitButton(context),
                   ],
                 )
               : const Spacer(),
-          !isLandscape ? _buildExitActionButton(context) : const Spacer(),
+          !isLandscape ? _buildExitButton(context) : const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 좌측 하단
-              _buildTextWidget("60,240.16  +3.15%", tickerClickSize), // 우측 하단
+              _buildTextWidget(
+                  "60,240.16  +3.15%", tickerClickSize, false, true), // 좌측 하단
+              _buildTextWidget(
+                  "60,240.16  +3.15%", tickerClickSize, false, false), // 우측 하단
             ],
           ),
         ],
@@ -80,7 +84,7 @@ class WatchMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExitActionButton(BuildContext context) {
+  Widget _buildExitButton(BuildContext context) {
     final ColorScheme currentTheme = Theme.of(context).colorScheme;
 
     return RawMaterialButton(
@@ -97,9 +101,22 @@ class WatchMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextWidget(String text, double tickerClickSize) {
+  Widget _buildTextWidget(
+      String text, double tickerClickSize, bool isTop, bool isStart) {
     return Container(
-      padding: EdgeInsets.only(top: tickerClickSize),
+      padding: isTop
+          ? isStart
+              ? EdgeInsets.only(
+                  top: tickerClickSize,
+                  bottom: tickerClickSize,
+                  right: tickerClickSize)
+              : EdgeInsets.only(
+                  top: tickerClickSize,
+                  bottom: tickerClickSize,
+                  left: tickerClickSize)
+          : isStart
+              ? EdgeInsets.only(top: tickerClickSize, right: tickerClickSize)
+              : EdgeInsets.only(top: tickerClickSize, left: tickerClickSize),
       child: Text(
         text,
       ),
