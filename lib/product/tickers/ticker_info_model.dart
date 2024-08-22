@@ -5,35 +5,42 @@ import 'category_exchange_enum.dart';
 class TickerInfoModel {
   // TickerInfoModel
   // raw
-  final String? rawSymbol,
-      rawCategory,
-      // code
-      baseCode,
-      quoteCode,
-      paymentCode,
-      baseCodeKorean,
-      quoteCodeKorean,
-      paymentCodeKorean,
-      // group
-      baseGroup,
-      quoteGroup,
-      paymentGroup,
-      baseGroupKorean,
-      quoteGroupKorean,
-      paymentGroupKorean,
-      // country
-      baseCountry,
-      quoteCountry,
-      paymentCountry,
-      baseCountryKorean,
-      quoteCountryKorean,
-      paymentCountryKorean,
-      // category
-      category;
+  final String? rawSymbol;
+  final String? rawCategory;
+
+  final String? symbolSub;
+  // Codes
+  final String baseCode;
+  final String quoteCode;
+  final String paymentCode;
+  final String baseCodeKorean;
+  final String quoteCodeKorean;
+  final String paymentCodeKorean;
+
+  // Groups
+  final String baseGroup;
+  final String quoteGroup;
+  final String paymentGroup;
+  final String baseGroupKorean;
+  final String quoteGroupKorean;
+  final String paymentGroupKorean;
+
+  // Countries
+  final String baseCountry;
+  final String quoteCountry;
+  final String paymentCountry;
+  final String baseCountryKorean;
+  final String quoteCountryKorean;
+  final String paymentCountryKorean;
+
+  // category
+  final String category;
   final ExchangeRawCategoryEnum exchangeRawCategoryEnum;
   final CategoryExchangeEnum categoryExchangeEnum;
+
   // searchKeywords
   final String searchKeywords;
+
   // unit
   final int unit;
 
@@ -43,6 +50,7 @@ class TickerInfoModel {
   TickerInfoModel(
       {required this.rawSymbol,
       required this.rawCategory,
+      required this.symbolSub,
       required this.baseCodeKorean,
       required this.quoteCodeKorean,
       required this.paymentCodeKorean,
