@@ -1,7 +1,5 @@
 // watch_main_screen.dart
 
-import 'dart:developer';
-
 import 'package:analog_clock/analog_clock.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +19,6 @@ class WatchMainScreen extends StatelessWidget {
     final bool isLandscape = screenSize.width > screenSize.height;
     final double minSideSize =
         isLandscape ? screenSize.height : screenSize.width;
-    log('minSideSize : $minSideSize');
     final tickerClickSize = minSideSize / 10;
 
     return Scaffold(
@@ -52,9 +49,9 @@ class WatchMainScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTextWidget(
+              _buildTickerWidget(
                   "60,240.16  +3.15%", tickerClickSize, true, true), // 좌측 상단
-              _buildTextWidget(
+              _buildTickerWidget(
                   "60,240.16  +3.15%", tickerClickSize, true, false), // 우측 상단
             ],
           ),
@@ -72,9 +69,9 @@ class WatchMainScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTextWidget(
+              _buildTickerWidget(
                   "60,240.16  +3.15%", tickerClickSize, false, true), // 좌측 하단
-              _buildTextWidget(
+              _buildTickerWidget(
                   "60,240.16  +3.15%", tickerClickSize, false, false), // 우측 하단
             ],
           ),
@@ -101,7 +98,7 @@ class WatchMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextWidget(
+  Widget _buildTickerWidget(
       String text, double tickerClickSize, bool isTop, bool isStart) {
     return Container(
       padding: isTop
