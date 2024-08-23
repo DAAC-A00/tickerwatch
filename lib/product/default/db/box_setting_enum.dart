@@ -2,8 +2,8 @@
 
 enum BoxSettingEnum {
   // Ticker Setting
-  longColor,
-  shortColor,
+  upColor,
+  downColor,
   isBorderEnabled,
   isPriceBackgroundAlarmEnabled,
   isQuoteUnitSignEnabled,
@@ -16,10 +16,10 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
   String get name {
     switch (this) {
       // Ticker Setting
-      case BoxSettingEnum.longColor:
-        return 'longColor';
-      case BoxSettingEnum.shortColor:
-        return 'shortColor';
+      case BoxSettingEnum.upColor:
+        return 'upColor';
+      case BoxSettingEnum.downColor:
+        return 'downColor';
       case BoxSettingEnum.isBorderEnabled:
         return 'isBorderEnabled';
       case BoxSettingEnum.isPriceBackgroundAlarmEnabled:

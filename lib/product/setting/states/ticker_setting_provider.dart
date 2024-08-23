@@ -52,8 +52,8 @@ final tickerSettingProvider =
 });
 
 final TickerSetting defaultTickerSetting = TickerSetting(
-  longColor: null,
-  shortColor: null,
+  upColor: null,
+  downColor: null,
   isBorderEnabled: null,
   isPriceBackgroundAlarmEnabled: null,
   isQuoteUnitSignEnabled: null,
@@ -71,12 +71,12 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
 
   Future<void> _init() async {
     _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
-    final String longColorString = _tickerSettingBox.get(
-      BoxSettingEnum.longColor.name,
+    final String upColorString = _tickerSettingBox.get(
+      BoxSettingEnum.upColor.name,
       defaultValue: colorToString(Colors.red),
     )!;
-    final String shortColorString = _tickerSettingBox.get(
-      BoxSettingEnum.shortColor.name,
+    final String downColorString = _tickerSettingBox.get(
+      BoxSettingEnum.downColor.name,
       defaultValue: colorToString(Colors.blue),
     )!;
     final bool isBorderEnabled = _tickerSettingBox.get(
@@ -101,8 +101,8 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
         true.toString();
 
     state = TickerSetting(
-      longColor: _stringToColor(longColorString, isLightMode),
-      shortColor: _stringToColor(shortColorString, isLightMode),
+      upColor: _stringToColor(upColorString, isLightMode),
+      downColor: _stringToColor(downColorString, isLightMode),
       isBorderEnabled: isBorderEnabled,
       isPriceBackgroundAlarmEnabled: isPriceBackgroundAlarmEnabled,
       isQuoteUnitSignEnabled: isQuoteUnitSignEnabled,
@@ -111,17 +111,17 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
   }
 
   void updateCandleColor(String newColor) {
-    String? longColorString = newColor.split('-').firstOrNull;
-    String? shortColorString = newColor.split('-').lastOrNull;
-    if (longColorString != null && shortColorString != null) {
-      _tickerSettingBox.put(BoxSettingEnum.longColor.name, longColorString);
-      _tickerSettingBox.put(BoxSettingEnum.shortColor.name, shortColorString);
+    String? upColorString = newColor.split('-').firstOrNull;
+    String? downColorString = newColor.split('-').lastOrNull;
+    if (upColorString != null && downColorString != null) {
+      _tickerSettingBox.put(BoxSettingEnum.upColor.name, upColorString);
+      _tickerSettingBox.put(BoxSettingEnum.downColor.name, downColorString);
       state = state.copyWith(
-        longColor: _stringToColor(longColorString, isLightMode),
-        shortColor: _stringToColor(shortColorString, isLightMode),
+        upColor: _stringToColor(upColorString, isLightMode),
+        downColor: _stringToColor(downColorString, isLightMode),
       );
     } else {
-      log('[WARN][TickerSettingNotifier.updateCandleColor] longColorString or shortColorString is null. So BoxSetting not updated.');
+      log('[WARN][TickerSettingNotifier.updateCandleColor] upColorString or downColorString is null. So BoxSetting not updated.');
     }
   }
 
@@ -143,12 +143,12 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
 
   void updateBox(TickerSetting tickerSetting) {
     _tickerSettingBox.put(
-      BoxSettingEnum.longColor.name,
-      colorToString(tickerSetting.longColor),
+      BoxSettingEnum.upColor.name,
+      colorToString(tickerSetting.upColor),
     );
     _tickerSettingBox.put(
-      BoxSettingEnum.shortColor.name,
-      colorToString(tickerSetting.shortColor),
+      BoxSettingEnum.downColor.name,
+      colorToString(tickerSetting.downColor),
     );
     _tickerSettingBox.put(
       BoxSettingEnum.isBorderEnabled.name,

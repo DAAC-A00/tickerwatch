@@ -3,16 +3,16 @@
 import 'package:flutter/material.dart';
 
 class TickerSetting {
-  Color? longColor;
-  Color? shortColor;
+  Color? upColor;
+  Color? downColor;
   bool? isBorderEnabled;
   bool? isPriceBackgroundAlarmEnabled;
   bool? isQuoteUnitSignEnabled;
   bool? isPercentSignEnabled;
 
   TickerSetting({
-    required this.longColor,
-    required this.shortColor,
+    required this.upColor,
+    required this.downColor,
     required this.isBorderEnabled,
     required this.isPriceBackgroundAlarmEnabled,
     required this.isQuoteUnitSignEnabled,
@@ -20,16 +20,16 @@ class TickerSetting {
   });
 
   TickerSetting copyWith({
-    Color? longColor,
-    Color? shortColor,
+    Color? upColor,
+    Color? downColor,
     bool? isBorderEnabled,
     bool? isPriceBackgroundAlarmEnabled,
     bool? isQuoteUnitSignEnabled,
     bool? isPercentSignEnabled,
   }) {
     return TickerSetting(
-      longColor: longColor ?? this.longColor,
-      shortColor: shortColor ?? this.shortColor,
+      upColor: upColor ?? this.upColor,
+      downColor: downColor ?? this.downColor,
       isBorderEnabled: isBorderEnabled ?? this.isBorderEnabled,
       isPriceBackgroundAlarmEnabled:
           isPriceBackgroundAlarmEnabled ?? this.isPriceBackgroundAlarmEnabled,
