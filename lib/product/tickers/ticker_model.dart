@@ -3,6 +3,7 @@
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
+import 'price_status_enum.dart';
 import 'ticker_info_model.dart';
 
 class TickerModel {
@@ -39,7 +40,7 @@ class TickerModel {
   late String dataAt;
   late String _updatedAt;
 
-  String color; // long, short, stay
+  PriceStatusEnum priceStatusEnum; // long, short, stay
 
   String get updatedAt => _updatedAt;
 
@@ -62,7 +63,7 @@ class TickerModel {
     required this.lowPriceUtc0,
     required this.turnOverUtc0,
     required this.volumeUtc0,
-    required this.color,
+    required this.priceStatusEnum,
     String? dataAt,
   }) {
     var now = DateTime.now().toUtc().add(const Duration(hours: 9));
@@ -101,7 +102,7 @@ class TickerModelAdapter extends TypeAdapter<TickerModel> {
       lowPriceUtc0: reader.readString(),
       turnOverUtc0: reader.readString(),
       volumeUtc0: reader.readString(),
-      color: reader.readString(),
+      priceStatusEnum: PriceStatusEnum.values[reader.readInt()],
       dataAt: reader.readString(),
     );
   }
@@ -127,7 +128,7 @@ class TickerModelAdapter extends TypeAdapter<TickerModel> {
     writer.writeString(obj.lowPriceUtc0);
     writer.writeString(obj.turnOverUtc0);
     writer.writeString(obj.volumeUtc0);
-    writer.writeString(obj.color);
+    writer.writeInt(obj.priceStatusEnum.index);
     writer.writeString(obj.dataAt);
   }
 }
