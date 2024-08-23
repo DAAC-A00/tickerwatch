@@ -38,9 +38,9 @@ class TickerInfoModel {
   // category
   final String rawCategory;
   final String category;
-  final ExchangeRawCategoryEnum exchangeRawCategoryEnum;
+  final ExchangeRawCategoryEnum exchangeRawCategoryEnum; // 정보 공유자
   final CategoryExchangeEnum categoryExchangeEnum;
-  final String source;
+  final String source; // 정보 출처
 
   // etc
   final String remark;

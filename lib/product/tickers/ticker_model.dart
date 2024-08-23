@@ -8,61 +8,61 @@ import 'ticker_info_model.dart';
 class TickerModel {
   // MarketPairDetailModel
   // -- raw
-  final TickerInfoModel? info;
+  final TickerInfoModel info;
 
   // 지속적으로 변하는 데이터
   // -- 현재 호가
-  String? price;
-  String? ask1Price;
-  String? ask1Size;
-  String? bid1Price;
-  String? bid1Size;
+  String price;
+  String ask1Price;
+  String ask1Size;
+  String bid1Price;
+  String bid1Size;
 
   // -- 24h
-  String? changePercent24h;
-  String? prevPrice24h;
-  String? highPrice24h;
-  String? lowPrice24h;
-  String? turnOver24h; // 거래대금 = quoteCode 기준 거래량
-  String? volume24h; // 거래량 = baseCode 기준 거래량
+  String changePercent24h;
+  String prevPrice24h;
+  String highPrice24h;
+  String lowPrice24h;
+  String turnOver24h; // 거래대금 = quoteCode 기준 거래량
+  String volume24h; // 거래량 = baseCode 기준 거래량
 
   // -- UTC0
-  String? changePercentUtc0;
-  String? prevPriceUtc0;
-  String? highPriceUtc0;
-  String? lowPriceUtc0;
-  String? turnOverUtc0; // 거래대금 = quoteCode 기준 거래량
-  String? volumeUtc0; // 거래량 = baseCode 기준 거래량
+  String changePercentUtc0;
+  String prevPriceUtc0;
+  String highPriceUtc0;
+  String lowPriceUtc0;
+  String turnOverUtc0; // 거래대금 = quoteCode 기준 거래량
+  String volumeUtc0; // 거래량 = baseCode 기준 거래량
 
   // -- dataAt : 해당 데이터가 타기관에서 기록된 시점
   // -- updatedAt : 해당 데이터가 본 프로그램 내에서 수정된 시점
-  String? dataAt;
-  String? _updatedAt;
+  late String dataAt;
+  late String _updatedAt;
 
-  String? color; // long, short, stay
+  String color; // long, short, stay
 
-  String get updatedAt => _updatedAt!;
+  String get updatedAt => _updatedAt;
 
   TickerModel({
     required this.info,
-    this.price,
-    this.ask1Price,
-    this.ask1Size,
-    this.bid1Price,
-    this.bid1Size,
-    this.changePercent24h,
-    this.prevPrice24h,
-    this.highPrice24h,
-    this.lowPrice24h,
-    this.turnOver24h,
-    this.volume24h,
-    this.changePercentUtc0,
-    this.prevPriceUtc0,
-    this.highPriceUtc0,
-    this.lowPriceUtc0,
-    this.turnOverUtc0,
-    this.volumeUtc0,
-    this.color,
+    required this.price,
+    required this.ask1Price,
+    required this.ask1Size,
+    required this.bid1Price,
+    required this.bid1Size,
+    required this.changePercent24h,
+    required this.prevPrice24h,
+    required this.highPrice24h,
+    required this.lowPrice24h,
+    required this.turnOver24h,
+    required this.volume24h,
+    required this.changePercentUtc0,
+    required this.prevPriceUtc0,
+    required this.highPriceUtc0,
+    required this.lowPriceUtc0,
+    required this.turnOverUtc0,
+    required this.volumeUtc0,
+    required this.color,
     String? dataAt,
   }) {
     var now = DateTime.now().toUtc().add(const Duration(hours: 9));
@@ -110,24 +110,24 @@ class TickerModelAdapter extends TypeAdapter<TickerModel> {
   void write(BinaryWriter writer, TickerModel obj) {
     // TickerModel 객체를 바이너리 데이터로 씁니다.
     writer.write(obj.info); // TickerInfoModel을 씁니다.
-    writer.writeString(obj.price ?? '');
-    writer.writeString(obj.ask1Price ?? '');
-    writer.writeString(obj.ask1Size ?? '');
-    writer.writeString(obj.bid1Price ?? '');
-    writer.writeString(obj.bid1Size ?? '');
-    writer.writeString(obj.changePercent24h ?? '');
-    writer.writeString(obj.prevPrice24h ?? '');
-    writer.writeString(obj.highPrice24h ?? '');
-    writer.writeString(obj.lowPrice24h ?? '');
-    writer.writeString(obj.turnOver24h ?? '');
-    writer.writeString(obj.volume24h ?? '');
-    writer.writeString(obj.changePercentUtc0 ?? '');
-    writer.writeString(obj.prevPriceUtc0 ?? '');
-    writer.writeString(obj.highPriceUtc0 ?? '');
-    writer.writeString(obj.lowPriceUtc0 ?? '');
-    writer.writeString(obj.turnOverUtc0 ?? '');
-    writer.writeString(obj.volumeUtc0 ?? '');
-    writer.writeString(obj.color ?? '');
-    writer.writeString(obj.dataAt ?? '');
+    writer.writeString(obj.price);
+    writer.writeString(obj.ask1Price);
+    writer.writeString(obj.ask1Size);
+    writer.writeString(obj.bid1Price);
+    writer.writeString(obj.bid1Size);
+    writer.writeString(obj.changePercent24h);
+    writer.writeString(obj.prevPrice24h);
+    writer.writeString(obj.highPrice24h);
+    writer.writeString(obj.lowPrice24h);
+    writer.writeString(obj.turnOver24h);
+    writer.writeString(obj.volume24h);
+    writer.writeString(obj.changePercentUtc0);
+    writer.writeString(obj.prevPriceUtc0);
+    writer.writeString(obj.highPriceUtc0);
+    writer.writeString(obj.lowPriceUtc0);
+    writer.writeString(obj.turnOverUtc0);
+    writer.writeString(obj.volumeUtc0);
+    writer.writeString(obj.color);
+    writer.writeString(obj.dataAt);
   }
 }
