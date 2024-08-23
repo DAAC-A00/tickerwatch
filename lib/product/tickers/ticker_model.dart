@@ -7,7 +7,7 @@ import 'ticker_info_model.dart';
 class TickerModel {
   // MarketPairDetailModel
   // -- raw
-  final TickerInfoModel? tickerInfoModel;
+  final TickerInfoModel? info;
 
   // 지속적으로 변하는 데이터
   // -- 현재 호가
@@ -33,20 +33,17 @@ class TickerModel {
   String? turnOverUtc0; // 거래대금 = quoteCode 기준 거래량
   String? volumeUtc0; // 거래량 = baseCode 기준 거래량
 
-  // -- 출처
-  String? source;
-
   // -- dataAt : 해당 데이터가 타기관에서 기록된 시점
   // -- updatedAt : 해당 데이터가 본 프로그램 내에서 수정된 시점
   String? dataAt;
   String? _updatedAt;
 
-  bool? isLongBlink;
+  bool? isColorLong;
 
   String get updatedAt => _updatedAt!;
 
   TickerModel({
-    required this.tickerInfoModel,
+    required this.info,
     this.price,
     this.ask1Price,
     this.ask1Size,
@@ -64,8 +61,7 @@ class TickerModel {
     this.lowPriceUtc0,
     this.turnOverUtc0,
     this.volumeUtc0,
-    this.source,
-    this.isLongBlink,
+    this.isColorLong,
     String? dataAt,
   }) {
     var now = DateTime.now().toUtc().add(const Duration(hours: 9));
