@@ -1,5 +1,6 @@
 // ticker_model.dart
 
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 import 'ticker_info_model.dart';
@@ -38,7 +39,7 @@ class TickerModel {
   String? dataAt;
   String? _updatedAt;
 
-  bool? isColorLong;
+  String? color; // long, short, stay
 
   String get updatedAt => _updatedAt!;
 
@@ -61,7 +62,7 @@ class TickerModel {
     this.lowPriceUtc0,
     this.turnOverUtc0,
     this.volumeUtc0,
-    this.isColorLong,
+    this.color,
     String? dataAt,
   }) {
     var now = DateTime.now().toUtc().add(const Duration(hours: 9));
@@ -71,5 +72,62 @@ class TickerModel {
 
     this.dataAt = dataAt ??
         formattedDate; // dataAt 에 별도 값을 넣어주지 않으면 자동으로 updatedAt과 같은 값으로 저장
+  }
+}
+
+class TickerModelAdapter extends TypeAdapter<TickerModel> {
+  @override
+  final int typeId = 1; // 타입 식별자입니다.
+
+  @override
+  TickerModel read(BinaryReader reader) {
+    // 바이너리 데이터를 읽어 TickerModel 객체를 생성합니다.
+    return TickerModel(
+      info: reader.read() as TickerInfoModel, // TickerInfoModel을 읽어옵니다.
+      price: reader.readString(),
+      ask1Price: reader.readString(),
+      ask1Size: reader.readString(),
+      bid1Price: reader.readString(),
+      bid1Size: reader.readString(),
+      changePercent24h: reader.readString(),
+      prevPrice24h: reader.readString(),
+      highPrice24h: reader.readString(),
+      lowPrice24h: reader.readString(),
+      turnOver24h: reader.readString(),
+      volume24h: reader.readString(),
+      changePercentUtc0: reader.readString(),
+      prevPriceUtc0: reader.readString(),
+      highPriceUtc0: reader.readString(),
+      lowPriceUtc0: reader.readString(),
+      turnOverUtc0: reader.readString(),
+      volumeUtc0: reader.readString(),
+      color: reader.readString(),
+      dataAt: reader.readString(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, TickerModel obj) {
+    // TickerModel 객체를 바이너리 데이터로 씁니다.
+    writer.write(obj.info); // TickerInfoModel을 씁니다.
+    writer.writeString(obj.price ?? '');
+    writer.writeString(obj.ask1Price ?? '');
+    writer.writeString(obj.ask1Size ?? '');
+    writer.writeString(obj.bid1Price ?? '');
+    writer.writeString(obj.bid1Size ?? '');
+    writer.writeString(obj.changePercent24h ?? '');
+    writer.writeString(obj.prevPrice24h ?? '');
+    writer.writeString(obj.highPrice24h ?? '');
+    writer.writeString(obj.lowPrice24h ?? '');
+    writer.writeString(obj.turnOver24h ?? '');
+    writer.writeString(obj.volume24h ?? '');
+    writer.writeString(obj.changePercentUtc0 ?? '');
+    writer.writeString(obj.prevPriceUtc0 ?? '');
+    writer.writeString(obj.highPriceUtc0 ?? '');
+    writer.writeString(obj.lowPriceUtc0 ?? '');
+    writer.writeString(obj.turnOverUtc0 ?? '');
+    writer.writeString(obj.volumeUtc0 ?? '');
+    writer.writeString(obj.color ?? '');
+    writer.writeString(obj.dataAt ?? '');
   }
 }

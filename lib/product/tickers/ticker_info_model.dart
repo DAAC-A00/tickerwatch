@@ -39,7 +39,7 @@ class TickerInfoModel {
   final String category;
   final ExchangeRawCategoryEnum exchangeRawCategoryEnum;
   final CategoryExchangeEnum categoryExchangeEnum;
-  String? source;
+  final String? source;
 
   // searchKeywords
   final String searchKeywords;
