@@ -28,7 +28,7 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
       return RadioListTile<String>(
         value: value,
         groupValue:
-            '${colorToString(tickerSetting.longColor)}-${colorToString(tickerSetting.shortColor)}',
+            '${colorToString(tickerSetting.upColor)}-${colorToString(tickerSetting.downColor)}',
         onChanged: (String? newValue) {
           tickerSettingNotifier.updateCandleColor(newValue ?? '');
         },
@@ -70,13 +70,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
                 const Spacer(),
                 ChangePercentSampleWidget(
                     sampleIcon: Icons.arrow_drop_up,
-                    sampleColor: tickerSetting.longColor,
+                    sampleColor: tickerSetting.upColor,
                     sampleText: '+0.78%',
                     isPercentEnabled: true),
                 const Spacer(),
                 ChangePercentSampleWidget(
                     sampleIcon: Icons.arrow_drop_down,
-                    sampleColor: tickerSetting.shortColor,
+                    sampleColor: tickerSetting.downColor,
                     sampleText: '-0.31%',
                     isPercentEnabled: true)
               ],
@@ -103,7 +103,7 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
           ListTile(
             title: PriceSampleWidget(
               sampleText: '\$ 60,000',
-              color: tickerSetting.longColor,
+              color: tickerSetting.upColor,
               isQuoteUnitEnabled: tickerSetting.isQuoteUnitSignEnabled,
               isBorderEnabled: tickerSetting.isBorderEnabled,
             ),
