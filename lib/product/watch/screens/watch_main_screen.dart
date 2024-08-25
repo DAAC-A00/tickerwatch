@@ -62,6 +62,9 @@ class WatchMainScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     _buildExitButton(context),
+                    SizedBox(
+                      width: tickerClickSize,
+                    )
                   ],
                 )
               : const Spacer(),
