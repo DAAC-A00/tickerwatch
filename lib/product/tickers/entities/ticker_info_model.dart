@@ -100,6 +100,7 @@ class TickerInfoModel {
   //    bybit spot : BTCBRL, PEPEUSDC, DOGEEUR, 1SOLUSDT, 1INCHUSDT
   //    bybit linear : 10000000AIDOGEUSDT, 1000000PEIPEIUSDT, 10000COQUSDT, SHIB1000PERP, BTCPERP, BTC-06SEP24, BTC-25OCT24, BTC-27DEC24, BTC-27JUN25, BTC-27SEP24, BTC-28MAR25, BTC-30AUG24
   //    bybit inverse : BTCUSDZ24, BTCUSDU24, DOTUSD
+  //    bitget spot : BTCUSDT, ETHBTC, 3ULLUSDT, API3USDT, BTCBRL
   //    bitget umcbl : BTCUSDT_UMCBL
   //    bitget dmcbl : BTCUSD_DMCBL, ETHUSD_DMCBL_240927
   //    bitget cmcbl : ETHPERP_CMCBL
@@ -107,6 +108,11 @@ class TickerInfoModel {
   //    okx SWAP : BTC-USD-SWAP, ETH-USDC-SWAP
   //    okx FUTURES : XRP-USDT-241227
   //    okx OPTION : BTC-USD-240906-62000-P, BTC-USD-241108-50000-C
+  //    binance spot : BNBETH, ETHUSDT, 1000SATSTRY, 1000SATSFDUSD
+  //    binance cm : ETHUSD_240927, ETHUSD_PERP, UNIUSD_PERP, LTCUSD_241227
+  //    binance um : BTCUSDT_241227, BTCUSDC, 1000PEPEUSDT, 1000SHIBUSDC
+  //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
+  //    bithumb spot : BTC, ETH
 
   TickerInfoModel? rawToTickerInfo(
       ExchangeRawCategoryEnum exchangeRawCategoryEnum, String rawSymbol,
@@ -144,12 +150,23 @@ class TickerInfoModel {
     //    okx SWAP : BTC-USD, ETH-USDC
     //    okx FUTURES : XRP-USDT-241227
     //    okx OPTION : BTC-USD-240906-62000-P, BTC-USD-241108-50000-C
-
-    splitSymbol =
-        tmpSymbol.contains('_') ? tmpSymbol.split('_') : tmpSymbol.split('-');
-    return null;
+    //    binance spot : BNBETH, ETHUSDT, 1000SATSTRY, 1000SATSFDUSD
+    //    binance cm : ETHUSD_240927, ETHUSD_PERP, UNIUSD_PERP, LTCUSD_241227
+    //    binance um : BTCUSDT_241227, BTCUSDC, 1000PEPEUSDT, 1000SHIBUSDC
+    //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
+    //    bithumb spot : BTC, ETH
+    switch (exchangeRawCategoryEnum) {
+      case ExchangeRawCategoryEnum.bitgetDmcbl:
+        // TODO Binance cm & Binance um 진행 필요
+        splitSymbol = tmpSymbol.split('_');
+        break;
+      default:
+        splitSymbol = tmpSymbol.split('-');
+    }
 
     // TODO 이어서 데이터 가공 로직 구현 필요
+
+    return null;
 
     // tickerid 예시 : // BTC_0/USDT_0 OR BTC_0/USDT_0-2024y12m20d13h30m
   }

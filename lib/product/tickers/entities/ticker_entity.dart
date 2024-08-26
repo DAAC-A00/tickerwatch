@@ -4,12 +4,12 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 import '../enums/price_status_enum.dart';
-import 'ticker_info_entity.dart';
+import 'ticker_info_model.dart';
 
 class TickerEntity {
   // MarketPairDetailModel
   // -- raw
-  final TickerInfoEntity info;
+  final TickerInfoModel info;
 
   // 지속적으로 변하는 데이터
   // -- 현재 호가
@@ -84,7 +84,7 @@ class TickerEntityAdapter extends TypeAdapter<TickerEntity> {
   TickerEntity read(BinaryReader reader) {
     // 바이너리 데이터를 읽어 TickerEntity 객체를 생성합니다.
     return TickerEntity(
-      info: reader.read() as TickerInfoEntity, // TickerInfoEntity을 읽어옵니다.
+      info: reader.read() as TickerInfoModel, // TickerInfoEntity을 읽어옵니다.
       price: reader.readString(),
       ask1Price: reader.readString(),
       ask1Size: reader.readString(),
