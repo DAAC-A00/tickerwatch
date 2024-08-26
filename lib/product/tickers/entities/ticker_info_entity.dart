@@ -1,12 +1,12 @@
-// ticker_info_model.dart
+// ticker_info_entity.dart
 
 import 'package:hive/hive.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 
-import 'category_exchange_enum.dart';
+import '../enums/category_exchange_enum.dart';
 
-class TickerInfoModel {
-  // TickerInfoModel
+class TickerInfoEntity {
+  // TickerInfoEntity
   // symbol
   final String rawSymbol;
   final String symbolSub;
@@ -46,7 +46,7 @@ class TickerInfoModel {
   final String remark;
   final String searchKeywords;
 
-  TickerInfoModel({
+  TickerInfoEntity({
     // raw
     required this.rawSymbol,
     required this.symbolSub,
@@ -83,14 +83,14 @@ class TickerInfoModel {
   });
 }
 
-class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
+class TickerInfoEntityAdapter extends TypeAdapter<TickerInfoEntity> {
   @override
   final int typeId = 2; // 타입 식별자입니다.
 
   @override
-  TickerInfoModel read(BinaryReader reader) {
-    // 바이너리 데이터를 읽어 TickerInfoModel 객체를 생성합니다.
-    return TickerInfoModel(
+  TickerInfoEntity read(BinaryReader reader) {
+    // 바이너리 데이터를 읽어 TickerInfoEntity 객체를 생성합니다.
+    return TickerInfoEntity(
       rawSymbol: reader.readString(),
       symbolSub: reader.readString(),
       unit: reader.readInt(),
@@ -123,8 +123,8 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
   }
 
   @override
-  void write(BinaryWriter writer, TickerInfoModel obj) {
-    // TickerInfoModel 객체를 바이너리 데이터로 씁니다.
+  void write(BinaryWriter writer, TickerInfoEntity obj) {
+    // TickerInfoEntity 객체를 바이너리 데이터로 씁니다.
     writer.writeString(obj.rawSymbol);
     writer.writeString(obj.symbolSub);
     writer.writeInt(obj.unit);
