@@ -84,7 +84,7 @@ class TickerEntityAdapter extends TypeAdapter<TickerEntity> {
   TickerEntity read(BinaryReader reader) {
     // 바이너리 데이터를 읽어 TickerEntity 객체를 생성합니다.
     return TickerEntity(
-      info: reader.read() as TickerInfoModel, // TickerInfoEntity을 읽어옵니다.
+      info: reader.read() as TickerInfoModel, // TickerInfoModel을 읽어옵니다.
       price: reader.readString(),
       ask1Price: reader.readString(),
       ask1Size: reader.readString(),
@@ -110,7 +110,7 @@ class TickerEntityAdapter extends TypeAdapter<TickerEntity> {
   @override
   void write(BinaryWriter writer, TickerEntity obj) {
     // TickerEntity 객체를 바이너리 데이터로 씁니다.
-    writer.write(obj.info); // TickerInfoEntity을 씁니다.
+    writer.write(obj.info); // TickerInfoModel을 씁니다.
     writer.writeString(obj.price);
     writer.writeString(obj.ask1Price);
     writer.writeString(obj.ask1Size);

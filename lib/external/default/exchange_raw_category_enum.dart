@@ -10,7 +10,12 @@ enum ExchangeRawCategoryEnum {
   okxSpot,
   okxSwap,
   okxFutures,
-  okxOption
+  okxOption,
+  binanceSpot,
+  binanceCm,
+  binanceUm,
+  upbitSpot,
+  bithumbSpot
 }
 
 extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
@@ -36,6 +41,16 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
         return 'okxFutures';
       case ExchangeRawCategoryEnum.okxOption:
         return 'okxOption';
+      case ExchangeRawCategoryEnum.binanceSpot:
+        return 'binanceSpot';
+      case ExchangeRawCategoryEnum.binanceCm:
+        return 'binanceCm';
+      case ExchangeRawCategoryEnum.binanceUm:
+        return 'binanceUm';
+      case ExchangeRawCategoryEnum.upbitSpot:
+        return 'upbitSpot';
+      case ExchangeRawCategoryEnum.bithumbSpot:
+        return 'bithumbSpot';
       default:
         return '';
     }
@@ -63,6 +78,18 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
         return 'https://www.okx.com/api/v5/market/tickers?instType=FUTURES';
       case ExchangeRawCategoryEnum.okxOption:
         return 'https://www.okx.com/api/v5/market/tickers?instType=OPTION';
+      case ExchangeRawCategoryEnum.binanceSpot:
+        return 'https://api.binance.com/api/v3/ticker/24hr';
+      case ExchangeRawCategoryEnum.binanceCm:
+        return 'https://dapi.binance.com/dapi/v1/ticker/24hr';
+      case ExchangeRawCategoryEnum.binanceUm:
+        return 'https://fapi.binance.com/fapi/v1/ticker/24hr';
+      case ExchangeRawCategoryEnum.upbitSpot:
+        return '';
+      // https://api.upbit.com/v1/ticker?markets=KRW-BTC
+      // https://api.upbit.com/v1/market/all?isDetails=true
+      case ExchangeRawCategoryEnum.bithumbSpot:
+        return 'https://api.bithumb.com/public/ticker';
       default:
         return '';
     }
