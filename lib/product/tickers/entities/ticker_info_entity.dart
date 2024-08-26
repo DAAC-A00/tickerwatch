@@ -2,23 +2,29 @@
 
 import 'package:hive/hive.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
+import 'package:tickerwatch/product/tickers/enums/option_type_enum.dart';
 
 import '../enums/category_exchange_enum.dart';
 
 class TickerInfoEntity {
-  // TickerInfoEntity
-  // 무기한 상품 고유값 ex1 : BTC/USDT_0/0
-  // 무기한 상품 고유값 ex2 : BTC/KRW_1/0   // 위BTC와 아래BTC가 다른 상품인 경우 코드만 같고 _뒤 숫자는 다름
-  // 만기 있는 상품 고유값 : BTC/USDT_0/0-2024y12m20d
+  // tickerId
+  //    무기한 상품 고유값 ex1 : BTC_0/USDT_0
+  //    무기한 상품 고유값 ex2 : BTC_1/KRW_0
+  //    만기 있는 상품 고유값 : BTC_0/USDT_0-2024y12m20d
   final String tickerId;
   // symbol
-  final String rawSymbol;
-  final String symbolSub;
-  final int unit;
+  final String rawSymbol; // 1000PEPEPERP
+  final String symbolSub; // PERP
+  final int unit; // 1000
+
+  // option 관련
+  final OptionTypeEnum optionTypeEnum; //
+  final String strikePrice; // 행사 가격
+
   // Codes
-  final String baseCode;
-  final String quoteCode;
-  final String paymentCode;
+  final String baseCode; // PEPE_0
+  final String quoteCode; // USDC_0
+  final String paymentCode; // USDC_0
   final String baseCodeKorean;
   final String quoteCodeKorean;
   final String paymentCodeKorean;
@@ -56,6 +62,9 @@ class TickerInfoEntity {
     required this.rawSymbol,
     required this.symbolSub,
     required this.unit,
+    // option 관련
+    required this.optionTypeEnum,
+    required this.strikePrice,
     // Code
     required this.baseCode,
     required this.quoteCode,
@@ -100,6 +109,8 @@ class TickerInfoEntityAdapter extends TypeAdapter<TickerInfoEntity> {
       rawSymbol: reader.readString(),
       symbolSub: reader.readString(),
       unit: reader.readInt(),
+      strikePrice: reader.readString(),
+      optionTypeEnum: OptionTypeEnum.values[reader.readInt()],
       baseCode: reader.readString(),
       quoteCode: reader.readString(),
       paymentCode: reader.readString(),
@@ -135,6 +146,8 @@ class TickerInfoEntityAdapter extends TypeAdapter<TickerInfoEntity> {
     writer.writeString(obj.rawSymbol);
     writer.writeString(obj.symbolSub);
     writer.writeInt(obj.unit);
+    writer.writeString(obj.strikePrice);
+    writer.writeInt(obj.optionTypeEnum.index);
     writer.writeString(obj.baseCode);
     writer.writeString(obj.quoteCode);
     writer.writeString(obj.paymentCode);
