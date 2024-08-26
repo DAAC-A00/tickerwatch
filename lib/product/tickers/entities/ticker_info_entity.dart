@@ -7,6 +7,10 @@ import '../enums/category_exchange_enum.dart';
 
 class TickerInfoEntity {
   // TickerInfoEntity
+  // 무기한 상품 고유값 ex1 : BTC/USDT_0/0
+  // 무기한 상품 고유값 ex2 : BTC/KRW_1/0   // 위BTC와 아래BTC가 다른 상품인 경우 코드만 같고 _뒤 숫자는 다름
+  // 만기 있는 상품 고유값 : BTC/USDT_0/0-2024y12m20d
+  final String tickerId;
   // symbol
   final String rawSymbol;
   final String symbolSub;
@@ -47,6 +51,7 @@ class TickerInfoEntity {
   final String searchKeywords;
 
   TickerInfoEntity({
+    required this.tickerId,
     // raw
     required this.rawSymbol,
     required this.symbolSub,
@@ -91,6 +96,7 @@ class TickerInfoEntityAdapter extends TypeAdapter<TickerInfoEntity> {
   TickerInfoEntity read(BinaryReader reader) {
     // 바이너리 데이터를 읽어 TickerInfoEntity 객체를 생성합니다.
     return TickerInfoEntity(
+      tickerId: reader.readString(),
       rawSymbol: reader.readString(),
       symbolSub: reader.readString(),
       unit: reader.readInt(),
@@ -125,6 +131,7 @@ class TickerInfoEntityAdapter extends TypeAdapter<TickerInfoEntity> {
   @override
   void write(BinaryWriter writer, TickerInfoEntity obj) {
     // TickerInfoEntity 객체를 바이너리 데이터로 씁니다.
+    writer.writeString(obj.tickerId);
     writer.writeString(obj.rawSymbol);
     writer.writeString(obj.symbolSub);
     writer.writeInt(obj.unit);
