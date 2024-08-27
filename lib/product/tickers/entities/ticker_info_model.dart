@@ -18,8 +18,9 @@ class TickerInfoModel {
   final int unit; // 1000
 
   // option 관련
-  final OptionTypeEnum optionTypeEnum; //
+  final OptionTypeEnum optionTypeEnum; // 옵션 종류
   final String strikePrice; // 행사 가격
+  final String expirationDate; // 행사일
 
   // Codes
   final String baseCode; // PEPE_0
@@ -65,6 +66,7 @@ class TickerInfoModel {
     // option 관련
     required this.optionTypeEnum,
     required this.strikePrice,
+    required this.expirationDate,
     // Code
     required this.baseCode,
     required this.quoteCode,
@@ -117,8 +119,9 @@ class TickerInfoModel {
   TickerInfoModel? rawToTickerInfo(
       ExchangeRawCategoryEnum exchangeRawCategoryEnum, String rawSymbol,
       {String? subData, bool isPreferToFiat = false}) {
-    late List<String> splitSymbol;
     late String tmpSymbol;
+    late List<String> splitSymbol;
+    late String? expirationDate;
 
     // 불필요한 rawSymbol의 데이터 삭제해서 tmpSymbol 만들기
     // bitget의 _$rawCategory 문구 제거
@@ -157,18 +160,104 @@ class TickerInfoModel {
     //    bithumb spot : BTC, ETH
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.bitgetDmcbl:
-        // TODO Binance cm & Binance um 진행 필요
+      case ExchangeRawCategoryEnum.binanceCm:
+      case ExchangeRawCategoryEnum.binanceUm:
         splitSymbol = tmpSymbol.split('_');
         break;
       default:
         splitSymbol = tmpSymbol.split('-');
     }
 
+    // splitSymbol 예시
+    //    bybit spot : length 1 -> BTCBRL, PEPEUSDC, DOGEEUR, 1SOLUSDT, 1INCHUSDT
+    //    bybit linear : length 1, 2 유기한 -> 10000000AIDOGEUSDT, 1000000PEIPEIUSDT, 10000COQUSDT, SHIB1000PERP, BTCPERP, [BTC, 06SEP24], [BTC, 25OCT24], [BTC, 27DEC24], [BTC, 27JUN25], [BTC, 27SEP24], [BTC, 28MAR25], [BTC, 30AUG24]
+    //    bybit inverse : length 1 -> BTCUSDZ24, BTCUSDU24, DOTUSD
+    //    bitget umcbl : length 1 -> BTCUSDT
+    //    bitget dmcbl : length 1, 2 유기한 -> BTCUSD, [ETHUSD, 240927]
+    //    bitget cmcbl : length 1 -> ETHPERP
+    //    okx SPOT : length 2 -> [BTC, USDT]
+    //    okx SWAP : length 2 -> [BTC, USD], [ETH, USDC]
+    //    okx FUTURES : length 3 유기한 -> [XRP, USDT, 241227]
+    //    okx OPTION : length 5 유기한 -> [BTC, USD, 240906, 62000, P], [BTC, USD, 241108, 50000, C]
+    //    binance spot : length 1 -> BNBETH, ETHUSDT, 1000SATSTRY, 1000SATSFDUSD
+    //    binance cm : length 2 무/유기한 -> [ETHUSD, 240927], [ETHUSD, PERP], [UNIUSD, PERP], [LTCUSD, 241227]
+    //    binance um : length 1, 2 유기한 -> [BTCUSDT, 241227], [BTCUSDC], [1000PEPEUSDT], [1000SHIBUSDC]
+    //    upbit spot : length 2 -> [KRW, BTC], [USDT, BTC], [BTC, APE]       (quoteCode-baseCode)
+    //    bithumb spot : length 1 -> [BTC], [ETH]
+
+    expirationDate = _getExpirationDate(exchangeRawCategoryEnum, splitSymbol);
+
+    // category 확보
+    // TODO quoteCode 분리
+    // TODO unit & baseCode 분리
+
     // TODO 이어서 데이터 가공 로직 구현 필요
 
     return null;
 
     // tickerid 예시 : // BTC_0/USDT_0 OR BTC_0/USDT_0-2024y12m20d13h30m
+  }
+
+  String? _extractExpirationDate(String rawExpirationDate) {
+    // 월 약어와 숫자 매핑
+    final Map<String, String> monthMap = {
+      'JAN': '01',
+      'FEB': '02',
+      'MAR': '03',
+      'APR': '04',
+      'MAY': '05',
+      'JUN': '06',
+      'JUL': '07',
+      'AUG': '08',
+      'SEP': '09',
+      'OCT': '10',
+      'NOV': '11',
+      'DEC': '12',
+    };
+
+    // 정규 표현식을 사용하여 문자열을 분리
+    RegExp regExp = RegExp(r'(\d{2})([A-Z]{3})(\d{2})');
+    Match? match = regExp.firstMatch(rawExpirationDate);
+
+    if (match != null) {
+      String? day = match.group(1);
+      String? month = monthMap[match.group(2)];
+      String? year = match.group(3) != null ? '20${match.group(3)!}' : null;
+
+      if (day != null && month != null && year != null) {
+        return '$year$month$day'; // 유기한인 경우
+      }
+    }
+    return null; // PERP인 경우
+  }
+
+  String? _getExpirationDate(ExchangeRawCategoryEnum exchangeRawCategoryEnum,
+      List<String> splitSymbol) {
+    switch (exchangeRawCategoryEnum) {
+      case ExchangeRawCategoryEnum.bybitLinear:
+        if (splitSymbol.length == 2) {
+          return _extractExpirationDate(splitSymbol.last);
+        }
+        break;
+
+      case ExchangeRawCategoryEnum.bitgetDmcbl:
+      case ExchangeRawCategoryEnum.binanceUm:
+        if (splitSymbol.length == 2) {
+          return '20${splitSymbol.last}';
+        }
+        break;
+
+      case ExchangeRawCategoryEnum.okxFutures:
+      case ExchangeRawCategoryEnum.okxOption:
+        return '20${splitSymbol.last}';
+
+      case ExchangeRawCategoryEnum.binanceCm:
+        return splitSymbol.last == 'PERP' ? null : '20${splitSymbol.last}';
+
+      default:
+        break;
+    }
+    return null; // 모든 PERP인 경우 처리
   }
 }
 
@@ -186,6 +275,7 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
       unit: reader.readInt(),
       strikePrice: reader.readString(),
       optionTypeEnum: OptionTypeEnum.values[reader.readInt()],
+      expirationDate: reader.readString(),
       baseCode: reader.readString(),
       quoteCode: reader.readString(),
       paymentCode: reader.readString(),
@@ -223,6 +313,7 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
     writer.writeInt(obj.unit);
     writer.writeString(obj.strikePrice);
     writer.writeInt(obj.optionTypeEnum.index);
+    writer.writeString(obj.expirationDate);
     writer.writeString(obj.baseCode);
     writer.writeString(obj.quoteCode);
     writer.writeString(obj.paymentCode);
@@ -243,8 +334,8 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
     writer.writeString(obj.paymentCountryKorean);
     writer.writeString(obj.rawCategory);
     writer.writeString(obj.category);
-    writer.writeInt(obj.exchangeRawCategoryEnum.index); // Enum 값을 인덱스로 저장
-    writer.writeInt(obj.categoryExchangeEnum.index); // Enum 값을 인덱스로 저장
+    writer.writeInt(obj.exchangeRawCategoryEnum.index);
+    writer.writeInt(obj.categoryExchangeEnum.index);
     writer.writeString(obj.source);
     writer.writeString(obj.remark);
     writer.writeString(obj.searchKeywords);
