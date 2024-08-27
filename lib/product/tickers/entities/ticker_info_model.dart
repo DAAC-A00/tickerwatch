@@ -1,5 +1,7 @@
 // ticker_info_model.dart
 
+import 'dart:developer';
+
 import 'package:hive/hive.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/option_type_enum.dart';
@@ -18,9 +20,9 @@ class TickerInfoModel {
   final int unit; // 1000
 
   // option 관련
-  final OptionTypeEnum optionTypeEnum; // 옵션 종류
-  final String strikePrice; // 행사 가격
-  final String expirationDate; // 행사일
+  OptionTypeEnum optionTypeEnum; // 옵션 종류
+  String strikePrice; // 행사 가격
+  String expirationDate; // 행사일
 
   // Codes
   final String baseCode; // PEPE_0
@@ -121,7 +123,6 @@ class TickerInfoModel {
       {String? subData, bool isPreferToFiat = false}) {
     late String tmpSymbol;
     late List<String> splitSymbol;
-    late String? expirationDate;
 
     // 불필요한 rawSymbol의 데이터 삭제해서 tmpSymbol 만들기
     // bitget의 _$rawCategory 문구 제거
@@ -188,6 +189,7 @@ class TickerInfoModel {
     expirationDate = _getExpirationDate(exchangeRawCategoryEnum, splitSymbol);
 
     // category 확보
+
     // TODO quoteCode 분리
     // TODO unit & baseCode 분리
 
@@ -198,7 +200,7 @@ class TickerInfoModel {
     // tickerid 예시 : // BTC_0/USDT_0 OR BTC_0/USDT_0-2024y12m20d13h30m
   }
 
-  String? _extractExpirationDate(String rawExpirationDate) {
+  String _extractExpirationDate(String rawExpirationDate) {
     // 월 약어와 숫자 매핑
     final Map<String, String> monthMap = {
       'JAN': '01',
@@ -228,10 +230,10 @@ class TickerInfoModel {
         return '$year$month$day'; // 유기한인 경우
       }
     }
-    return null; // PERP인 경우
+    return ''; // PERP인 경우
   }
 
-  String? _getExpirationDate(ExchangeRawCategoryEnum exchangeRawCategoryEnum,
+  String _getExpirationDate(ExchangeRawCategoryEnum exchangeRawCategoryEnum,
       List<String> splitSymbol) {
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.bybitLinear:
@@ -248,16 +250,32 @@ class TickerInfoModel {
         break;
 
       case ExchangeRawCategoryEnum.okxFutures:
-      case ExchangeRawCategoryEnum.okxOption:
         return '20${splitSymbol.last}';
+      case ExchangeRawCategoryEnum.okxOption:
+        if (splitSymbol.length == 5) {
+          strikePrice = splitSymbol[3];
+          if (splitSymbol.last == 'C') {
+            optionTypeEnum = OptionTypeEnum.call;
+          } else if (splitSymbol.last == 'P') {
+            optionTypeEnum = OptionTypeEnum.put;
+          } else {
+            // OptionTypeEnum.none으로 설정되었을 때 로그 출력
+            log('[WARN][TickerInfoModel._getExpirationDate] splitSymbol.last not in ["C", "P"]. But OPTION has only Call or Put.');
+            optionTypeEnum = OptionTypeEnum.none;
+          }
+          return splitSymbol[2];
+        } else {
+          log('[WARN][TickerInfoModel._getExpirationDate] ExchangeRawCategoryEnum.okxFutures splitSymbol.length != 5인 경우 발생');
+          break;
+        }
 
       case ExchangeRawCategoryEnum.binanceCm:
-        return splitSymbol.last == 'PERP' ? null : '20${splitSymbol.last}';
+        return splitSymbol.last == 'PERP' ? '' : '20${splitSymbol.last}';
 
       default:
         break;
     }
-    return null; // 모든 PERP인 경우 처리
+    return ''; // 모든 PERP인 경우 처리
   }
 }
 
