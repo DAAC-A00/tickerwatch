@@ -186,7 +186,8 @@ class TickerInfoModel {
     //    upbit spot : length 2 -> [KRW, BTC], [USDT, BTC], [BTC, APE]       (quoteCode-baseCode)
     //    bithumb spot : length 1 -> [BTC], [ETH]
 
-    expirationDate = _getExpirationDate(exchangeRawCategoryEnum, splitSymbol);
+    expirationDate = _getExpirationDateAndUpdateOptionData(
+        exchangeRawCategoryEnum, splitSymbol);
 
     // category 확보
 
@@ -233,7 +234,23 @@ class TickerInfoModel {
     return ''; // PERP인 경우
   }
 
-  String _getExpirationDate(ExchangeRawCategoryEnum exchangeRawCategoryEnum,
+  void _updateStrikePrice(String price) {
+    strikePrice = price;
+  }
+
+  void _updateOptionType(String lastSymbol) {
+    if (lastSymbol == 'C') {
+      optionTypeEnum = OptionTypeEnum.call;
+    } else if (lastSymbol == 'P') {
+      optionTypeEnum = OptionTypeEnum.put;
+    } else {
+      log('[WARN][TickerInfoModel._updateOptionType] Invalid option type detected: $lastSymbol. Setting to OptionTypeEnum.none');
+      optionTypeEnum = OptionTypeEnum.none;
+    }
+  }
+
+  String _getExpirationDateAndUpdateOptionData(
+      ExchangeRawCategoryEnum exchangeRawCategoryEnum,
       List<String> splitSymbol) {
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.bybitLinear:
@@ -253,19 +270,11 @@ class TickerInfoModel {
         return '20${splitSymbol.last}';
       case ExchangeRawCategoryEnum.okxOption:
         if (splitSymbol.length == 5) {
-          strikePrice = splitSymbol[3];
-          if (splitSymbol.last == 'C') {
-            optionTypeEnum = OptionTypeEnum.call;
-          } else if (splitSymbol.last == 'P') {
-            optionTypeEnum = OptionTypeEnum.put;
-          } else {
-            // OptionTypeEnum.none으로 설정되었을 때 로그 출력
-            log('[WARN][TickerInfoModel._getExpirationDate] splitSymbol.last not in ["C", "P"]. But OPTION has only Call or Put.');
-            optionTypeEnum = OptionTypeEnum.none;
-          }
+          _updateStrikePrice(splitSymbol[3]);
+          _updateOptionType(splitSymbol.last);
           return splitSymbol[2];
         } else {
-          log('[WARN][TickerInfoModel._getExpirationDate] ExchangeRawCategoryEnum.okxFutures splitSymbol.length != 5인 경우 발생');
+          log('[WARN][TickerInfoModel._getExpirationDateAndUpdateOptionData] ExchangeRawCategoryEnum.okxFutures splitSymbol.length != 5인 경우 발생');
           break;
         }
 
