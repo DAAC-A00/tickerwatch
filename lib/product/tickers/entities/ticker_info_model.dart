@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/option_type_enum.dart';
 
+import '../enums/category_enum.dart';
 import '../enums/category_exchange_enum.dart';
 
 class TickerInfoModel {
@@ -49,11 +50,10 @@ class TickerInfoModel {
   final String paymentCountryKorean;
 
   // category
-  final String rawCategory;
-  String category;
+  CategoryEnum categoryEnum;
   final ExchangeRawCategoryEnum exchangeRawCategoryEnum; // 정보 공유자
   CategoryExchangeEnum categoryExchangeEnum;
-  final String source; // 정보 출처
+  String source; // 정보 출처
 
   // etc
   final String remark;
@@ -91,8 +91,7 @@ class TickerInfoModel {
     required this.quoteCountryKorean,
     required this.paymentCountryKorean,
     // category
-    required this.rawCategory,
-    required this.category,
+    required this.categoryEnum,
     required this.exchangeRawCategoryEnum,
     required this.categoryExchangeEnum,
     required this.source,
@@ -121,6 +120,7 @@ class TickerInfoModel {
   TickerInfoModel? rawToTickerInfo(
       ExchangeRawCategoryEnum exchangeRawCategoryEnum, String rawSymbol,
       {String? subData, bool isPreferToFiat = false}) {
+    rawSymbol = rawSymbol;
     late String tmpSymbol;
     late List<String> splitSymbol;
 
@@ -189,77 +189,93 @@ class TickerInfoModel {
     expirationDate = _getExpirationDateAndUpdateOptionData(
         exchangeRawCategoryEnum, splitSymbol);
 
-    // category
+    // category & source
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.bybitSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotBybit;
-        category = 'spot';
+        categoryEnum = CategoryEnum.spot;
+        source = 'bybit';
         break;
       case ExchangeRawCategoryEnum.bitgetSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotBitget;
-        category = 'spot';
+        categoryEnum = CategoryEnum.spot;
+        source = 'bitget';
         break;
       case ExchangeRawCategoryEnum.okxSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotOkx;
-        category = 'spot';
+        categoryEnum = CategoryEnum.spot;
+        source = 'okx';
         break;
       case ExchangeRawCategoryEnum.binanceSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotBinance;
-        category = 'spot';
+        categoryEnum = CategoryEnum.spot;
+        source = 'binance';
         break;
       case ExchangeRawCategoryEnum.upbitSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotUpbit;
-        category = 'spot';
+        categoryEnum = CategoryEnum.spot;
+        source = 'upbit';
         break;
       case ExchangeRawCategoryEnum.bithumbSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotBithumb;
-        category = 'spot';
+        categoryEnum = CategoryEnum.spot;
+        source = 'bithumb';
         break;
       case ExchangeRawCategoryEnum.bybitLinear:
         categoryExchangeEnum = CategoryExchangeEnum.umBybit;
-        category = 'um';
+        categoryEnum = CategoryEnum.um;
+        source = 'bybit';
         break;
       case ExchangeRawCategoryEnum.bitgetUmcbl:
       case ExchangeRawCategoryEnum.bitgetCmcbl:
         categoryExchangeEnum = CategoryExchangeEnum.umBitget;
-        category = 'um';
+        categoryEnum = CategoryEnum.um;
+        source = 'bitget';
         break;
       case ExchangeRawCategoryEnum.okxSwap:
+        source = 'okx';
         if (splitSymbol.last == 'USD') {
           categoryExchangeEnum = CategoryExchangeEnum.cmOkx;
-          category = 'cm';
+          categoryEnum = CategoryEnum.cm;
         } else {
           categoryExchangeEnum = CategoryExchangeEnum.umOkx;
-          category = 'um';
+          categoryEnum = CategoryEnum.um;
         }
         break;
       case ExchangeRawCategoryEnum.okxFutures:
         categoryExchangeEnum = CategoryExchangeEnum.umOkx;
-        category = 'um';
+        categoryEnum = CategoryEnum.um;
+        source = 'okx';
         break;
       case ExchangeRawCategoryEnum.binanceUm:
         categoryExchangeEnum = CategoryExchangeEnum.umBinance;
-        category = 'um';
+        categoryEnum = CategoryEnum.um;
+        source = 'binance';
         break;
       case ExchangeRawCategoryEnum.bybitInverse:
         categoryExchangeEnum = CategoryExchangeEnum.cmBybit;
-        category = 'cm';
+        categoryEnum = CategoryEnum.cm;
+        source = 'bybit';
         break;
       case ExchangeRawCategoryEnum.bitgetDmcbl:
         categoryExchangeEnum = CategoryExchangeEnum.cmBitget;
-        category = 'cm';
+        categoryEnum = CategoryEnum.cm;
+        source = 'bitget';
         break;
       case ExchangeRawCategoryEnum.binanceCm:
         categoryExchangeEnum = CategoryExchangeEnum.cmBinance;
-        category = 'cm';
+        categoryEnum = CategoryEnum.cm;
+        source = 'binance';
         break;
       case ExchangeRawCategoryEnum.okxOption:
         categoryExchangeEnum = CategoryExchangeEnum.cmOptionOkx;
-        category = 'option';
+        categoryEnum = CategoryEnum.option;
+        source = 'option';
         break;
     }
 
     // TODO quoteCode 분리
+
     // TODO unit & baseCode 분리
 
     // TODO 이어서 데이터 가공 로직 구현 필요
@@ -389,8 +405,7 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
       baseCountryKorean: reader.readString(),
       quoteCountryKorean: reader.readString(),
       paymentCountryKorean: reader.readString(),
-      rawCategory: reader.readString(),
-      category: reader.readString(),
+      categoryEnum: CategoryEnum.values[reader.readInt()],
       exchangeRawCategoryEnum: ExchangeRawCategoryEnum.values[reader.readInt()],
       categoryExchangeEnum: CategoryExchangeEnum.values[reader.readInt()],
       source: reader.readString(),
@@ -427,8 +442,7 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
     writer.writeString(obj.baseCountryKorean);
     writer.writeString(obj.quoteCountryKorean);
     writer.writeString(obj.paymentCountryKorean);
-    writer.writeString(obj.rawCategory);
-    writer.writeString(obj.category);
+    writer.writeInt(obj.categoryEnum.index);
     writer.writeInt(obj.exchangeRawCategoryEnum.index);
     writer.writeInt(obj.categoryExchangeEnum.index);
     writer.writeString(obj.source);
