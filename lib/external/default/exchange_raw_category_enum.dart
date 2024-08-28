@@ -4,6 +4,7 @@ enum ExchangeRawCategoryEnum {
   bybitSpot,
   bybitLinear,
   bybitInverse,
+  bitgetSpot,
   bitgetUmcbl,
   bitgetDmcbl,
   bitgetCmcbl,
@@ -27,6 +28,8 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
         return 'bybitLinear';
       case ExchangeRawCategoryEnum.bybitInverse:
         return 'bybitInverse';
+      case ExchangeRawCategoryEnum.bitgetSpot:
+        return 'bitgetSpot';
       case ExchangeRawCategoryEnum.bitgetUmcbl:
         return 'bitgetUmcbl';
       case ExchangeRawCategoryEnum.bitgetDmcbl:
@@ -64,6 +67,8 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
         return 'https://api.bybit.com/v5/market/tickers?category=linear';
       case ExchangeRawCategoryEnum.bybitInverse:
         return 'https://api.bybit.com/v5/market/tickers?category=inverse';
+      case ExchangeRawCategoryEnum.bitgetSpot:
+        return 'https://api.bitget.com/api/spot/v1/market/tickers';
       case ExchangeRawCategoryEnum.bitgetUmcbl:
         return 'https://api.bitget.com/api/mix/v1/market/tickers?productType=umcbl';
       case ExchangeRawCategoryEnum.bitgetDmcbl:

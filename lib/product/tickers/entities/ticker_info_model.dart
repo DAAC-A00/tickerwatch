@@ -50,9 +50,9 @@ class TickerInfoModel {
 
   // category
   final String rawCategory;
-  final String category;
+  String category;
   final ExchangeRawCategoryEnum exchangeRawCategoryEnum; // 정보 공유자
-  final CategoryExchangeEnum categoryExchangeEnum;
+  CategoryExchangeEnum categoryExchangeEnum;
   final String source; // 정보 출처
 
   // etc
@@ -189,7 +189,75 @@ class TickerInfoModel {
     expirationDate = _getExpirationDateAndUpdateOptionData(
         exchangeRawCategoryEnum, splitSymbol);
 
-    // category 확보
+    // category
+    switch (exchangeRawCategoryEnum) {
+      case ExchangeRawCategoryEnum.bybitSpot:
+        categoryExchangeEnum = CategoryExchangeEnum.spotBybit;
+        category = 'spot';
+        break;
+      case ExchangeRawCategoryEnum.bitgetSpot:
+        categoryExchangeEnum = CategoryExchangeEnum.spotBitget;
+        category = 'spot';
+        break;
+      case ExchangeRawCategoryEnum.okxSpot:
+        categoryExchangeEnum = CategoryExchangeEnum.spotOkx;
+        category = 'spot';
+        break;
+      case ExchangeRawCategoryEnum.binanceSpot:
+        categoryExchangeEnum = CategoryExchangeEnum.spotBinance;
+        category = 'spot';
+        break;
+      case ExchangeRawCategoryEnum.upbitSpot:
+        categoryExchangeEnum = CategoryExchangeEnum.spotUpbit;
+        category = 'spot';
+        break;
+      case ExchangeRawCategoryEnum.bithumbSpot:
+        categoryExchangeEnum = CategoryExchangeEnum.spotBithumb;
+        category = 'spot';
+        break;
+      case ExchangeRawCategoryEnum.bybitLinear:
+        categoryExchangeEnum = CategoryExchangeEnum.umBybit;
+        category = 'um';
+        break;
+      case ExchangeRawCategoryEnum.bitgetUmcbl:
+      case ExchangeRawCategoryEnum.bitgetCmcbl:
+        categoryExchangeEnum = CategoryExchangeEnum.umBitget;
+        category = 'um';
+        break;
+      case ExchangeRawCategoryEnum.okxSwap:
+        if (splitSymbol.last == 'USD') {
+          categoryExchangeEnum = CategoryExchangeEnum.cmOkx;
+          category = 'cm';
+        } else {
+          categoryExchangeEnum = CategoryExchangeEnum.umOkx;
+          category = 'um';
+        }
+        break;
+      case ExchangeRawCategoryEnum.okxFutures:
+        categoryExchangeEnum = CategoryExchangeEnum.umOkx;
+        category = 'um';
+        break;
+      case ExchangeRawCategoryEnum.binanceUm:
+        categoryExchangeEnum = CategoryExchangeEnum.umBinance;
+        category = 'um';
+        break;
+      case ExchangeRawCategoryEnum.bybitInverse:
+        categoryExchangeEnum = CategoryExchangeEnum.cmBybit;
+        category = 'cm';
+        break;
+      case ExchangeRawCategoryEnum.bitgetDmcbl:
+        categoryExchangeEnum = CategoryExchangeEnum.cmBitget;
+        category = 'cm';
+        break;
+      case ExchangeRawCategoryEnum.binanceCm:
+        categoryExchangeEnum = CategoryExchangeEnum.cmBinance;
+        category = 'cm';
+        break;
+      case ExchangeRawCategoryEnum.okxOption:
+        categoryExchangeEnum = CategoryExchangeEnum.cmOptionOkx;
+        category = 'option';
+        break;
+    }
 
     // TODO quoteCode 분리
     // TODO unit & baseCode 분리
