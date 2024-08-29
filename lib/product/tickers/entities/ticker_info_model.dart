@@ -26,9 +26,9 @@ class TickerInfoModel {
   String expirationDate; // 행사일
 
   // Codes
-  final String baseCode; // PEPE_0
-  final String quoteCode; // USDC_0
-  final String paymentCode; // USDC_0
+  String baseCode; // PEPE_0
+  String quoteCode; // USDC_0
+  String paymentCode; // USDC_0
   final String baseCodeKorean;
   final String quoteCodeKorean;
   final String paymentCodeKorean;
@@ -280,7 +280,7 @@ class TickerInfoModel {
     // splitSymbol 예시
     //    bybit spot : length 1 -> ['BTCBRL'], ['PEPEUSDC'], ['DOGEEUR'], ['1SOLUSDT'], ['1INCHUSDT']
     //    bybit linear : length 1 /// 2 유기한 -> ['10000000AIDOGEUSDT'], ['1000000PEIPEIUSDT'], ['10000COQUSDT'], ['SHIB1000PERP'], ['BTCPERP'] /// ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC']
-    //    bybit inverse : length 1 -> ['BTCUSDZ24'], ['BTCUSDU24'], ['DOTUSD']
+    //    bybit inverse : length 1 -> ['BTCUSD'], ['BTCUSD'], ['DOTUSD']
     //    bitget spot : length 1 -> ['BTCUSDT'], ['PEPEEUR'], ['USDTBRL']
     //    bitget umcbl : length 1 -> ['BTCUSDT']
     //    bitget dmcbl : length 1 /// 2 유기한 -> ['BTCUSD'] /// ['ETHUSD']
@@ -296,8 +296,115 @@ class TickerInfoModel {
     //    bithumb spot : length 1 -> ['BTC'], ['ETH']
 
     // TODO quoteCode 분리
+    late String unitAndBaseCode;
+    switch (exchangeRawCategoryEnum) {
+      case ExchangeRawCategoryEnum.upbitSpot:
+        unitAndBaseCode = splitSymbol.last;
+        quoteCode = splitSymbol.first;
+        break;
+      case ExchangeRawCategoryEnum.bithumbSpot:
+        unitAndBaseCode = splitSymbol.first;
+        quoteCode = subData ?? '';
+        break;
+      case ExchangeRawCategoryEnum.okxSpot:
+      case ExchangeRawCategoryEnum.okxSwap:
+      case ExchangeRawCategoryEnum.okxFutures:
+      case ExchangeRawCategoryEnum.okxOption:
+        unitAndBaseCode = splitSymbol.first;
+        quoteCode = splitSymbol.last;
+        break;
+      default:
+        if (splitSymbol.first.length > 5) {
+          final String suffix5 =
+              splitSymbol.first.substring(splitSymbol.first.length - 5);
+          if (['BUSDS', 'FDUSD'].contains(suffix5)) {
+            quoteCode = suffix5;
+            unitAndBaseCode =
+                splitSymbol.first.substring(0, splitSymbol.first.length - 5);
+          }
+        }
+        if (splitSymbol.first.length > 4) {
+          final String suffix4 =
+              splitSymbol.first.substring(splitSymbol.first.length - 4);
+          if (splitSymbol.first ==
+                  'DOTUSD' // DOT USD로 나뉘어야하는데, 해당 로직에서 DO TUSD로 잘못 나뉘는 문제가 있어 제외하고 진행
+              &&
+              [
+                // coin
+                'DOGE', //
+                // $
+                'TUSD',
+                'USDT',
+                'USDC',
+                'PERP'
+                    'USDP', // = PAX
+                // fiat
+                'BKRW',
+                'BIDR',
+                'IDRT',
+                'BVND',
+                'AEUR', // Anchored Coins EUR
+                'USDS', // United States Digital Service
+                'USDE' // 에테나(Ethena) : 이더리움 기반 담보형 합성 스테이블코인 프로토콜 = ETH를 예치하면 자동으로 현물 + 숏 포지션으로 이루어진 합성 포지션이 구축되고 동일한 가치의 USDe를 받도록 설계
+              ].contains(suffix4)) {
+            quoteCode =
+                suffix4 == 'PERP' ? 'USDC' : suffix4; // PERP인 경우 USDC로 변경
+            unitAndBaseCode =
+                splitSymbol.first.substring(0, splitSymbol.first.length - 4);
+          }
+        }
+        if (splitSymbol.first.length > 3) {
+          final String suffix3 =
+              splitSymbol.first.substring(splitSymbol.first.length - 3);
+          if ([
+            // coin
+            'BTC',
+            'ETH',
+            'XRP',
+            'UST', // 루나 USD
+            'BNB',
+            'TRX', // 트론
+            'DOT',
+            'BRZ', // Brazilian Digital Token = 브라질 헤알과 1:1 페깅을 유지하도록 설계된 이더리움 블록체인 위에 구축된 ERC-20 토큰
+            // $
+            'USD',
+            'DAI',
+            'PAX', // = USDP
+            'VAI',
+            // fiat
+            'NGN', // 나이지리아 Nigerian - 나이라 Naira
+            'TRY', // 터키 - 리라
+            'ARS', // 아르헨티나 Argentine - 페소 Peso
+            'EUR', // 유럽연합 - 유로
+            'AUD', // 호주 - 달러
+            'GBP', // 영국 - 파운드
+            'BRL', // 브라질 - 레알
+            'PLN', // 폴란드 - 즐로티
+            'RUB', // 러시아 - 루블
+            'RON', // 루마니아 - 레우
+            'ZAR', // 남아프리카 공화국 - 랜드
+            'UAH', // 우크라이나 Ukrainian - 흐리브냐 Hryvnia
+            'JPY', // 일본 Japan - 엔
+            'MXN', // 멕시코 페소
+            'CZK', // 체코 코루나
+            'COP', // 콜롬비아 COLUMBIA - 페소
+          ].contains(suffix3)) {
+            quoteCode = suffix3;
+            unitAndBaseCode =
+                splitSymbol.first.substring(0, splitSymbol.first.length - 3);
+          }
+        } else {}
+        break;
+    }
 
     // TODO unit & baseCode 분리
+
+    // TODO paymentCode
+    if (splitSymbol.last == 'USD') {
+      paymentCode = baseCode;
+    } else {
+      paymentCode = quoteCode;
+    }
 
     // TODO 이어서 데이터 가공 로직 구현 필요
 
