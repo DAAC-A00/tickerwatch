@@ -1,6 +1,7 @@
 // exchange_raw_category_enum.dart
 
 enum ExchangeRawCategoryEnum {
+  none,
   bybitSpot,
   bybitLinear,
   bybitInverse,
@@ -22,6 +23,8 @@ enum ExchangeRawCategoryEnum {
 extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
   String get name {
     switch (this) {
+      case ExchangeRawCategoryEnum.none:
+        return '';
       case ExchangeRawCategoryEnum.bybitSpot:
         return 'bybitSpot';
       case ExchangeRawCategoryEnum.bybitLinear:
@@ -54,13 +57,13 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
         return 'upbitSpot';
       case ExchangeRawCategoryEnum.bithumbSpot:
         return 'bithumbSpot';
-      default:
-        return '';
     }
   }
 
   String get allTickerListApiEndPoint {
     switch (this) {
+      case ExchangeRawCategoryEnum.none:
+        return '';
       case ExchangeRawCategoryEnum.bybitSpot:
         return 'https://api.bybit.com/v5/market/tickers?category=spot';
       case ExchangeRawCategoryEnum.bybitLinear:
@@ -95,8 +98,6 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
       // https://api.upbit.com/v1/market/all?isDetails=true
       case ExchangeRawCategoryEnum.bithumbSpot:
         return 'https://api.bithumb.com/public/ticker';
-      default:
-        return '';
     }
   }
 }

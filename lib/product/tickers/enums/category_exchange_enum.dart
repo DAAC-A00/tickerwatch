@@ -3,6 +3,7 @@
 // 내부 데이터 저장용
 
 enum CategoryExchangeEnum {
+  none,
   // Bybit
   spotBybit,
   umBybit,
@@ -31,6 +32,8 @@ enum CategoryExchangeEnum {
 extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
   static CategoryExchangeEnum fromString(String enumString) {
     switch (enumString) {
+      case 'none':
+        return CategoryExchangeEnum.none;
       case 'spotBybit':
         return CategoryExchangeEnum.spotBybit;
       case 'umBybit':
@@ -72,6 +75,8 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
 
   String get getDescription {
     switch (this) {
+      case CategoryExchangeEnum.none:
+        return 'None';
       // bybit
       case CategoryExchangeEnum.spotBybit:
         return '🆂 Spot (Bybit)';
@@ -112,6 +117,8 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
 
   String get getString {
     switch (this) {
+      case CategoryExchangeEnum.none:
+        return 'none';
       // bybit
       case CategoryExchangeEnum.spotBybit:
         return 'spotBybit';
@@ -152,6 +159,8 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
 
   String get getExchangeName {
     switch (this) {
+      case CategoryExchangeEnum.none:
+        return 'none';
       // Bybit
       case CategoryExchangeEnum.spotBybit:
       case CategoryExchangeEnum.umBybit:
@@ -181,6 +190,8 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
 
   String get logoPath {
     switch (this) {
+      case CategoryExchangeEnum.none:
+        return '';
       // Bybit
       case CategoryExchangeEnum.spotBybit:
       case CategoryExchangeEnum.umBybit:

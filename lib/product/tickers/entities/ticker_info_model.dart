@@ -56,7 +56,7 @@ class TickerInfoModel {
   String source; // 정보 출처
 
   // etc
-  final String remark;
+  String remark;
   String searchKeywords;
 
   List<String> splitSymbol = [];
@@ -65,40 +65,40 @@ class TickerInfoModel {
     // required this.tickerId,
     // raw
     required this.rawSymbol,
-    required this.symbolSub,
-    required this.unit,
+    this.symbolSub = '',
+    this.unit = 1,
     // option 관련
-    required this.optionTypeEnum,
-    required this.strikePrice,
-    required this.expirationDate,
+    this.optionTypeEnum = OptionTypeEnum.none,
+    this.strikePrice = '',
+    this.expirationDate = '',
     // Code
-    required this.baseCode,
-    required this.quoteCode,
-    required this.paymentCode,
-    required this.baseCodeKorean,
-    required this.quoteCodeKorean,
-    required this.paymentCodeKorean,
+    this.baseCode = '',
+    this.quoteCode = '',
+    this.paymentCode = '',
+    this.baseCodeKorean = '',
+    this.quoteCodeKorean = '',
+    this.paymentCodeKorean = '',
     // Group
-    required this.baseGroup,
-    required this.quoteGroup,
-    required this.paymentGroup,
-    required this.baseGroupKorean,
-    required this.quoteGroupKorean,
-    required this.paymentGroupKorean,
+    this.baseGroup = '',
+    this.quoteGroup = '',
+    this.paymentGroup = '',
+    this.baseGroupKorean = '',
+    this.quoteGroupKorean = '',
+    this.paymentGroupKorean = '',
     // Country
-    required this.baseCountry,
-    required this.quoteCountry,
-    required this.paymentCountry,
-    required this.baseCountryKorean,
-    required this.quoteCountryKorean,
-    required this.paymentCountryKorean,
+    this.baseCountry = '',
+    this.quoteCountry = '',
+    this.paymentCountry = '',
+    this.baseCountryKorean = '',
+    this.quoteCountryKorean = '',
+    this.paymentCountryKorean = '',
     // category
-    required this.categoryEnum,
-    required this.exchangeRawCategoryEnum,
-    required this.categoryExchangeEnum,
-    required this.source,
-    required this.remark,
-    required this.searchKeywords,
+    this.categoryEnum = CategoryEnum.none,
+    this.exchangeRawCategoryEnum = ExchangeRawCategoryEnum.none,
+    this.categoryExchangeEnum = CategoryExchangeEnum.none,
+    this.source = '',
+    this.remark = '',
+    this.searchKeywords = '',
   });
 
   // rawSymbol 예시
@@ -119,12 +119,7 @@ class TickerInfoModel {
   //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
   //    bithumb spot : BTC, ETH
 
-  void rawToTickerInfo(
-      ExchangeRawCategoryEnum exchangeRawCategoryEnum, String rawSymbol,
-      {String? subData, bool isPreferToFiat = false}) {
-    rawSymbol = rawSymbol;
-    exchangeRawCategoryEnum = exchangeRawCategoryEnum;
-
+  void rawToTickerInfo({String? subData, bool isPreferToFiat = false}) {
     late String tmpSymbol;
 
     // 불필요한 rawSymbol의 데이터 삭제해서 tmpSymbol 만들기
@@ -196,6 +191,8 @@ class TickerInfoModel {
 
     // category & source
     switch (exchangeRawCategoryEnum) {
+      case ExchangeRawCategoryEnum.none:
+        break;
       case ExchangeRawCategoryEnum.bybitSpot:
         categoryExchangeEnum = CategoryExchangeEnum.spotBybit;
         categoryEnum = CategoryEnum.spot;

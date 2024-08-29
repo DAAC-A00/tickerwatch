@@ -13,7 +13,8 @@ class TickerEntity {
 
   // 지속적으로 변하는 데이터
   // -- 현재 호가
-  String price;
+  String price; // 현재가 (bidPrice, askPrice의 평균)
+  String lastPrice; // 최근 체결가
   String ask1Price;
   String ask1Size;
   String bid1Price;
@@ -47,6 +48,7 @@ class TickerEntity {
   TickerEntity({
     required this.info,
     required this.price,
+    required this.lastPrice,
     required this.ask1Price,
     required this.ask1Size,
     required this.bid1Price,
@@ -57,12 +59,12 @@ class TickerEntity {
     required this.lowPrice24h,
     required this.turnOver24h,
     required this.volume24h,
-    required this.changePercentUtc0,
-    required this.prevPriceUtc0,
-    required this.highPriceUtc0,
-    required this.lowPriceUtc0,
-    required this.turnOverUtc0,
-    required this.volumeUtc0,
+    this.changePercentUtc0 = '',
+    this.prevPriceUtc0 = '',
+    this.highPriceUtc0 = '',
+    this.lowPriceUtc0 = '',
+    this.turnOverUtc0 = '',
+    this.volumeUtc0 = '',
     required this.priceStatusEnum,
     String? dataAt,
   }) {
@@ -86,6 +88,7 @@ class TickerEntityAdapter extends TypeAdapter<TickerEntity> {
     return TickerEntity(
       info: reader.read() as TickerInfoModel, // TickerInfoModel을 읽어옵니다.
       price: reader.readString(),
+      lastPrice: reader.readString(),
       ask1Price: reader.readString(),
       ask1Size: reader.readString(),
       bid1Price: reader.readString(),
@@ -112,6 +115,7 @@ class TickerEntityAdapter extends TypeAdapter<TickerEntity> {
     // TickerEntity 객체를 바이너리 데이터로 씁니다.
     writer.write(obj.info); // TickerInfoModel을 씁니다.
     writer.writeString(obj.price);
+    writer.writeString(obj.lastPrice);
     writer.writeString(obj.ask1Price);
     writer.writeString(obj.ask1Size);
     writer.writeString(obj.bid1Price);
