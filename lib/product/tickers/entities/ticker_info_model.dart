@@ -10,11 +10,11 @@ import '../enums/category_enum.dart';
 import '../enums/category_exchange_enum.dart';
 
 class TickerInfoModel {
-  // tickerId
-  //    무기한 상품 고유값 ex1 : BTC_0/USDT_0
-  //    무기한 상품 고유값 ex2 : BTC_1/KRW_0
-  //    만기 있는 상품 고유값 : BTC_0/USDT_0-2024y12m20d
-  final String tickerId;
+  // // tickerId : 현물,무기한 baseCode/quoteCode=paymentCode & 유기한 baseCode/quoteCode=paymentCode-expiration
+  // //    무기한 상품 고유값 ex1 : BTC_0/USDT_0
+  // //    무기한 상품 고유값 ex2 : BTC_1/KRW_0
+  // //    만기 있는 상품 고유값 : BTC_0/USDT_0-20241220
+  // final String tickerId;
   // symbol
   final String rawSymbol; // 1000PEPEPERP
   final String symbolSub; // PERP
@@ -62,7 +62,7 @@ class TickerInfoModel {
   List<String> splitSymbol = [];
 
   TickerInfoModel({
-    required this.tickerId,
+    // required this.tickerId,
     // raw
     required this.rawSymbol,
     required this.symbolSub,
@@ -123,6 +123,8 @@ class TickerInfoModel {
       ExchangeRawCategoryEnum exchangeRawCategoryEnum, String rawSymbol,
       {String? subData, bool isPreferToFiat = false}) {
     rawSymbol = rawSymbol;
+    exchangeRawCategoryEnum = exchangeRawCategoryEnum;
+
     late String tmpSymbol;
 
     // 불필요한 rawSymbol의 데이터 삭제해서 tmpSymbol 만들기
@@ -300,7 +302,7 @@ class TickerInfoModel {
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.upbitSpot:
         unitAndBaseCode = splitSymbol.last;
-        quoteCode = splitSymbol.first;
+        quoteCode = '${splitSymbol.first}_0';
         break;
       case ExchangeRawCategoryEnum.bithumbSpot:
         unitAndBaseCode = splitSymbol.first;
@@ -311,7 +313,7 @@ class TickerInfoModel {
       case ExchangeRawCategoryEnum.okxFutures:
       case ExchangeRawCategoryEnum.okxOption:
         unitAndBaseCode = splitSymbol.first;
-        quoteCode = splitSymbol.last;
+        quoteCode = '${splitSymbol.last}_0';
         break;
       default:
         if (splitSymbol.first.length > 5) {
@@ -335,9 +337,8 @@ class TickerInfoModel {
                 // $
                 'TUSD',
                 'USDT',
-                'USDC',
-                'PERP'
-                    'USDP', // = PAX
+                'USDC', 'PERP',
+                'USDP', // = PAX
                 // fiat
                 'BKRW',
                 'BIDR',
@@ -347,8 +348,9 @@ class TickerInfoModel {
                 'USDS', // United States Digital Service
                 'USDE' // 에테나(Ethena) : 이더리움 기반 담보형 합성 스테이블코인 프로토콜 = ETH를 예치하면 자동으로 현물 + 숏 포지션으로 이루어진 합성 포지션이 구축되고 동일한 가치의 USDe를 받도록 설계
               ].contains(suffix4)) {
-            quoteCode =
-                suffix4 == 'PERP' ? 'USDC' : suffix4; // PERP인 경우 USDC로 변경
+            quoteCode = suffix4 == 'PERP'
+                ? 'USDC_0'
+                : '${suffix4}_0'; // PERP인 경우 USDC로 변경
             unitAndBaseCode =
                 splitSymbol.first.substring(0, splitSymbol.first.length - 4);
           }
@@ -389,7 +391,7 @@ class TickerInfoModel {
             'CZK', // 체코 코루나
             'COP', // 콜롬비아 COLUMBIA - 페소
           ].contains(suffix3)) {
-            quoteCode = suffix3;
+            quoteCode = '${suffix3}_0';
             unitAndBaseCode =
                 splitSymbol.first.substring(0, splitSymbol.first.length - 3);
           } else {
@@ -427,11 +429,11 @@ class TickerInfoModel {
     baseCountryKorean = _getCountryKorean(baseCode);
     quoteCountryKorean = _getCountryKorean(quoteCode);
     paymentCountryKorean = _getCountryKorean(paymentCode);
+
     // TODO 이어서 데이터 가공 로직 구현 필요
+    rawSymbol = rawSymbol;
 
     return null;
-
-    // tickerid 예시 : // BTC_0/USDT_0 OR BTC_0/USDT_0-2024y12m20d13h30m
   }
 
   String _extractExpirationDate(String rawExpirationDate) {
@@ -514,11 +516,11 @@ class TickerInfoModel {
         if (possibleUnit != null && validUnits.contains(possibleUnit)) {
           // possibleUnit이 유효한 unit 값 중 하나인 경우
           unit = possibleUnit;
-          baseCode = remainingPart ?? '';
+          baseCode = remainingPart != null ? '${remainingPart}_0' : '';
         } else {
           // 유효한 unit 값이 아닌 경우, 전체 baseCode를 code로 간주합니다.
           unit = 1;
-          baseCode = unitAndBaseCode;
+          baseCode = unitAndBaseCode.isNotEmpty ? '${unitAndBaseCode}_0' : '';
         }
       }
     }
@@ -2078,7 +2080,7 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
   TickerInfoModel read(BinaryReader reader) {
     // 바이너리 데이터를 읽어 TickerInfoModel 객체를 생성합니다.
     return TickerInfoModel(
-      tickerId: reader.readString(),
+      // tickerId: reader.readString(),
       rawSymbol: reader.readString(),
       symbolSub: reader.readString(),
       unit: reader.readInt(),
@@ -2115,7 +2117,7 @@ class TickerInfoModelAdapter extends TypeAdapter<TickerInfoModel> {
   @override
   void write(BinaryWriter writer, TickerInfoModel obj) {
     // TickerInfoModel 객체를 바이너리 데이터로 씁니다.
-    writer.writeString(obj.tickerId);
+    // writer.writeString(obj.tickerId);
     writer.writeString(obj.rawSymbol);
     writer.writeString(obj.symbolSub);
     writer.writeInt(obj.unit);
