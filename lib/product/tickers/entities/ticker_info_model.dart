@@ -18,7 +18,7 @@ class TickerInfoModel {
   // symbol
   final String rawSymbol; // 1000PEPEPERP
   final String symbolSub; // PERP
-  final int unit; // 1000
+  int unit; // 1000
 
   // option 관련
   OptionTypeEnum optionTypeEnum; // 옵션 종류
@@ -295,7 +295,7 @@ class TickerInfoModel {
     //    upbit spot : length 2 -> ['KRW', 'BTC'], ['USDT', 'BTC'], ['BTC', 'APE']       (quoteCode-baseCode)
     //    bithumb spot : length 1 -> ['BTC'], ['ETH']
 
-    // TODO quoteCode 분리
+    // quoteCode 분리
     late String unitAndBaseCode;
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.upbitSpot:
@@ -392,12 +392,18 @@ class TickerInfoModel {
             quoteCode = suffix3;
             unitAndBaseCode =
                 splitSymbol.first.substring(0, splitSymbol.first.length - 3);
+          } else {
+            // 분리가 안되는 경우
+            quoteCode = '';
+            unitAndBaseCode = '';
+            log('[WARN][TickerInfoModel.rawToTickerInfo] quoteCode 분리 실패. 확인 요망 - $exchangeRawCategoryEnum $rawSymbol');
           }
-        } else {}
+        }
         break;
     }
 
-    // TODO unit & baseCode 분리
+    // unit & baseCode 분리
+    _updateUnitAndBaseCode(unitAndBaseCode);
 
     // TODO paymentCode
     if (splitSymbol.last == 'USD') {
@@ -461,6 +467,45 @@ class TickerInfoModel {
     } else {
       log('[WARN][TickerInfoModel._updateOptionType] Invalid option type detected: ${splitSymbol.last}. Setting to OptionTypeEnum.none');
       optionTypeEnum = OptionTypeEnum.none;
+    }
+  }
+
+  void _updateUnitAndBaseCode(String unitAndBaseCode) {
+    // 유효한 unit 값들을 정의합니다.
+    final List<int> validUnits = [
+      100,
+      1000,
+      10000,
+      100000,
+      1000000,
+      10000000,
+      100000000,
+      1000000000,
+      10000000000,
+    ];
+
+    if (unitAndBaseCode.isEmpty) {
+      unit = 1;
+      baseCode = '';
+    } else {
+      // baseCode를 숫자와 나머지 부분으로 나누기 위한 정규 표현식입니다.
+      RegExp regExp = RegExp(r'^(\d+)([A-Za-z0-9]*)$');
+      Match? match = regExp.firstMatch(unitAndBaseCode);
+
+      if (match != null) {
+        final int? possibleUnit = int.tryParse(match.group(1)!);
+        final String? remainingPart = match.group(2);
+
+        if (possibleUnit != null && validUnits.contains(possibleUnit)) {
+          // possibleUnit이 유효한 unit 값 중 하나인 경우
+          unit = possibleUnit;
+          baseCode = remainingPart ?? '';
+        } else {
+          // 유효한 unit 값이 아닌 경우, 전체 baseCode를 code로 간주합니다.
+          unit = 1;
+          baseCode = unitAndBaseCode;
+        }
+      }
     }
   }
 
