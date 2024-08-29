@@ -295,7 +295,8 @@ class TickerInfoModel {
     //    bithumb spot : length 1 -> ['BTC'], ['ETH']
 
     // quoteCode 분리
-    late String unitAndBaseCode;
+
+    String unitAndBaseCode = '';
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.upbitSpot:
         unitAndBaseCode = splitSymbol.last;
@@ -313,6 +314,8 @@ class TickerInfoModel {
         quoteCode = '${splitSymbol.last}_0';
         break;
       default:
+        // quoteCode 확보 완료 여부
+        bool hasQuoteCode = false;
         if (splitSymbol.first.length > 5) {
           final String suffix5 =
               splitSymbol.first.substring(splitSymbol.first.length - 5);
@@ -320,12 +323,13 @@ class TickerInfoModel {
             quoteCode = suffix5;
             unitAndBaseCode =
                 splitSymbol.first.substring(0, splitSymbol.first.length - 5);
+            hasQuoteCode = true;
           }
         }
-        if (splitSymbol.first.length > 4) {
+        if (!hasQuoteCode && splitSymbol.first.length > 4) {
           final String suffix4 =
               splitSymbol.first.substring(splitSymbol.first.length - 4);
-          if (splitSymbol.first ==
+          if (splitSymbol.first !=
                   'DOTUSD' // DOT USD로 나뉘어야하는데, 해당 로직에서 DO TUSD로 잘못 나뉘는 문제가 있어 제외하고 진행
               &&
               [
@@ -350,9 +354,10 @@ class TickerInfoModel {
                 : '${suffix4}_0'; // PERP인 경우 USDC로 변경
             unitAndBaseCode =
                 splitSymbol.first.substring(0, splitSymbol.first.length - 4);
+            hasQuoteCode = true;
           }
         }
-        if (splitSymbol.first.length > 3) {
+        if (!hasQuoteCode && splitSymbol.first.length > 3) {
           final String suffix3 =
               splitSymbol.first.substring(splitSymbol.first.length - 3);
           if ([
@@ -391,12 +396,11 @@ class TickerInfoModel {
             quoteCode = '${suffix3}_0';
             unitAndBaseCode =
                 splitSymbol.first.substring(0, splitSymbol.first.length - 3);
-          } else {
-            // 분리가 안되는 경우
-            quoteCode = '';
-            unitAndBaseCode = '';
-            log('[WARN][TickerInfoModel.rawToTickerInfo] quoteCode 분리 실패. 확인 요망 - $exchangeRawCategoryEnum $rawSymbol');
+            hasQuoteCode = true;
           }
+        }
+        if (!hasQuoteCode) {
+          log('[WARN][TickerInfoModel.rawToTickerInfo] quoteCode 분리 실패 - $exchangeRawCategoryEnum $rawSymbol, splitSymbol.first: ${splitSymbol.first}');
         }
         break;
     }

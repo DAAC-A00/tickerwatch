@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 
+import 'external/bybit/services/bybit_all_spot_api_service.dart';
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
 import 'product/sample_person/person.dart';
+import 'product/tickers/states/ticker_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +18,7 @@ void main() async {
 
   // Register the PersonAdapter
   Hive.registerAdapter(PersonAdapter());
+  Hive.registerAdapter(TickerEntityAdapter());
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -27,6 +31,19 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _fetchAndStoreTickerData(); // 데이터 가져오기 및 저장
+  }
+
+  Future<void> _fetchAndStoreTickerData() async {
+    final tickerList = await BybitAllSpotApiService.getDataList();
+    if (tickerList != null) {
+      ref.read(tickerProvider.notifier).insertAllBox(tickerList);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final commonSettingState = ref.watch(commonSettingProvider);
