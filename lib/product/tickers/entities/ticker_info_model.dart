@@ -59,6 +59,8 @@ class TickerInfoModel {
   final String remark;
   final String searchKeywords;
 
+  List<String> splitSymbol = [];
+
   TickerInfoModel({
     required this.tickerId,
     // raw
@@ -122,7 +124,6 @@ class TickerInfoModel {
       {String? subData, bool isPreferToFiat = false}) {
     rawSymbol = rawSymbol;
     late String tmpSymbol;
-    late List<String> splitSymbol;
 
     // 불필요한 rawSymbol의 데이터 삭제해서 tmpSymbol 만들기
     // bitget의 _$rawCategory 문구 제거
@@ -147,6 +148,7 @@ class TickerInfoModel {
     //    bybit spot : BTCBRL, PEPEUSDC, DOGEEUR, 1SOLUSDT, 1INCHUSDT
     //    bybit linear : 10000000AIDOGEUSDT, 1000000PEIPEIUSDT, 10000COQUSDT, SHIB1000PERP, BTCPERP, BTC-06SEP24, BTC-25OCT24, BTC-27DEC24, BTC-27JUN25, BTC-27SEP24, BTC-28MAR25, BTC-30AUG24
     //    bybit inverse : BTCUSDZ24, BTCUSDU24, DOTUSD
+    //    bitget spot : BTCUSDT, PEPEEUR, USDTBRL
     //    bitget umcbl : BTCUSDT
     //    bitget dmcbl : BTCUSD, ETHUSD_240927
     //    bitget cmcbl : ETHPERP
@@ -170,24 +172,25 @@ class TickerInfoModel {
     }
 
     // splitSymbol 예시
-    //    bybit spot : length 1 -> BTCBRL, PEPEUSDC, DOGEEUR, 1SOLUSDT, 1INCHUSDT
-    //    bybit linear : length 1, 2 유기한 -> 10000000AIDOGEUSDT, 1000000PEIPEIUSDT, 10000COQUSDT, SHIB1000PERP, BTCPERP, [BTC, 06SEP24], [BTC, 25OCT24], [BTC, 27DEC24], [BTC, 27JUN25], [BTC, 27SEP24], [BTC, 28MAR25], [BTC, 30AUG24]
-    //    bybit inverse : length 1 -> BTCUSDZ24, BTCUSDU24, DOTUSD
-    //    bitget umcbl : length 1 -> BTCUSDT
-    //    bitget dmcbl : length 1, 2 유기한 -> BTCUSD, [ETHUSD, 240927]
-    //    bitget cmcbl : length 1 -> ETHPERP
-    //    okx SPOT : length 2 -> [BTC, USDT]
-    //    okx SWAP : length 2 -> [BTC, USD], [ETH, USDC]
-    //    okx FUTURES : length 3 유기한 -> [XRP, USDT, 241227]
-    //    okx OPTION : length 5 유기한 -> [BTC, USD, 240906, 62000, P], [BTC, USD, 241108, 50000, C]
-    //    binance spot : length 1 -> BNBETH, ETHUSDT, 1000SATSTRY, 1000SATSFDUSD
-    //    binance cm : length 2 무/유기한 -> [ETHUSD, 240927], [ETHUSD, PERP], [UNIUSD, PERP], [LTCUSD, 241227]
-    //    binance um : length 1, 2 유기한 -> [BTCUSDT, 241227], [BTCUSDC], [1000PEPEUSDT], [1000SHIBUSDC]
-    //    upbit spot : length 2 -> [KRW, BTC], [USDT, BTC], [BTC, APE]       (quoteCode-baseCode)
-    //    bithumb spot : length 1 -> [BTC], [ETH]
+    //    bybit spot : length 1 -> ['BTCBRL'], ['PEPEUSDC'], ['DOGEEUR'], ['1SOLUSDT'], ['1INCHUSDT']
+    //    bybit linear : length 1 /// 2 유기한 -> ['10000000AIDOGEUSDT'], ['1000000PEIPEIUSDT'], ['10000COQUSDT'], ['SHIB1000PERP'], ['BTCPERP'] /// ['BTC', '06SEP24'], ['BTC', '25OCT24'], ['BTC', '27DEC24'], ['BTC', '27JUN25'], ['BTC', '27SEP24'], ['BTC', '28MAR25'], ['BTC', '30AUG24']
+    //    bybit inverse : length 1 -> ['BTCUSDZ24'], ['BTCUSDU24'], ['DOTUSD']
+    //    bitget spot : length 1 -> ['BTCUSDT'], ['PEPEEUR'], ['USDTBRL']
+    //    bitget umcbl : length 1 -> ['BTCUSDT']
+    //    bitget dmcbl : length 1 /// 2 유기한 -> ['BTCUSD'] /// ['ETHUSD', '240927']
+    //    bitget cmcbl : length 1 -> ['ETHPERP']
+    //    okx SPOT : length 2 -> ['BTC', 'USDT']
+    //    okx SWAP : length 2 -> ['BTC', 'USD'], ['ETH', 'USDC']
+    //    okx FUTURES : length 3 유기한 -> ['XRP', 'USDT', '241227']
+    //    okx OPTION : length 5 유기한 -> ['BTC', 'USD', '240906', '62000', 'P'], ['BTC', 'USD', '241108', '50000', 'C']
+    //    binance spot : length 1 -> ['BNBETH'], ['ETHUSDT'], ['1000SATSTRY'], ['1000SATSFDUSD']
+    //    binance cm : length 2 무/유기한 -> ['ETHUSD', '240927'], ['ETHUSD', 'PERP'], ['UNIUSD', 'PERP'], ['LTCUSD', '241227']
+    //    binance um : length 1 /// 2 유기한 -> ['BTCUSDC'], ['1000PEPEUSDT'], ['1000SHIBUSDC'] /// ['BTCUSDT', '241227']
+    //    upbit spot : length 2 -> ['KRW', 'BTC'], ['USDT', 'BTC'], ['BTC', 'APE']       (quoteCode-baseCode)
+    //    bithumb spot : length 1 -> ['BTC'], ['ETH']
 
-    expirationDate = _getExpirationDateAndUpdateOptionData(
-        exchangeRawCategoryEnum, splitSymbol);
+    expirationDate =
+        _getExpirationDateAndUpdateOptionData(exchangeRawCategoryEnum);
 
     // category & source
     switch (exchangeRawCategoryEnum) {
@@ -274,6 +277,24 @@ class TickerInfoModel {
         break;
     }
 
+    // splitSymbol 예시
+    //    bybit spot : length 1 -> ['BTCBRL'], ['PEPEUSDC'], ['DOGEEUR'], ['1SOLUSDT'], ['1INCHUSDT']
+    //    bybit linear : length 1 /// 2 유기한 -> ['10000000AIDOGEUSDT'], ['1000000PEIPEIUSDT'], ['10000COQUSDT'], ['SHIB1000PERP'], ['BTCPERP'] /// ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC']
+    //    bybit inverse : length 1 -> ['BTCUSDZ24'], ['BTCUSDU24'], ['DOTUSD']
+    //    bitget spot : length 1 -> ['BTCUSDT'], ['PEPEEUR'], ['USDTBRL']
+    //    bitget umcbl : length 1 -> ['BTCUSDT']
+    //    bitget dmcbl : length 1 /// 2 유기한 -> ['BTCUSD'] /// ['ETHUSD']
+    //    bitget cmcbl : length 1 -> ['ETHPERP']
+    //    okx SPOT : length 2 -> ['BTC', 'USDT']
+    //    okx SWAP : length 2 -> ['BTC', 'USD'], ['ETH', 'USDC']
+    //    okx FUTURES : length 3 유기한 -> ['XRP', 'USDT']
+    //    okx OPTION : length 5 유기한 -> ['BTC', 'USD'], ['BTC', 'USD']
+    //    binance spot : length 1 -> ['BNBETH'], ['ETHUSDT'], ['1000SATSTRY'], ['1000SATSFDUSD']
+    //    binance cm : length 2 무/유기한 -> ['ETHUSD'], ['ETHUSD'], ['UNIUSD'], ['LTCUSD']
+    //    binance um : length 1 /// 2 유기한 -> ['BTCUSDC'], ['1000PEPEUSDT'], ['1000SHIBUSDC'] /// ['BTCUSDT']
+    //    upbit spot : length 2 -> ['KRW', 'BTC'], ['USDT', 'BTC'], ['BTC', 'APE']       (quoteCode-baseCode)
+    //    bithumb spot : length 1 -> ['BTC'], ['ETH']
+
     // TODO quoteCode 분리
 
     // TODO unit & baseCode 분리
@@ -318,57 +339,77 @@ class TickerInfoModel {
     return ''; // PERP인 경우
   }
 
-  void _updateStrikePrice(String price) {
-    strikePrice = price;
+  void _updateStrikePrice() {
+    strikePrice = splitSymbol.last;
+    _popSplitSymbol;
   }
 
-  void _updateOptionType(String lastSymbol) {
-    if (lastSymbol == 'C') {
+  void _updateOptionType() {
+    if (splitSymbol.last == 'C') {
       optionTypeEnum = OptionTypeEnum.call;
-    } else if (lastSymbol == 'P') {
+      _popSplitSymbol;
+    } else if (splitSymbol.last == 'P') {
       optionTypeEnum = OptionTypeEnum.put;
+      _popSplitSymbol;
     } else {
-      log('[WARN][TickerInfoModel._updateOptionType] Invalid option type detected: $lastSymbol. Setting to OptionTypeEnum.none');
+      log('[WARN][TickerInfoModel._updateOptionType] Invalid option type detected: ${splitSymbol.last}. Setting to OptionTypeEnum.none');
       optionTypeEnum = OptionTypeEnum.none;
     }
   }
 
   String _getExpirationDateAndUpdateOptionData(
-      ExchangeRawCategoryEnum exchangeRawCategoryEnum,
-      List<String> splitSymbol) {
+      ExchangeRawCategoryEnum exchangeRawCategoryEnum) {
     switch (exchangeRawCategoryEnum) {
       case ExchangeRawCategoryEnum.bybitLinear:
         if (splitSymbol.length == 2) {
-          return _extractExpirationDate(splitSymbol.last);
+          return _extractExpirationDate(_popSplitSymbol() ?? '');
         }
         break;
+      case ExchangeRawCategoryEnum.bybitInverse:
+        if (splitSymbol.first.substring(3) == 'Z24') {
+          splitSymbol.first =
+              splitSymbol.first.substring(0, splitSymbol.first.length - 3);
+          return '20241227';
+        } else if (splitSymbol.first.substring(3) == 'U24') {
+          splitSymbol.first =
+              splitSymbol.first.substring(0, splitSymbol.first.length - 3);
+          return '20240927';
+        } else {
+          return '';
+        }
 
       case ExchangeRawCategoryEnum.bitgetDmcbl:
       case ExchangeRawCategoryEnum.binanceUm:
         if (splitSymbol.length == 2) {
-          return '20${splitSymbol.last}';
+          return '20$_popSplitSymbol';
         }
         break;
 
       case ExchangeRawCategoryEnum.okxFutures:
-        return '20${splitSymbol.last}';
+        final String partOfExpirationDate = _popSplitSymbol() ?? '';
+        return '20$partOfExpirationDate';
       case ExchangeRawCategoryEnum.okxOption:
         if (splitSymbol.length == 5) {
-          _updateStrikePrice(splitSymbol[3]);
-          _updateOptionType(splitSymbol.last);
-          return splitSymbol[2];
+          _updateOptionType();
+          _updateStrikePrice();
+          return _popSplitSymbol() ?? '';
         } else {
           log('[WARN][TickerInfoModel._getExpirationDateAndUpdateOptionData] ExchangeRawCategoryEnum.okxFutures splitSymbol.length != 5인 경우 발생');
           break;
         }
 
       case ExchangeRawCategoryEnum.binanceCm:
-        return splitSymbol.last == 'PERP' ? '' : '20${splitSymbol.last}';
+        return splitSymbol.last == 'PERP' ? '' : '20$_popSplitSymbol';
 
       default:
         break;
     }
     return ''; // 모든 PERP인 경우 처리
+  }
+
+  String? _popSplitSymbol() {
+    // python에서 pop은 해당 List의 마지막 요소를 remove하면서 return하는 기본함수이다.
+    return splitSymbol.isNotEmpty ? splitSymbol.removeLast() : null;
   }
 }
 
