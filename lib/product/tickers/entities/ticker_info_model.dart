@@ -57,7 +57,7 @@ class TickerInfoModel {
 
   // etc
   final String remark;
-  final String searchKeywords;
+  String searchKeywords;
 
   List<String> splitSymbol = [];
 
@@ -119,7 +119,7 @@ class TickerInfoModel {
   //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
   //    bithumb spot : BTC, ETH
 
-  TickerInfoModel? rawToTickerInfo(
+  void rawToTickerInfo(
       ExchangeRawCategoryEnum exchangeRawCategoryEnum, String rawSymbol,
       {String? subData, bool isPreferToFiat = false}) {
     rawSymbol = rawSymbol;
@@ -430,10 +430,10 @@ class TickerInfoModel {
     quoteCountryKorean = _getCountryKorean(quoteCode);
     paymentCountryKorean = _getCountryKorean(paymentCode);
 
-    // TODO 이어서 데이터 가공 로직 구현 필요
-    rawSymbol = rawSymbol;
+    searchKeywords =
+        '$rawSymbol$unit${baseCode.split('_').first}$unit${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
 
-    return null;
+    // TODO 이어서 데이터 가공 로직 구현 필요
   }
 
   String _extractExpirationDate(String rawExpirationDate) {
