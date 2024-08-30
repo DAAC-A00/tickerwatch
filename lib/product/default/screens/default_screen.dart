@@ -1,6 +1,7 @@
 // default_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
 import 'package:tickerwatch/product/counter/counter_main_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
@@ -60,6 +61,10 @@ class _DefaultScreenState extends State<DefaultScreen> {
             icon: Icon(Icons.settings),
             label: 'Setting',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.candlestick_chart),
+            label: 'tickers',
+          ),
         ],
         selectedItemColor: currentTheme.primary,
         unselectedItemColor: currentTheme.secondary,
@@ -77,6 +82,8 @@ class _DefaultScreenState extends State<DefaultScreen> {
         return const PersonMainScreen();
       case 3:
         return const SettingMainScreen();
+      case 4:
+        return const AllTickerMainScreen();
       default:
         return const HomeMainScreen();
     }
