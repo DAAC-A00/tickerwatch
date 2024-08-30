@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 
-import 'external/bybit/services/bybit_all_spot_api_service.dart';
+import 'external/bybit/schedulers/bybit_all_spot_api_service.dart';
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
 import 'product/sample_person/person.dart';
@@ -19,6 +20,7 @@ void main() async {
   // Register the PersonAdapter
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(TickerEntityAdapter());
+  Hive.registerAdapter(TickerInfoModelAdapter());
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -31,21 +33,27 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  late final BybitAllSpotScheduler bybitSpotScheduler;
+
   @override
   void initState() {
     super.initState();
-    _fetchAndStoreTickerData(); // 데이터 가져오기 및 저장
+    bybitSpotScheduler = BybitAllSpotScheduler(ref);
+    bybitSpotScheduler.start();
   }
 
-  Future<void> _fetchAndStoreTickerData() async {
-    final tickerList = await BybitAllSpotApiService.getDataList();
-    if (tickerList != null) {
-      ref.read(tickerProvider.notifier).insertAllBox(tickerList);
-    }
+  @override
+  void dispose() {
+    bybitSpotScheduler.stop();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // 앱 실행시 데이터 저장이 정상적으로 되도록 선언
+    ref.watch(tickerProvider);
+
+    // 공통 설정값 가져오기
     final commonSettingState = ref.watch(commonSettingProvider);
     // baseSize
     final double baseSize = MediaQuery.of(context).size.shortestSide;
