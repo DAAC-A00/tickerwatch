@@ -38,16 +38,26 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    _fetchInitialData();
+    bybitSpotScheduler = BybitAllSpotScheduler(ref);
+    _fetchInitialData(); // 비동기 초기 데이터 가져오기
   }
 
   Future<void> _fetchInitialData() async {
-    bybitSpotScheduler = BybitAllSpotScheduler(ref);
-    await bybitSpotScheduler.fetchOnce();
+    // commonSettingProvider 값을 정상적으로 불러오도록 기다리기 위해 1초 대기
+    await Future.delayed(const Duration(seconds: 1));
+
+    // commonSettingProvider의 isSuperMode에 따라 동작 결정
+    final commonSettingState = ref.read(commonSettingProvider);
+    if (commonSettingState.isSuperMode) {
+      bybitSpotScheduler.start();
+    } else {
+      bybitSpotScheduler.fetchOnce();
+    }
   }
 
   @override
   void dispose() {
+    bybitSpotScheduler.stop();
     super.dispose();
   }
 

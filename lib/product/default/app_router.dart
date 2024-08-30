@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tickerwatch/product/alltickers/screens/all_ticker_main_screen.dart';
+import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
