@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../entities/common_setting.dart';
 import '../states/common_setting_provider.dart';
 
 class CommonSettingScreen extends ConsumerWidget {
@@ -27,9 +26,17 @@ class CommonSettingScreen extends ConsumerWidget {
             ),
             value: commonSetting.isLightMode,
             onChanged: (bool value) {
-              commonSettingNotifier.updateBox(
-                CommonSetting(isLightMode: value),
-              );
+              commonSettingNotifier.updateIsLightModeBox(value);
+            },
+          ),
+          SwitchListTile(
+            title: const Text('개발자 모드'),
+            subtitle: Text(
+              commonSetting.isDevMode ? '👩🏻‍💻 On' : '👩🏻‍💼 Off',
+            ),
+            value: commonSetting.isDevMode,
+            onChanged: (bool value) {
+              commonSettingNotifier.updateIsDevModeBox(value);
             },
           ),
         ],

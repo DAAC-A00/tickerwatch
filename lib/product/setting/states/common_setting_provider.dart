@@ -14,6 +14,7 @@ final commonSettingProvider =
 
 final CommonSetting defaultCommonSetting = CommonSetting(
   isLightMode: false, // true면 기본값이 Dark Mode, false면 기본값이 Light Mode
+  isDevMode: false,
 );
 
 class CommonSettingNotifier extends StateNotifier<CommonSetting> {
@@ -30,13 +31,32 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
           defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
         'true';
+    final bool isDevMode = _commonSettingBox.get(
+          BoxSettingEnum.isDevMode.name,
+          defaultValue: defaultCommonSetting.isLightMode.toString(),
+        )! ==
+        'true';
 
-    state = CommonSetting(isLightMode: isLightMode);
+    state = CommonSetting(
+      isLightMode: isLightMode,
+      isDevMode: isDevMode,
+    );
   }
 
   void updateBox(CommonSetting commonSetting) {
     _commonSettingBox.put(
         BoxSettingEnum.isLightMode.name, commonSetting.isLightMode.toString());
     state = commonSetting;
+  }
+
+  void updateIsLightModeBox(bool isLightMode) {
+    _commonSettingBox.put(
+        BoxSettingEnum.isLightMode.name, isLightMode.toString());
+    state = CommonSetting(isLightMode: isLightMode, isDevMode: state.isDevMode);
+  }
+
+  void updateIsDevModeBox(bool isDevMode) {
+    _commonSettingBox.put(BoxSettingEnum.isDevMode.name, isDevMode.toString());
+    state = CommonSetting(isLightMode: state.isLightMode, isDevMode: isDevMode);
   }
 }
