@@ -51,6 +51,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (commonSettingState.isSuperMode) {
       bybitSpotScheduler.start();
     } else {
+      bybitSpotScheduler.stop();
       bybitSpotScheduler.fetchOnce();
     }
   }
