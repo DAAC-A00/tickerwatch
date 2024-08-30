@@ -17,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  // Register the PersonAdapter
+  // Register Adapters
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(TickerEntityAdapter());
   Hive.registerAdapter(TickerInfoModelAdapter());

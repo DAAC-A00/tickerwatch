@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../default/handler/device_back_button_handler.dart';
 import '../../watch/screens/watch_main_screen.dart';
 
 class HomeMainScreen extends ConsumerStatefulWidget {
@@ -28,11 +29,16 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
+          DeviceBackButtonHandler.disable();
+          Navigator.of(context)
+              .push(
             MaterialPageRoute(
               builder: (context) => const WatchMainScreen(),
             ),
-          );
+          )
+              .then((_) {
+            DeviceBackButtonHandler.enable();
+          });
         },
         tooltip: 'Go to New Screen',
         child: const Icon(Icons.watch_later_outlined),

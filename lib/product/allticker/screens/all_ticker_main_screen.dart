@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../tickers/states/ticker_provider.dart';
-import '../../watch/screens/watch_main_screen.dart';
 
 class AllTickerMainScreen extends ConsumerStatefulWidget {
   const AllTickerMainScreen({super.key});
@@ -71,17 +70,6 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const WatchMainScreen(),
-            ),
-          );
-        },
-        tooltip: 'Go to New Screen',
-        child: const Icon(Icons.watch_later_outlined),
-      ),
     );
   }
 }
