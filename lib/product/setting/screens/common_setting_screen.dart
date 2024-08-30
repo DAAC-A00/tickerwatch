@@ -39,6 +39,16 @@ class CommonSettingScreen extends ConsumerWidget {
               commonSettingNotifier.updateIsDevModeBox(value);
             },
           ),
+          SwitchListTile(
+            title: const Text('슈퍼 모드'),
+            subtitle: Text(
+              commonSetting.isSuperMode ? '🌈 On' : '☁️ Off',
+            ),
+            value: commonSetting.isSuperMode,
+            onChanged: (bool value) {
+              commonSettingNotifier.updateIsSuperModeBox(value);
+            },
+          ),
         ],
       ),
     );

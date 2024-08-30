@@ -11,6 +11,7 @@ enum BoxSettingEnum {
   // Common Setting
   isLightMode,
   isDevMode,
+  isSuperMode,
 }
 
 extension BoxSettingEnumExtension on BoxSettingEnum {
@@ -34,6 +35,8 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
         return 'isLightMode';
       case BoxSettingEnum.isDevMode:
         return 'isDevMode';
+      case BoxSettingEnum.isSuperMode:
+        return 'isSuperMode';
     }
   }
 }

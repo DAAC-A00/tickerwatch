@@ -13,8 +13,9 @@ final commonSettingProvider =
 });
 
 final CommonSetting defaultCommonSetting = CommonSetting(
-  isLightMode: false, // true면 기본값이 Dark Mode, false면 기본값이 Light Mode
+  isLightMode: false,
   isDevMode: false,
+  isSuperMode: false,
 );
 
 class CommonSettingNotifier extends StateNotifier<CommonSetting> {
@@ -33,13 +34,19 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
         'true';
     final bool isDevMode = _commonSettingBox.get(
           BoxSettingEnum.isDevMode.name,
-          defaultValue: defaultCommonSetting.isLightMode.toString(),
+          defaultValue: defaultCommonSetting.isDevMode.toString(),
+        )! ==
+        'true';
+    final bool isSuperMode = _commonSettingBox.get(
+          BoxSettingEnum.isSuperMode.name,
+          defaultValue: defaultCommonSetting.isSuperMode.toString(),
         )! ==
         'true';
 
     state = CommonSetting(
       isLightMode: isLightMode,
       isDevMode: isDevMode,
+      isSuperMode: isSuperMode,
     );
   }
 
@@ -52,11 +59,26 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
   void updateIsLightModeBox(bool isLightMode) {
     _commonSettingBox.put(
         BoxSettingEnum.isLightMode.name, isLightMode.toString());
-    state = CommonSetting(isLightMode: isLightMode, isDevMode: state.isDevMode);
+    state = CommonSetting(
+        isLightMode: isLightMode,
+        isDevMode: state.isDevMode,
+        isSuperMode: state.isSuperMode);
   }
 
   void updateIsDevModeBox(bool isDevMode) {
     _commonSettingBox.put(BoxSettingEnum.isDevMode.name, isDevMode.toString());
-    state = CommonSetting(isLightMode: state.isLightMode, isDevMode: isDevMode);
+    state = CommonSetting(
+        isLightMode: state.isLightMode,
+        isDevMode: isDevMode,
+        isSuperMode: state.isSuperMode);
+  }
+
+  void updateIsSuperModeBox(bool isSuperMode) {
+    _commonSettingBox.put(
+        BoxSettingEnum.isSuperMode.name, isSuperMode.toString());
+    state = CommonSetting(
+        isLightMode: state.isLightMode,
+        isDevMode: state.isDevMode,
+        isSuperMode: isSuperMode);
   }
 }
