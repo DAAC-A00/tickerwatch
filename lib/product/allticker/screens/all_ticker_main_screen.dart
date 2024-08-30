@@ -30,7 +30,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     final filteredTickers = tickers.where((ticker) {
       return ticker.info.searchKeywords
           .toLowerCase()
-          .contains(_searchController.text.toLowerCase());
+          .contains(_searchController.text.replaceAll(' ', '').toLowerCase());
     }).toList();
 
     return Scaffold(

@@ -433,8 +433,6 @@ class TickerInfoModel {
 
     searchKeywords =
         '$rawSymbol$unit${baseCode.split('_').first}$unit${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
-
-    // TODO 이어서 데이터 가공 로직 구현 필요
   }
 
   String _extractExpirationDate(String rawExpirationDate) {
