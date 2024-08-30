@@ -14,3 +14,7 @@
 3. [ERROR] : 오류 감지 데이터 출력, 즉시 대응해야하는 문제 발생
 4. 예시 : log('[WARN][$className.$funcName] 내용');
 5. log('[WARN][TickerSettingNotifier.updateCandleColor] upColorString or downColorString is null. So BoxSetting not updated.');
+
+- 설정값
+1. isDevMode : 개발자모드로, 클라이언트에게는 공개되지 않는 데이터를 확인할 수 있는 메뉴 하단 가장 우측에 개발자용 화면으로 진입할 수 있는 메뉴탭이 활성화된다.
+2. 

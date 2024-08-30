@@ -38,13 +38,16 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
     bybitSpotScheduler = BybitAllSpotScheduler(ref);
-    bybitSpotScheduler.start();
+    await bybitSpotScheduler.fetchOnce();
   }
 
   @override
   void dispose() {
-    bybitSpotScheduler.stop();
     super.dispose();
   }
 
@@ -55,6 +58,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // 공통 설정값 가져오기
     final commonSettingState = ref.watch(commonSettingProvider);
+
     // baseSize
     final double baseSize = MediaQuery.of(context).size.shortestSide;
     final customTheme = CustomTheme(baseSize: baseSize);

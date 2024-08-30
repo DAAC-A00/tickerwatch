@@ -13,7 +13,7 @@ class BybitAllSpotScheduler {
   BybitAllSpotScheduler(this.ref);
 
   void start() {
-    const period = Duration(milliseconds: 2000);
+    const period = Duration(milliseconds: 1300);
     _timer?.cancel();
     _timer = Timer.periodic(period, (timer) async {
       List<TickerEntity>? newDataList =
@@ -26,5 +26,13 @@ class BybitAllSpotScheduler {
 
   void stop() {
     _timer?.cancel();
+  }
+
+  Future<void> fetchOnce() async {
+    List<TickerEntity>? newDataList =
+        await BybitAllSpotApiService.getDataList();
+    if (newDataList != null) {
+      ref.read(tickerProvider.notifier).updateAllBox(newDataList);
+    }
   }
 }
