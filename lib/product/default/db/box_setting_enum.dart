@@ -9,7 +9,9 @@ enum BoxSettingEnum {
   isQuoteUnitSignEnabled,
   isPercentSignEnabled,
   // Common Setting
-  isLightMode
+  isLightMode,
+  isDevMode,
+  isSuperMode,
 }
 
 extension BoxSettingEnumExtension on BoxSettingEnum {
@@ -31,8 +33,10 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
       // Common Setting
       case BoxSettingEnum.isLightMode:
         return 'isLightMode';
-      default:
-        return '';
+      case BoxSettingEnum.isDevMode:
+        return 'isDevMode';
+      case BoxSettingEnum.isSuperMode:
+        return 'isSuperMode';
     }
   }
 }

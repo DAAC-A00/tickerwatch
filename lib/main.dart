@@ -4,17 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 
+import 'external/bybit/schedulers/bybit_all_spot_api_service.dart';
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
 import 'product/sample_person/person.dart';
+import 'product/tickers/states/ticker_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  // Register the PersonAdapter
+  // Register Adapters
   Hive.registerAdapter(PersonAdapter());
+  Hive.registerAdapter(TickerEntityAdapter());
+  Hive.registerAdapter(TickerInfoModelAdapter());
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -27,9 +33,43 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  late final BybitAllSpotScheduler bybitSpotScheduler;
+
+  @override
+  void initState() {
+    super.initState();
+    bybitSpotScheduler = BybitAllSpotScheduler(ref);
+    _fetchInitialData(); // 비동기 초기 데이터 가져오기
+  }
+
+  Future<void> _fetchInitialData() async {
+    // commonSettingProvider 값을 정상적으로 불러오도록 기다리기 위해 1초 대기
+    await Future.delayed(const Duration(seconds: 1));
+
+    // commonSettingProvider의 isSuperMode에 따라 동작 결정
+    final commonSettingState = ref.read(commonSettingProvider);
+    if (commonSettingState.isSuperMode) {
+      bybitSpotScheduler.start();
+    } else {
+      bybitSpotScheduler.stop();
+      bybitSpotScheduler.fetchOnce();
+    }
+  }
+
+  @override
+  void dispose() {
+    bybitSpotScheduler.stop();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 앱 실행시 데이터 저장이 정상적으로 되도록 선언
+    ref.watch(tickerProvider);
+
+    // 공통 설정값 가져오기
     final commonSettingState = ref.watch(commonSettingProvider);
+
     // baseSize
     final double baseSize = MediaQuery.of(context).size.shortestSide;
     final customTheme = CustomTheme(baseSize: baseSize);

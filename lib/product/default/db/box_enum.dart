@@ -4,6 +4,7 @@ enum BoxEnum {
   setting,
   counter,
   person,
+  ticker,
 }
 
 extension BoxEnumExtension on BoxEnum {
@@ -15,8 +16,8 @@ extension BoxEnumExtension on BoxEnum {
         return 'counter';
       case BoxEnum.person:
         return 'person';
-      default:
-        return '';
+      case BoxEnum.ticker:
+        return 'ticker';
     }
   }
 }

@@ -1,19 +1,20 @@
-// ticker_model.dart
+// ticker_entity.dart
 
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
-import 'price_status_enum.dart';
+import '../enums/price_status_enum.dart';
 import 'ticker_info_model.dart';
 
-class TickerModel {
+class TickerEntity {
   // MarketPairDetailModel
   // -- raw
   final TickerInfoModel info;
 
   // 지속적으로 변하는 데이터
   // -- 현재 호가
-  String price;
+  String price; // 현재가 (bidPrice, askPrice의 평균)
+  String lastPrice; // 최근 체결가
   String ask1Price;
   String ask1Size;
   String bid1Price;
@@ -44,9 +45,10 @@ class TickerModel {
 
   String get updatedAt => _updatedAt;
 
-  TickerModel({
+  TickerEntity({
     required this.info,
     required this.price,
+    required this.lastPrice,
     required this.ask1Price,
     required this.ask1Size,
     required this.bid1Price,
@@ -57,12 +59,12 @@ class TickerModel {
     required this.lowPrice24h,
     required this.turnOver24h,
     required this.volume24h,
-    required this.changePercentUtc0,
-    required this.prevPriceUtc0,
-    required this.highPriceUtc0,
-    required this.lowPriceUtc0,
-    required this.turnOverUtc0,
-    required this.volumeUtc0,
+    this.changePercentUtc0 = '',
+    this.prevPriceUtc0 = '',
+    this.highPriceUtc0 = '',
+    this.lowPriceUtc0 = '',
+    this.turnOverUtc0 = '',
+    this.volumeUtc0 = '',
     required this.priceStatusEnum,
     String? dataAt,
   }) {
@@ -76,16 +78,17 @@ class TickerModel {
   }
 }
 
-class TickerModelAdapter extends TypeAdapter<TickerModel> {
+class TickerEntityAdapter extends TypeAdapter<TickerEntity> {
   @override
   final int typeId = 1; // 타입 식별자입니다.
 
   @override
-  TickerModel read(BinaryReader reader) {
-    // 바이너리 데이터를 읽어 TickerModel 객체를 생성합니다.
-    return TickerModel(
+  TickerEntity read(BinaryReader reader) {
+    // 바이너리 데이터를 읽어 TickerEntity 객체를 생성합니다.
+    return TickerEntity(
       info: reader.read() as TickerInfoModel, // TickerInfoModel을 읽어옵니다.
       price: reader.readString(),
+      lastPrice: reader.readString(),
       ask1Price: reader.readString(),
       ask1Size: reader.readString(),
       bid1Price: reader.readString(),
@@ -108,10 +111,11 @@ class TickerModelAdapter extends TypeAdapter<TickerModel> {
   }
 
   @override
-  void write(BinaryWriter writer, TickerModel obj) {
-    // TickerModel 객체를 바이너리 데이터로 씁니다.
+  void write(BinaryWriter writer, TickerEntity obj) {
+    // TickerEntity 객체를 바이너리 데이터로 씁니다.
     writer.write(obj.info); // TickerInfoModel을 씁니다.
     writer.writeString(obj.price);
+    writer.writeString(obj.lastPrice);
     writer.writeString(obj.ask1Price);
     writer.writeString(obj.ask1Size);
     writer.writeString(obj.bid1Price);

@@ -1,21 +1,24 @@
 // default_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
 import 'package:tickerwatch/product/counter/counter_main_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 
 import '../../sample_person/person_main_screen.dart';
+import '../../setting/states/common_setting_provider.dart';
 import '../handler/device_back_button_handler.dart';
 
-class DefaultScreen extends StatefulWidget {
+class DefaultScreen extends ConsumerStatefulWidget {
   const DefaultScreen({super.key});
 
   @override
-  State<DefaultScreen> createState() => _DefaultScreenState();
+  ConsumerState<DefaultScreen> createState() => _DefaultScreenState();
 }
 
-class _DefaultScreenState extends State<DefaultScreen> {
+class _DefaultScreenState extends ConsumerState<DefaultScreen> {
   int _selectedTabIndex = 0;
 
   @override
@@ -33,6 +36,7 @@ class _DefaultScreenState extends State<DefaultScreen> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme currentTheme = Theme.of(context).colorScheme;
+    final commonSetting = ref.watch(commonSettingProvider);
 
     return Scaffold(
       body: _getBodyWidget(_selectedTabIndex),
@@ -43,28 +47,37 @@ class _DefaultScreenState extends State<DefaultScreen> {
             _selectedTabIndex = index;
           });
         },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.onetwothree),
-            label: 'Counter',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Person',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Setting',
-          ),
-        ],
+        items: _buildBottomNavigationBarItems(commonSetting.isDevMode),
         selectedItemColor: currentTheme.primary,
         unselectedItemColor: currentTheme.secondary,
       ),
     );
+  }
+
+  List<BottomNavigationBarItem> _buildBottomNavigationBarItems(bool isDevMode) {
+    return [
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.onetwothree),
+        label: 'Counter',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Person',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Setting',
+      ),
+      if (isDevMode)
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.candlestick_chart),
+          label: 'Tickers',
+        ),
+    ];
   }
 
   Widget _getBodyWidget(int index) {
@@ -77,6 +90,8 @@ class _DefaultScreenState extends State<DefaultScreen> {
         return const PersonMainScreen();
       case 3:
         return const SettingMainScreen();
+      case 4:
+        return const AllTickerMainScreen();
       default:
         return const HomeMainScreen();
     }
