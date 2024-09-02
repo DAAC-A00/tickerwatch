@@ -22,21 +22,33 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     super.dispose();
   }
 
-  void _showInfoDialog() {
-    showDialog(
+  void _showInfoBottomSheet() {
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('안내 정보'),
-          content: const Text('여기에 해당 화면에 대한 안내 정보를 작성합니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('확인'),
-            ),
-          ],
+        // final double text = Theme.of(context).textTheme.bodyLarge?.fontSize;
+        // final ColorScheme currentTheme = Theme.of(context).colorScheme;
+        return Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                '안내 정보',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              const Text('여기에 해당 화면에 대한 안내 정보를 작성합니다.'),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // 바텀 시트를 닫기
+                },
+                child: const Text('확인'),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -77,8 +89,8 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline), // `!` 아이콘
-            onPressed: _showInfoDialog, // 클릭 시 다이얼로그 표시
+            icon: const Icon(Icons.info_outline),
+            onPressed: _showInfoBottomSheet,
           ),
         ],
       ),
