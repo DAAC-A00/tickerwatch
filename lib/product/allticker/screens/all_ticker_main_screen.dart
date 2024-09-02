@@ -22,6 +22,26 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     super.dispose();
   }
 
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('안내 정보'),
+          content: const Text('여기에 해당 화면에 대한 안내 정보를 작성합니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final tickers = ref.watch(tickerProvider);
@@ -43,7 +63,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
           decoration: InputDecoration(
             hintText: '검색',
             prefixIcon: const Icon(Icons.search),
-            // border: const OutlineInputBorder(),
+            // border: InputBorder.none,
             suffixIcon: _searchController.text != ''
                 ? IconButton(
                     icon: const Icon(Icons.clear),
@@ -55,6 +75,12 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 : null,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline), // `!` 아이콘
+            onPressed: _showInfoDialog, // 클릭 시 다이얼로그 표시
+          ),
+        ],
       ),
       body: filteredTickers.isEmpty
           ? const Center(

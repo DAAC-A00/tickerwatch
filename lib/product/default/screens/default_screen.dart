@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
 import 'package:tickerwatch/product/counter/counter_main_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 
+import '../../admin/screens/admin_main_screen.dart';
 import '../../sample_person/person_main_screen.dart';
 import '../../setting/states/common_setting_provider.dart';
 import '../handler/device_back_button_handler.dart';
@@ -92,7 +92,7 @@ class _DefaultScreenState extends ConsumerState<DefaultScreen> {
       case 3:
         return const SettingMainScreen();
       case 4:
-        return const AllTickerMainScreen();
+        return const AdminMainScreen();
       default:
         return const HomeMainScreen();
     }

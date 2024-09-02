@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tickerwatch/product/admin/screens/admin_main_screen.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
@@ -57,6 +58,11 @@ List<RouteBase> _buildRoutes() {
                   const ExchangeSettingScreen(),
             ),
           ],
+        ),
+        GoRoute(
+          path: 'admin',
+          builder: (BuildContext context, GoRouterState state) =>
+              const AdminMainScreen(),
         ),
         GoRoute(
           path: 'alltickers',
