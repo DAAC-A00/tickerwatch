@@ -10,7 +10,7 @@ enum BoxSettingEnum {
   isPercentSignEnabled,
   // Common Setting
   isLightMode,
-  isDevMode,
+  isAdminMode,
   isSuperMode,
 }
 
@@ -33,8 +33,8 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
       // Common Setting
       case BoxSettingEnum.isLightMode:
         return 'isLightMode';
-      case BoxSettingEnum.isDevMode:
-        return 'isDevMode';
+      case BoxSettingEnum.isAdminMode:
+        return 'isAdminMode';
       case BoxSettingEnum.isSuperMode:
         return 'isSuperMode';
     }

@@ -47,14 +47,15 @@ class _DefaultScreenState extends ConsumerState<DefaultScreen> {
             _selectedTabIndex = index;
           });
         },
-        items: _buildBottomNavigationBarItems(commonSetting.isDevMode),
+        items: _buildBottomNavigationBarItems(commonSetting.isAdminMode),
         selectedItemColor: currentTheme.primary,
         unselectedItemColor: currentTheme.secondary,
       ),
     );
   }
 
-  List<BottomNavigationBarItem> _buildBottomNavigationBarItems(bool isDevMode) {
+  List<BottomNavigationBarItem> _buildBottomNavigationBarItems(
+      bool isAdminMode) {
     return [
       const BottomNavigationBarItem(
         icon: Icon(Icons.home),
@@ -72,10 +73,10 @@ class _DefaultScreenState extends ConsumerState<DefaultScreen> {
         icon: Icon(Icons.settings),
         label: 'Setting',
       ),
-      if (isDevMode)
+      if (isAdminMode)
         const BottomNavigationBarItem(
-          icon: Icon(Icons.candlestick_chart),
-          label: 'Tickers',
+          icon: Icon(Icons.devices),
+          label: 'Admin',
         ),
     ];
   }
