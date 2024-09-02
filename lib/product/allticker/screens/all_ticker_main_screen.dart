@@ -41,15 +41,18 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
             setState(() {});
           },
           decoration: InputDecoration(
-            hintText: 'Search Tickers',
+            hintText: '검색',
+            prefixIcon: const Icon(Icons.search),
             // border: const OutlineInputBorder(),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                _searchController.clear(); // 컨트롤러를 통해 입력값을 지웁니다.
-                setState(() {}); // 상태를 갱신하여 필터링
-              },
-            ),
+            suffixIcon: _searchController.text != ''
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear(); // 컨트롤러를 통해 입력값을 지웁니다.
+                      setState(() {}); // 상태를 갱신하여 필터링
+                    },
+                  )
+                : null,
           ),
         ),
       ),
