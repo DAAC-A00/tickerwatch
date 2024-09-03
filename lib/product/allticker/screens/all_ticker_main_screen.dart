@@ -24,16 +24,22 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
 
   void _showInfoBottomSheet() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
+        final double paddingSize =
+            Theme.of(context).textTheme.bodySmall?.fontSize ?? 20;
         return Padding(
-          padding: EdgeInsets.all(
-              (Theme.of(context).textTheme.bodyMedium?.fontSize ?? 20) * 2),
+          padding: EdgeInsets.symmetric(
+            vertical: paddingSize,
+            horizontal: paddingSize * 2,
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const Text(''),
                 const Text(
                   '개요',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -49,14 +55,15 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text(
-                    '현재는 binance, okx 등 거래소가 추가될 예정이며 spot 외에 cm(coin-margined), um(usdS-margined) 등의 정보 수집 및 저장 또한 추가될 예정입니다.'),
+                    'binance, okx 등 거래소가 추가될 예정이며 spot 외에 cm(coin-margined), um(usdS-margined) 등의 정보 수집 및 저장 또한 추가될 예정입니다.'),
                 const Text(
                   '\n슈퍼 모드 활성화 여부에 따른 차이점',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text(
                     '슈퍼 모드 활성화시 bybit spot의 모든 정보를 실시간으로 업데이트합니다.\n단, 슈퍼 모드 비활성화시 앱 실행했을때에만 정보를 수집해 저장하고 이후 실시간으로 최신회된 정보로 업데이트되지는 않습니다.'),
-                TextButton(
+                const Text(''),
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // 바텀 시트를 닫기
                   },
