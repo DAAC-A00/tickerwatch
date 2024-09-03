@@ -26,28 +26,44 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        // final double text = Theme.of(context).textTheme.bodyLarge?.fontSize;
-        // final ColorScheme currentTheme = Theme.of(context).colorScheme;
         return Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                '안내 정보',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              const Text('여기에 해당 화면에 대한 안내 정보를 작성합니다.'),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // 바텀 시트를 닫기
-                },
-                child: const Text('확인'),
-              ),
-            ],
+          padding: EdgeInsets.all(
+              (Theme.of(context).textTheme.bodyMedium?.fontSize ?? 20) * 2),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  '개요',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Text('현재 디바이스에 저장된 모든 ticker 정보를 조회하고 검색할 수 있는 화면입니다.'),
+                const Text(
+                  '\n주의사항',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Text('현재는 bybit spot 정보만 수집 및 저장하고 있습니다.'),
+                const Text(
+                  '\n기능 추가 예정 내용',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Text(
+                    '현재는 binance, okx 등 거래소가 추가될 예정이며 spot 외에 cm(coin-margined), um(usdS-margined) 등의 정보 수집 및 저장 또한 추가될 예정입니다.'),
+                const Text(
+                  '\n슈퍼 모드 활성화 여부에 따른 차이점',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Text(
+                    '슈퍼 모드 활성화시 bybit spot의 모든 정보를 실시간으로 업데이트합니다.\n단, 슈퍼 모드 비활성화시 앱 실행했을때에만 정보를 수집해 저장하고 이후 실시간으로 최신회된 정보로 업데이트되지는 않습니다.'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // 바텀 시트를 닫기
+                  },
+                  child: const Text('닫기'),
+                ),
+              ],
+            ),
           ),
         );
       },
