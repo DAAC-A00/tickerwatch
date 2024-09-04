@@ -12,6 +12,8 @@ enum BoxSettingEnum {
   isLightMode,
   isAdminMode,
   isSuperMode,
+  // tickerPriceDisplay
+  tickerPriceDisplayColumnCount,
 }
 
 extension BoxSettingEnumExtension on BoxSettingEnum {
@@ -37,6 +39,9 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
         return 'isAdminMode';
       case BoxSettingEnum.isSuperMode:
         return 'isSuperMode';
+      // tickerPriceDisplay
+      case BoxSettingEnum.tickerPriceDisplayColumnCount:
+        return 'tickerPriceDisplayColumnCount';
     }
   }
 }
