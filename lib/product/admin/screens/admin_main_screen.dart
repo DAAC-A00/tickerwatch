@@ -19,7 +19,7 @@ class _AdminMainScreenState extends ConsumerState<AdminMainScreen> {
       body: ListView(
         children: [
           ListTile(
-            leading: const Icon(Icons.density_small),
+            leading: const Icon(Icons.data_thresholding_outlined),
             trailing: const Icon(Icons.arrow_forward_ios),
             title: const Text(
               '전체 Ticker 정보 조회',
