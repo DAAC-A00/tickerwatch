@@ -34,7 +34,7 @@ class CustomTheme {
       titleMedium: _getTitleStyle(baseSize / 6 * 5),
       titleSmall: _getTitleStyle(baseSize / 6 * 4),
       bodyLarge: _getBodyStyle(baseSize),
-      bodyMedium: _getBodyStyle(baseSize / 8 * 7),
+      bodyMedium: _getBodyStyle(baseSize), // default : baseSize / 8 * 7
       bodySmall: _getBodyStyle(baseSize / 8 * 6),
       labelLarge: _getLabelStyle(baseSize),
       labelMedium: _getLabelStyle(baseSize / 7 * 6),
