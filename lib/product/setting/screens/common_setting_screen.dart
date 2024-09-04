@@ -30,7 +30,7 @@ class CommonSettingScreen extends ConsumerWidget {
             },
           ),
           SwitchListTile(
-            title: const Text('개발자 모드'),
+            title: const Text('관리자 모드'),
             subtitle: Text(
               commonSetting.isAdminMode ? '👩🏻‍💻 On' : '👩🏻‍💼 Off',
             ),

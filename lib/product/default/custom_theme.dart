@@ -10,32 +10,42 @@ class CustomTheme {
   // static final Color toastBackgroundLight = Colors.grey.shade300;
   // static final Color toastBackgroundDark = Colors.grey.shade900;
 
-  static TextStyle _getTitleStyle(double baseSize) =>
-      TextStyle(fontSize: baseSize * 0.07);
-  static TextStyle _getDisplayStyle(double baseSize) =>
-      TextStyle(fontSize: baseSize * 0.06);
-  static TextStyle _getBodyStyle(double baseSize) =>
-      TextStyle(fontSize: baseSize * 0.05);
+  static TextStyle _getDisplayStyle(double referenceSize) =>
+      TextStyle(fontSize: referenceSize / 15 * 4);
+  static TextStyle _getHeadLineStyle(double referenceSize) =>
+      TextStyle(fontSize: referenceSize / 9);
+  static TextStyle _getTitleStyle(double referenceSize) =>
+      TextStyle(fontSize: referenceSize / 15);
+  static TextStyle _getBodyStyle(double referenceSize) =>
+      TextStyle(fontSize: referenceSize / 45 * 2);
+  static TextStyle _getLabelStyle(double referenceSize) =>
+      TextStyle(fontSize: referenceSize / 180 * 7);
   // , fontFamily: 'Pretendard'
 
   static TextTheme _getTextTheme(double baseSize) {
     return TextTheme(
+      displayLarge: _getDisplayStyle(baseSize),
+      displayMedium: _getDisplayStyle(baseSize / 8 * 5),
+      displaySmall: _getDisplayStyle(baseSize / 8 * 4),
+      headlineLarge: _getHeadLineStyle(baseSize),
+      headlineMedium: _getHeadLineStyle(baseSize / 20 * 17),
+      headlineSmall: _getHeadLineStyle(baseSize / 20 * 12),
       titleLarge: _getTitleStyle(baseSize),
-      titleMedium: _getTitleStyle(baseSize),
-      titleSmall: _getTitleStyle(baseSize),
-      displayLarge: _getDisplayStyle(baseSize * 0.7),
-      displayMedium: _getDisplayStyle(baseSize * 0.6),
-      displaySmall: _getDisplayStyle(baseSize * 0.5),
-      bodyLarge: _getBodyStyle(baseSize * 0.9),
-      bodyMedium: _getBodyStyle(baseSize * 0.75),
-      bodySmall: _getBodyStyle(baseSize * 0.6),
+      titleMedium: _getTitleStyle(baseSize / 6 * 5),
+      titleSmall: _getTitleStyle(baseSize / 6 * 4),
+      bodyLarge: _getBodyStyle(baseSize),
+      bodyMedium: _getBodyStyle(baseSize / 8 * 7),
+      bodySmall: _getBodyStyle(baseSize / 8 * 6),
+      labelLarge: _getLabelStyle(baseSize),
+      labelMedium: _getLabelStyle(baseSize / 7 * 6),
+      labelSmall: _getLabelStyle(baseSize / 7 * 5),
     );
   }
 
   ThemeData get lightThemeData => ThemeData(
         useMaterial3: true,
         fontFamily: 'Pretendard',
-        textTheme: _getTextTheme(baseSize),
+        textTheme: _getTextTheme(baseSize), // mobile Device baseSize 360
         colorScheme: const ColorScheme.light(
           brightness: Brightness.light,
           primary: Colors.black,
