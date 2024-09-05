@@ -35,7 +35,8 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     final name = reader.readString();
     final price = reader.readString();
     final isUp = reader.readBool();
-    final exchangeRawCategoryEnum = reader.read() as ExchangeRawCategoryEnum;
+    final exchangeRawCategoryEnum =
+        ExchangeRawCategoryEnum.values[reader.readInt()];
     final rawSymbol = reader.readString();
 
     return TickerDisplayEntity(
@@ -54,7 +55,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     writer.writeString(obj.name);
     writer.writeString(obj.price);
     writer.writeBool(obj.isUp);
-    writer.write(obj.exchangeRawCategoryEnum);
+    writer.write(obj.exchangeRawCategoryEnum.index);
     writer.writeString(obj.rawSymbol);
   }
 }
