@@ -3,7 +3,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/default/db/box_enum.dart';
-import 'package:tickerwatch/product/watch/entities/ticker_display_entity.dart';
+import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
 
 final tickerDisplayProvider =
     StateNotifierProvider<TickerDisplayNotifier, List<TickerDisplayEntity>>(
