@@ -3,6 +3,7 @@
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import 'package:hive/hive.dart';
+import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 
 class TickerDisplayEntity {
   // 이용자 선택 또는 입력
@@ -10,7 +11,7 @@ class TickerDisplayEntity {
   String name;
   String price;
   // 자동 세팅 - tickerDisplay data
-  bool isUp;
+  PriceStatusEnum priceStatusEnum;
   // 자동 세팅 -
   ExchangeRawCategoryEnum exchangeRawCategoryEnum;
   String rawSymbol;
@@ -19,7 +20,7 @@ class TickerDisplayEntity {
     required this.categoryExchangeEnum,
     required this.name,
     required this.price,
-    required this.isUp,
+    required this.priceStatusEnum,
     required this.exchangeRawCategoryEnum,
     required this.rawSymbol,
   });
@@ -31,10 +32,10 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
 
   @override
   TickerDisplayEntity read(BinaryReader reader) {
-    final categoryExchangeEnum = reader.read() as CategoryExchangeEnum;
+    final categoryExchangeEnum = CategoryExchangeEnum.values[reader.readInt()];
     final name = reader.readString();
     final price = reader.readString();
-    final isUp = reader.readBool();
+    final priceStatusEnum = PriceStatusEnum.values[reader.readInt()];
     final exchangeRawCategoryEnum =
         ExchangeRawCategoryEnum.values[reader.readInt()];
     final rawSymbol = reader.readString();
@@ -43,7 +44,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
       categoryExchangeEnum: categoryExchangeEnum,
       name: name,
       price: price,
-      isUp: isUp,
+      priceStatusEnum: priceStatusEnum,
       exchangeRawCategoryEnum: exchangeRawCategoryEnum,
       rawSymbol: rawSymbol,
     );
@@ -51,11 +52,11 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
 
   @override
   void write(BinaryWriter writer, TickerDisplayEntity obj) {
-    writer.write(obj.categoryExchangeEnum);
+    writer.writeInt(obj.categoryExchangeEnum.index);
     writer.writeString(obj.name);
     writer.writeString(obj.price);
-    writer.writeBool(obj.isUp);
-    writer.write(obj.exchangeRawCategoryEnum.index);
+    writer.writeInt(obj.priceStatusEnum.index);
+    writer.writeInt(obj.exchangeRawCategoryEnum.index);
     writer.writeString(obj.rawSymbol);
   }
 }

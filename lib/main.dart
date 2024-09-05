@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
+import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 
@@ -21,6 +22,7 @@ void main() async {
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(TickerEntityAdapter());
   Hive.registerAdapter(TickerInfoModelAdapter());
+  Hive.registerAdapter(TickerDisplayEntityAdapter());
 
   runApp(const ProviderScope(child: MyApp()));
 }

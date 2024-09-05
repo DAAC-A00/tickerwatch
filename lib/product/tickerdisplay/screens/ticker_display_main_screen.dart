@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 import '../../tickers/states/ticker_provider.dart';
+import 'add_ticker_display_screen.dart'; // 추가할 화면
 
 class TickerDisplayMainScreen extends ConsumerStatefulWidget {
   const TickerDisplayMainScreen({super.key});
@@ -66,6 +67,13 @@ class _TickerDisplayMainScreenState
     );
   }
 
+  void _navigateToAddTickerDisplay() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddTickerDisplayScreen()),
+    ); // 추가하기 화면으로 이동
+  }
+
   @override
   Widget build(BuildContext context) {
     final tickerDisplays = ref.watch(tickerDisplayProvider);
@@ -117,6 +125,10 @@ class _TickerDisplayMainScreenState
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: _showInfoBottomSheet,
+          ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _navigateToAddTickerDisplay, // 추가하기 버튼
           ),
         ],
       ),
