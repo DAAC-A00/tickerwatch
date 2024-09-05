@@ -69,12 +69,10 @@ class TickerEntity {
     String? dataAt,
   }) {
     var now = DateTime.now().toUtc().add(const Duration(hours: 9));
-    var formatter = DateFormat('yyyy-MM-dd hh:mm:ss');
-    String formattedDate = formatter.format(now);
-    _updatedAt = formattedDate;
-
+    var formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    _updatedAt = formatter.format(now);
     this.dataAt = dataAt ??
-        formattedDate; // dataAt 에 별도 값을 넣어주지 않으면 자동으로 updatedAt과 같은 값으로 저장
+        _updatedAt; // dataAt 에 별도 값을 넣어주지 않으면 자동으로 updatedAt과 같은 값으로 저장
   }
 }
 

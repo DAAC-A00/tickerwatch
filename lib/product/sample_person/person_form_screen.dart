@@ -84,20 +84,47 @@ class PersonFormScreenState extends ConsumerState<PersonFormScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: ['Male', 'Female', 'Other'].map((String value) {
-            return ListTile(
-              title: Text(value),
-              onTap: () {
-                setState(() {
-                  _selectedGenderController.text = value;
-                  _validateInputs();
-                });
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        final double paddingSize =
+            Theme.of(context).textTheme.bodySmall?.fontSize ?? 20;
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: paddingSize,
+            horizontal: paddingSize * 2,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Gender',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+              Column(
+                children: ['Male', 'Female', 'Other'].map((String value) {
+                  return ListTile(
+                    title: Text(value),
+                    onTap: () {
+                      setState(() {
+                        _selectedGenderController.text = value;
+                        _validateInputs();
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         );
       },
     );

@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tickerwatch/product/admin/screens/admin_main_screen.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
+import 'package:tickerwatch/product/tickerdisplay/screens/ticker_display_main_screen.dart';
 import '../counter/counter_main_screen.dart';
 import '../sample_person/person_form_screen.dart';
 import '../setting/screens/exchange_setting_screen.dart';
@@ -37,9 +39,9 @@ List<RouteBase> _buildRoutes() {
               const HomeMainScreen(),
         ),
         GoRoute(
-          path: 'counter',
+          path: 'tickerDisplay',
           builder: (BuildContext context, GoRouterState state) =>
-              const CounterMainScreen(),
+              const TickerDisplayMainScreen(),
         ),
         GoRoute(
           path: 'setting',
@@ -59,9 +61,19 @@ List<RouteBase> _buildRoutes() {
           ],
         ),
         GoRoute(
+          path: 'admin',
+          builder: (BuildContext context, GoRouterState state) =>
+              const AdminMainScreen(),
+        ),
+        GoRoute(
           path: 'alltickers',
           builder: (BuildContext context, GoRouterState state) =>
               const AllTickerMainScreen(),
+        ),
+        GoRoute(
+          path: 'counter',
+          builder: (BuildContext context, GoRouterState state) =>
+              const CounterMainScreen(),
         ),
         GoRoute(
           path: 'person',

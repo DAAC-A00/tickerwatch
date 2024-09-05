@@ -14,7 +14,7 @@ final commonSettingProvider =
 
 final CommonSetting defaultCommonSetting = CommonSetting(
   isLightMode: false,
-  isDevMode: false,
+  isAdminMode: false,
   isSuperMode: false,
 );
 
@@ -32,9 +32,9 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
           defaultValue: defaultCommonSetting.isLightMode.toString(),
         )! ==
         'true';
-    final bool isDevMode = _commonSettingBox.get(
-          BoxSettingEnum.isDevMode.name,
-          defaultValue: defaultCommonSetting.isDevMode.toString(),
+    final bool isAdminMode = _commonSettingBox.get(
+          BoxSettingEnum.isAdminMode.name,
+          defaultValue: defaultCommonSetting.isAdminMode.toString(),
         )! ==
         'true';
     final bool isSuperMode = _commonSettingBox.get(
@@ -45,7 +45,7 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
 
     state = CommonSetting(
       isLightMode: isLightMode,
-      isDevMode: isDevMode,
+      isAdminMode: isAdminMode,
       isSuperMode: isSuperMode,
     );
   }
@@ -61,15 +61,16 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
         BoxSettingEnum.isLightMode.name, isLightMode.toString());
     state = CommonSetting(
         isLightMode: isLightMode,
-        isDevMode: state.isDevMode,
+        isAdminMode: state.isAdminMode,
         isSuperMode: state.isSuperMode);
   }
 
-  void updateIsDevModeBox(bool isDevMode) {
-    _commonSettingBox.put(BoxSettingEnum.isDevMode.name, isDevMode.toString());
+  void updateIsAdminModeBox(bool isAdminMode) {
+    _commonSettingBox.put(
+        BoxSettingEnum.isAdminMode.name, isAdminMode.toString());
     state = CommonSetting(
         isLightMode: state.isLightMode,
-        isDevMode: isDevMode,
+        isAdminMode: isAdminMode,
         isSuperMode: state.isSuperMode);
   }
 
@@ -78,7 +79,7 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
         BoxSettingEnum.isSuperMode.name, isSuperMode.toString());
     state = CommonSetting(
         isLightMode: state.isLightMode,
-        isDevMode: state.isDevMode,
+        isAdminMode: state.isAdminMode,
         isSuperMode: isSuperMode);
   }
 }

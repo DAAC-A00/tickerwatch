@@ -10,8 +10,10 @@ enum BoxSettingEnum {
   isPercentSignEnabled,
   // Common Setting
   isLightMode,
-  isDevMode,
+  isAdminMode,
   isSuperMode,
+  // tickerPriceDisplay
+  tickerPriceDisplayColumnCount,
 }
 
 extension BoxSettingEnumExtension on BoxSettingEnum {
@@ -33,10 +35,13 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
       // Common Setting
       case BoxSettingEnum.isLightMode:
         return 'isLightMode';
-      case BoxSettingEnum.isDevMode:
-        return 'isDevMode';
+      case BoxSettingEnum.isAdminMode:
+        return 'isAdminMode';
       case BoxSettingEnum.isSuperMode:
         return 'isSuperMode';
+      // tickerPriceDisplay
+      case BoxSettingEnum.tickerPriceDisplayColumnCount:
+        return 'tickerPriceDisplayColumnCount';
     }
   }
 }

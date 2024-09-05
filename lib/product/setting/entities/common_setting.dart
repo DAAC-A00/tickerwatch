@@ -2,12 +2,12 @@
 
 class CommonSetting {
   bool isLightMode;
-  bool isDevMode;
+  bool isAdminMode;
   bool isSuperMode;
 
   CommonSetting({
     required this.isLightMode,
-    required this.isDevMode,
+    required this.isAdminMode,
     required this.isSuperMode,
   });
 }

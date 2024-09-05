@@ -1,19 +1,21 @@
-// all_ticker_main_screen.dart
+// ticker_display_main_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 import '../../tickers/states/ticker_provider.dart';
+import 'add_ticker_display_screen.dart'; // 추가할 화면
 
-class AllTickerMainScreen extends ConsumerStatefulWidget {
-  const AllTickerMainScreen({super.key});
+class TickerDisplayMainScreen extends ConsumerStatefulWidget {
+  const TickerDisplayMainScreen({super.key});
 
   @override
-  ConsumerState<AllTickerMainScreen> createState() =>
-      _AllTickerMainScreenState();
+  ConsumerState<TickerDisplayMainScreen> createState() =>
+      _TickerDisplayMainScreenState();
 }
 
-class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
+class _TickerDisplayMainScreenState
+    extends ConsumerState<TickerDisplayMainScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -44,24 +46,12 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                   '개요',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const Text('현재 디바이스에 저장된 모든 ticker 정보를 조회하고 검색할 수 있는 화면입니다.'),
+                const Text('모니터링을 원하는 ticker 정보를 조회할 수 있습니다.'),
                 const Text(
                   '\n주의사항',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text('현재는 bybit spot 정보만 수집 및 저장하고 있습니다.'),
-                const Text(
-                  '\n기능 추가 예정 내용',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                    'binance, okx 등 거래소가 추가될 예정이며 spot 외에 cm(coin-margined), um(usdS-margined) 등의 정보 수집 및 저장 또한 추가될 예정입니다.'),
-                const Text(
-                  '\n슈퍼 모드 활성화 여부에 따른 차이점',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                    '슈퍼 모드 활성화시 bybit spot의 모든 정보를 실시간으로 업데이트합니다.\n단, 슈퍼 모드 비활성화시 앱 실행했을때에만 정보를 수집해 저장하고 이후 실시간으로 최신회된 정보로 업데이트되지는 않습니다.'),
                 const Text(''),
                 ElevatedButton(
                   onPressed: () {
@@ -77,16 +67,38 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     );
   }
 
+  void _navigateToAddTickerDisplay() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddTickerDisplayScreen()),
+    ); // 추가하기 화면으로 이동
+  }
+
   @override
   Widget build(BuildContext context) {
+    final tickerDisplays = ref.watch(tickerDisplayProvider);
     final tickers = ref.watch(tickerProvider);
 
-    // 검색된 ticker 리스트
-    final filteredTickers = tickers.where((ticker) {
-      return ticker.info.searchKeywords
-          .toLowerCase()
-          .contains(_searchController.text.replaceAll(' ', '').toLowerCase());
+    // 검색된 tickerDisplay 리스트
+    final filteredTickerDisplays = tickerDisplays.where((tickerDisplay) {
+      return tickerDisplay.rawSymbol.toLowerCase().contains(
+              _searchController.text.replaceAll(' ', '').toLowerCase()) ||
+          tickerDisplay.exchangeRawCategoryEnum.name.toLowerCase().contains(
+              _searchController.text.replaceAll(' ', '').toLowerCase());
     }).toList();
+
+    // tickerDisplay에 기반하여 해당 ticker의 정보를 필터링
+    final filteredTickerInfo = filteredTickerDisplays
+        .map((tickerDisplay) {
+          return tickers
+              .where((ticker) =>
+                  ticker.info.exchangeRawCategoryEnum ==
+                      tickerDisplay.exchangeRawCategoryEnum &&
+                  ticker.info.rawSymbol == tickerDisplay.rawSymbol)
+              .toList();
+        })
+        .expand((element) => element)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -98,8 +110,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
           decoration: InputDecoration(
             hintText: '검색',
             prefixIcon: const Icon(Icons.search),
-            // border: InputBorder.none,
-            suffixIcon: _searchController.text != ''
+            suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear),
                     onPressed: () {
@@ -115,22 +126,25 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
             icon: const Icon(Icons.info_outline),
             onPressed: _showInfoBottomSheet,
           ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _navigateToAddTickerDisplay, // 추가하기 버튼
+          ),
         ],
       ),
-      body: filteredTickers.isEmpty
+      body: filteredTickerInfo.isEmpty
           ? const Center(
               child: Text('검색 결과가 없습니다.'),
             )
           : ListView.builder(
-              itemCount: filteredTickers.length,
+              itemCount: filteredTickerInfo.length,
               itemBuilder: (context, index) {
-                final ticker = filteredTickers[index];
+                final ticker = filteredTickerInfo[index];
                 return ListTile(
                   title: Text(
-                      '${ticker.info.rawSymbol}     ${ticker.info.exchangeRawCategoryEnum.name}'),
+                      '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
                   subtitle: Text(
-                    '${ticker.price}    ${ticker.changePercent24h}',
-                  ),
+                      '가격: ${ticker.price} / 변동률: ${ticker.changePercent24h}'),
                 );
               },
             ),
