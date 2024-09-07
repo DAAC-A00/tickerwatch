@@ -126,10 +126,6 @@ class _TickerDisplayMainScreenState
             icon: const Icon(Icons.info_outline),
             onPressed: _showInfoBottomSheet,
           ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _navigateToAddTickerDisplay, // 추가하기 버튼
-          ),
         ],
       ),
       body: filteredTickerInfo.isEmpty
@@ -148,6 +144,11 @@ class _TickerDisplayMainScreenState
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _navigateToAddTickerDisplay,
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
