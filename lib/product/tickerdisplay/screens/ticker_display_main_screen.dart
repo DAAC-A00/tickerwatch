@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 import '../../tickers/states/ticker_provider.dart';
-import 'add_ticker_display_screen.dart'; // 추가할 화면
+import 'add_ticker_display_screen.dart';
 
 class TickerDisplayMainScreen extends ConsumerStatefulWidget {
   const TickerDisplayMainScreen({super.key});
@@ -46,12 +46,13 @@ class _TickerDisplayMainScreenState
                   '개요',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const Text('모니터링을 원하는 ticker 정보를 조회할 수 있습니다.'),
+                const Text('등록한 ticker의 실시간 정보를 모니터링할 수 있습니다.'),
                 const Text(
-                  '\n주의사항',
+                  '\n순서 변경 방법',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const Text('현재는 bybit spot 정보만 수집 및 저장하고 있습니다.'),
+                const Text(
+                    '꾹 누른 후 위치를 옮겨 순서를 변경할 수 있습니다. 단, 검색어가 입력된 상태에서는 순서를 변경할 수 없습니다.'),
                 const Text(''),
                 ElevatedButton(
                   onPressed: () {
@@ -76,11 +77,11 @@ class _TickerDisplayMainScreenState
 
   @override
   Widget build(BuildContext context) {
-    final tickerDisplays = ref.watch(tickerDisplayProvider);
+    final tickerDisplaysList = ref.watch(tickerDisplayProvider);
     final tickers = ref.watch(tickerProvider);
 
     // 검색된 tickerDisplay 리스트
-    final filteredTickerDisplays = tickerDisplays.where((tickerDisplay) {
+    final filteredTickerDisplays = tickerDisplaysList.where((tickerDisplay) {
       return tickerDisplay.rawSymbol.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase()) ||
           tickerDisplay.exchangeRawCategoryEnum.name.toLowerCase().contains(
@@ -88,7 +89,20 @@ class _TickerDisplayMainScreenState
     }).toList();
 
     // tickerDisplay에 기반하여 해당 ticker의 정보를 필터링
-    final filteredTickerInfo = filteredTickerDisplays
+    final tickerInfoList = tickerDisplaysList
+        .map((tickerDisplay) {
+          return tickers
+              .where((ticker) =>
+                  ticker.info.exchangeRawCategoryEnum ==
+                      tickerDisplay.exchangeRawCategoryEnum &&
+                  ticker.info.rawSymbol == tickerDisplay.rawSymbol)
+              .toList();
+        })
+        .expand((element) => element)
+        .toList();
+
+    // tickerDisplay에 기반하여 해당 ticker의 정보를 필터링
+    final filteredTickerInfoList = filteredTickerDisplays
         .map((tickerDisplay) {
           return tickers
               .where((ticker) =>
@@ -114,8 +128,8 @@ class _TickerDisplayMainScreenState
                 ? IconButton(
                     icon: const Icon(Icons.clear),
                     onPressed: () {
-                      _searchController.clear(); // 컨트롤러를 통해 입력값을 지웁니다.
-                      setState(() {}); // 상태를 갱신하여 필터링
+                      _searchController.clear();
+                      setState(() {});
                     },
                   )
                 : null,
@@ -128,22 +142,48 @@ class _TickerDisplayMainScreenState
           ),
         ],
       ),
-      body: filteredTickerInfo.isEmpty
+      body: tickerInfoList.isEmpty
           ? const Center(
               child: Text('검색 결과가 없습니다.'),
             )
-          : ListView.builder(
-              itemCount: filteredTickerInfo.length,
-              itemBuilder: (context, index) {
-                final ticker = filteredTickerInfo[index];
-                return ListTile(
-                  title: Text(
-                      '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
-                  subtitle: Text(
-                      '가격: ${ticker.price} / 변동률: ${ticker.changePercent24h}'),
-                );
-              },
-            ),
+          : _searchController.text.isEmpty
+              ? ReorderableListView.builder(
+                  itemCount: tickerInfoList.length,
+                  itemBuilder: (context, index) {
+                    final ticker = tickerInfoList[index];
+                    return ListTile(
+                      key: ValueKey(ticker.info.rawSymbol), // 키 설정
+                      title: Text(
+                          '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
+                      subtitle: Text(
+                          '가격: ${ticker.price} / 변동률: ${ticker.changePercent24h}'),
+                    );
+                  },
+                  onReorder: (oldIndex, newIndex) {
+                    if (newIndex > oldIndex) newIndex--;
+                    // ticker display 순서 변경
+                    final movedTickerDisplay =
+                        tickerDisplaysList.removeAt(oldIndex);
+                    tickerDisplaysList.insert(newIndex, movedTickerDisplay);
+                    // 상태 업데이트를 위해 tickerDisplayProvider에 순서 변경을 반영
+                    ref
+                        .read(tickerDisplayProvider.notifier)
+                        .updateOrder(oldIndex, newIndex);
+                    setState(() {});
+                  },
+                )
+              : ListView.builder(
+                  itemCount: filteredTickerInfoList.length,
+                  itemBuilder: (context, index) {
+                    final ticker = filteredTickerInfoList[index];
+                    return ListTile(
+                      title: Text(
+                          '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
+                      subtitle: Text(
+                          '가격: ${ticker.price} / 변동률: ${ticker.changePercent24h}'),
+                    );
+                  },
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddTickerDisplay,
         child: const Icon(Icons.add),
