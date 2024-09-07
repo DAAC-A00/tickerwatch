@@ -78,6 +78,7 @@ class _TickerDisplayMainScreenState
   @override
   Widget build(BuildContext context) {
     final tickerDisplaysList = ref.watch(tickerDisplayProvider);
+    final tickerDisplayNotifier = ref.read(tickerDisplayProvider.notifier);
     final tickers = ref.watch(tickerProvider);
 
     // 검색된 tickerDisplay 리스트
@@ -160,15 +161,8 @@ class _TickerDisplayMainScreenState
                     );
                   },
                   onReorder: (oldIndex, newIndex) {
-                    if (newIndex > oldIndex) newIndex--;
-                    // ticker display 순서 변경
-                    final movedTickerDisplay =
-                        tickerDisplaysList.removeAt(oldIndex);
-                    tickerDisplaysList.insert(newIndex, movedTickerDisplay);
                     // 상태 업데이트를 위해 tickerDisplayProvider에 순서 변경을 반영
-                    ref
-                        .read(tickerDisplayProvider.notifier)
-                        .updateOrder(oldIndex, newIndex);
+                    tickerDisplayNotifier.updateOrderBox(oldIndex, newIndex);
                     setState(() {});
                   },
                 )

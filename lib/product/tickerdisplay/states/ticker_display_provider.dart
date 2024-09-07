@@ -40,13 +40,13 @@ class TickerDisplayNotifier extends StateNotifier<List<TickerDisplayEntity>> {
   }
 
   // 순서 변경 메소드 수정
-  void updateOrder(int oldIndex, int newIndex) {
+  void updateOrderBox(int oldIndex, int newIndex) {
     // 이동할 TickerDisplayEntity를 가져옵니다.
     final movedTickerDisplay = _tickerDisplayEntityBox.getAt(oldIndex);
-
     if (movedTickerDisplay != null) {
       // 기존 위치에서 삭제
       _tickerDisplayEntityBox.deleteAt(oldIndex);
+      if (newIndex > oldIndex) newIndex--;
 
       // newIndex부터 끝까지의 요소를 한 칸씩 뒤로 이동
       for (int i = _tickerDisplayEntityBox.length; i > newIndex; i--) {
