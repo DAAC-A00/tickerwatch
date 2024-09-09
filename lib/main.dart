@@ -8,7 +8,7 @@ import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 
-import 'external/bybit/schedulers/bybit_all_spot_api_service.dart';
+import 'external/bybit/schedulers/bybit_all_ticker_api_service.dart';
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
 import 'product/sample_person/person.dart';
@@ -35,12 +35,12 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  late final BybitAllSpotScheduler bybitSpotScheduler;
+  late final BybitAllTickerScheduler bybitTickerScheduler;
 
   @override
   void initState() {
     super.initState();
-    bybitSpotScheduler = BybitAllSpotScheduler(ref);
+    bybitTickerScheduler = BybitAllTickerScheduler(ref);
     _fetchInitialData(); // 비동기 초기 데이터 가져오기
   }
 
@@ -51,16 +51,16 @@ class _MyAppState extends ConsumerState<MyApp> {
     // commonSettingProvider의 isSuperMode에 따라 동작 결정
     final commonSettingState = ref.read(commonSettingProvider);
     if (commonSettingState.isSuperMode) {
-      bybitSpotScheduler.start();
+      bybitTickerScheduler.start();
     } else {
-      bybitSpotScheduler.stop();
-      bybitSpotScheduler.fetchOnce();
+      bybitTickerScheduler.stop();
+      bybitTickerScheduler.fetchOnce();
     }
   }
 
   @override
   void dispose() {
-    bybitSpotScheduler.stop();
+    bybitTickerScheduler.stop();
     super.dispose();
   }
 

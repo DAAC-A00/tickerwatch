@@ -129,7 +129,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                   title: Text(
                       '${ticker.info.rawSymbol}     ${ticker.info.exchangeRawCategoryEnum.name}'),
                   subtitle: Text(
-                    '${ticker.price}    ${ticker.changePercent24h}',
+                    '${ticker.price}    ${ticker.changePercent24h}    ${ticker.info.expirationDate}',
                   ),
                 );
               },

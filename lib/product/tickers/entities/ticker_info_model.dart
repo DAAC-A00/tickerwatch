@@ -399,6 +399,13 @@ class TickerInfoModel {
             hasQuoteCode = true;
           }
         }
+        // bybitLinear 내에서 유기한 Futures의 경우, BTC, ETH, SOL 등으로만 데이터가 남는 경우가 있음 -> 각각 BTCUSD, ETHUSD, SOLUSD임.
+        if (exchangeRawCategoryEnum == ExchangeRawCategoryEnum.bybitLinear &&
+            quoteCode == '') {
+          quoteCode = 'USD_0';
+          unitAndBaseCode = splitSymbol.first; // BTC, ETH, SOL
+          hasQuoteCode = true;
+        }
         if (!hasQuoteCode) {
           log('[WARN][TickerInfoModel.rawToTickerInfo] quoteCode 분리 실패 - $exchangeRawCategoryEnum $rawSymbol, splitSymbol.first: ${splitSymbol.first}');
         }
@@ -432,7 +439,7 @@ class TickerInfoModel {
     paymentCountryKorean = _getCountryKorean(paymentCode);
 
     searchKeywords =
-        '$rawSymbol$unit${baseCode.split('_').first}$unit${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
+        '$rawSymbol$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
   }
 
   String _extractExpirationDate(String rawExpirationDate) {
@@ -513,14 +520,18 @@ class TickerInfoModel {
         final String? remainingPart = match.group(2);
 
         if (possibleUnit != null && validUnits.contains(possibleUnit)) {
-          // possibleUnit이 유효한 unit 값 중 하나인 경우
+          // possibleUnit이 유효한 unit 값 중 하나인 경우 - ex. 1000DOGE
           unit = possibleUnit;
           baseCode = remainingPart != null ? '${remainingPart}_0' : '';
         } else {
-          // 유효한 unit 값이 아닌 경우, 전체 baseCode를 code로 간주합니다.
+          // 앞에 숫자로 시작하지만 unitCode가 아니라 그 자체가 baseCode인 것으로 예상되는 경우 - ex. 1SOL
           unit = 1;
           baseCode = unitAndBaseCode.isNotEmpty ? '${unitAndBaseCode}_0' : '';
         }
+      } else {
+        // 유효한 unit 값이 아닌 경우, 전체 baseCode를 code로 간주합니다. - ex. BTC
+        unit = 1;
+        baseCode = unitAndBaseCode.isNotEmpty ? '${unitAndBaseCode}_0' : '';
       }
     }
   }
