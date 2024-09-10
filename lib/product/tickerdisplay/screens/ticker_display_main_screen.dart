@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'add_ticker_display_screen.dart';
@@ -17,55 +18,17 @@ class TickerDisplayMainScreen extends ConsumerStatefulWidget {
 class _TickerDisplayMainScreenState
     extends ConsumerState<TickerDisplayMainScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final List<String> contentList = [
+    '개요',
+    '등록한 ticker의 실시간 정보를 모니터링할 수 있습니다.',
+    '순서 변경 방법',
+    '꾹 누른 후 위치를 옮겨 순서를 변경할 수 있습니다. 단, 검색어가 입력된 상태에서는 순서를 변경할 수 없습니다.',
+  ];
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _showInfoBottomSheet() {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext context) {
-        final double paddingSize =
-            Theme.of(context).textTheme.bodySmall?.fontSize ?? 20;
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: paddingSize,
-            horizontal: paddingSize * 2,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(''),
-                const Text(
-                  '개요',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text('등록한 ticker의 실시간 정보를 모니터링할 수 있습니다.'),
-                const Text(
-                  '\n순서 변경 방법',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                    '꾹 누른 후 위치를 옮겨 순서를 변경할 수 있습니다. 단, 검색어가 입력된 상태에서는 순서를 변경할 수 없습니다.'),
-                const Text(''),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // 바텀 시트를 닫기
-                  },
-                  child: const Text('닫기'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   void _navigateToAddTickerDisplay() {
@@ -139,7 +102,7 @@ class _TickerDisplayMainScreenState
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: _showInfoBottomSheet,
+            onPressed: () => showInfoBottomSheet(context, contentList),
           ),
         ],
       ),

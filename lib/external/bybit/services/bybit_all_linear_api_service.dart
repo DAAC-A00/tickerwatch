@@ -1,28 +1,27 @@
-// bybit_all_spot_api_service.dart
+// bybit_all_linear_api_service.dart
 
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:http/http.dart' as http;
+import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import 'package:tickerwatch/product/tickers/utils/ticker_utils.dart';
 
-import '../../default/exchange_raw_category_enum.dart';
-import '../models/bybit_all_spot_list_model.dart';
-import '../models/bybit_all_spot_model.dart';
+import '../models/bybit_all_linear_list_model.dart';
+import '../models/bybit_all_linear_model.dart';
 
-class BybitAllSpotApiService {
+class BybitAllLinearApiService {
   static const ExchangeRawCategoryEnum exchangeRawCategoryEnum =
-      ExchangeRawCategoryEnum.bybitSpot;
+      ExchangeRawCategoryEnum.bybitLinear;
   static final String endPoint =
       exchangeRawCategoryEnum.allTickerListApiEndPoint;
 
   static Future<List<TickerEntity>?> getDataList() async {
     final Uri uri = Uri.parse(endPoint);
-
     try {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -31,9 +30,9 @@ class BybitAllSpotApiService {
         return [];
       }
     } on SocketException catch (e) {
-      log("[ BybitAllSpotApiService.getDataList ] SocketException: $e");
+      log("[ BybitAllLinearApiService.getDataList ] SocketException: $e");
     } catch (e) {
-      log("[ BybitAllSpotApiService.getDataList ] Unknown Exception: $e");
+      log("[ BybitAllLinearApiService.getDataList ] Unknown Exception: $e");
     }
     return null;
   }
@@ -42,8 +41,8 @@ class BybitAllSpotApiService {
     final List<TickerEntity> tickerList = [];
     final Map<String, dynamic> bodyData = jsonDecode(responseBody);
 
-    for (BybitAllSpotListModel data
-        in BybitAllSpotModel.fromJson(bodyData).result?.list ?? []) {
+    for (BybitAllLinearListModel data
+        in BybitAllLinearModel.fromJson(bodyData).result?.list ?? []) {
       final String? rawSymbol = data.symbol;
       if (rawSymbol != null) {
         final tickerInfoModel = _createTickerInfoModel(rawSymbol);

@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/allticker/screens/all_ticker_detail_screen.dart';
+import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
 
 import '../../tickers/states/ticker_provider.dart';
 
@@ -15,66 +17,21 @@ class AllTickerMainScreen extends ConsumerStatefulWidget {
 
 class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final List<String> contentList = [
+    '개요',
+    '현재 디바이스에 저장된 모든 ticker 정보를 조회하고 검색할 수 있는 화면입니다.',
+    '주의사항',
+    '현재는 bybit spot 정보만 수집 및 저장하고 있습니다.',
+    '기능 추가 예정 내용',
+    'binance, okx 등 거래소가 추가될 예정이며 spot 외에 cm(coin-margined), um(usdS-margined) 등의 정보 수집 및 저장 또한 추가될 예정입니다.',
+    '슈퍼 모드 활성화 여부에 따른 차이점',
+    '슈퍼 모드 활성화시 bybit spot의 모든 정보를 실시간으로 업데이트합니다.\n단, 슈퍼 모드 비활성화시 앱 실행했을때에만 정보를 수집해 저장하고 이후 실시간으로 최신회된 정보로 업데이트되지는 않습니다.'
+  ];
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _showInfoBottomSheet() {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext context) {
-        final double paddingSize =
-            Theme.of(context).textTheme.bodySmall?.fontSize ?? 20;
-        return Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: paddingSize,
-            horizontal: paddingSize * 2,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(''),
-                const Text(
-                  '개요',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text('현재 디바이스에 저장된 모든 ticker 정보를 조회하고 검색할 수 있는 화면입니다.'),
-                const Text(
-                  '\n주의사항',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text('현재는 bybit spot 정보만 수집 및 저장하고 있습니다.'),
-                const Text(
-                  '\n기능 추가 예정 내용',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                    'binance, okx 등 거래소가 추가될 예정이며 spot 외에 cm(coin-margined), um(usdS-margined) 등의 정보 수집 및 저장 또한 추가될 예정입니다.'),
-                const Text(
-                  '\n슈퍼 모드 활성화 여부에 따른 차이점',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                    '슈퍼 모드 활성화시 bybit spot의 모든 정보를 실시간으로 업데이트합니다.\n단, 슈퍼 모드 비활성화시 앱 실행했을때에만 정보를 수집해 저장하고 이후 실시간으로 최신회된 정보로 업데이트되지는 않습니다.'),
-                const Text(''),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // 바텀 시트를 닫기
-                  },
-                  child: const Text('닫기'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -98,7 +55,6 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
           decoration: InputDecoration(
             hintText: '검색',
             prefixIcon: const Icon(Icons.search),
-            // border: InputBorder.none,
             suffixIcon: _searchController.text != ''
                 ? IconButton(
                     icon: const Icon(Icons.clear),
@@ -113,13 +69,13 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: _showInfoBottomSheet,
+            onPressed: () => showInfoBottomSheet(context, contentList),
           ),
         ],
       ),
       body: filteredTickers.isEmpty
           ? const Center(
-              child: Text('검색 결과가 없습니다.'),
+              child: Text('검색 결과가 없습니다。'),
             )
           : ListView.builder(
               itemCount: filteredTickers.length,
@@ -127,10 +83,19 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 final ticker = filteredTickers[index];
                 return ListTile(
                   title: Text(
-                      '${ticker.info.rawSymbol}     ${ticker.info.exchangeRawCategoryEnum.name}'),
+                      '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
                   subtitle: Text(
-                    '${ticker.price}    ${ticker.changePercent24h}',
-                  ),
+                      '${ticker.price} ${ticker.changePercent24h} ${ticker.info.expirationDate}'),
+                  onTap: () {
+                    // ListTile 클릭 시 AllTickerDetailScreen으로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AllTickerDetailScreen(ticker: ticker),
+                      ),
+                    );
+                  },
                 );
               },
             ),

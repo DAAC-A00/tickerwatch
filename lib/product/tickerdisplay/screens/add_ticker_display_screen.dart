@@ -17,10 +17,10 @@ class AddTickerDisplayScreen extends ConsumerStatefulWidget {
 
 class _AddTickerDisplayScreenState
     extends ConsumerState<AddTickerDisplayScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  ExchangeRawCategoryEnum? selectedExchangeRawCategoryEnum;
   List<ExchangeRawCategoryEnum> availableCategories = [];
+  final TextEditingController _searchController = TextEditingController();
   List<String> filteredRawSymbols = [];
+  ExchangeRawCategoryEnum? selectedExchangeRawCategoryEnum;
   String? selectedRawSymbol;
 
   @override
