@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/allticker/screens/all_ticker_detail_screen.dart';
 
 import '../../tickers/states/ticker_provider.dart';
 
@@ -98,7 +99,6 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
           decoration: InputDecoration(
             hintText: '검색',
             prefixIcon: const Icon(Icons.search),
-            // border: InputBorder.none,
             suffixIcon: _searchController.text != ''
                 ? IconButton(
                     icon: const Icon(Icons.clear),
@@ -119,7 +119,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
       ),
       body: filteredTickers.isEmpty
           ? const Center(
-              child: Text('검색 결과가 없습니다.'),
+              child: Text('검색 결과가 없습니다。'),
             )
           : ListView.builder(
               itemCount: filteredTickers.length,
@@ -127,10 +127,19 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 final ticker = filteredTickers[index];
                 return ListTile(
                   title: Text(
-                      '${ticker.info.rawSymbol}     ${ticker.info.exchangeRawCategoryEnum.name}'),
+                      '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
                   subtitle: Text(
-                    '${ticker.price}    ${ticker.changePercent24h}    ${ticker.info.expirationDate}',
-                  ),
+                      '${ticker.price} ${ticker.changePercent24h} ${ticker.info.expirationDate}'),
+                  onTap: () {
+                    // ListTile 클릭 시 AllTickerDetailScreen으로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AllTickerDetailScreen(ticker: ticker),
+                      ),
+                    );
+                  },
                 );
               },
             ),
