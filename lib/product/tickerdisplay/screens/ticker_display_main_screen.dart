@@ -116,7 +116,8 @@ class _TickerDisplayMainScreenState
                   itemBuilder: (context, index) {
                     final ticker = tickerInfoList[index];
                     return ListTile(
-                      key: ValueKey(ticker.info.rawSymbol), // 키 설정
+                      key: ValueKey(
+                          '${ticker.info.exchangeRawCategoryEnum.name}_${ticker.info.rawSymbol}_${ticker.updatedAt}'), // 키 설정
                       title: Text(
                           '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
                       subtitle: Text(

@@ -28,7 +28,7 @@ class TickerDisplayEntity {
 
 class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
   @override
-  final typeId = 4;
+  final int typeId = 3;
 
   @override
   TickerDisplayEntity read(BinaryReader reader) {

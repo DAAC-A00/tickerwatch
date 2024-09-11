@@ -17,7 +17,7 @@ class Person {
 
 class PersonAdapter extends TypeAdapter<Person> {
   @override
-  final typeId = 0; // 타입 식별자입니다. 각 어댑터는 고유한 타입 ID를 가져야 합니다.
+  final int typeId = 0; // 타입 식별자입니다. 각 어댑터는 고유한 타입 ID를 가져야 합니다.
 
   @override
   Person read(BinaryReader reader) {
