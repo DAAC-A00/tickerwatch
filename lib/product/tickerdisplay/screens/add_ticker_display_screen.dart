@@ -1,7 +1,5 @@
 // add_ticker_display_screen.dart
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
@@ -60,9 +58,6 @@ class _AddTickerDisplayScreenState
       final tickers = ref.read(tickerProvider);
 
       TickerEntity? selectedTicker;
-
-      log('selectedRawSymbol : $selectedRawSymbol');
-      log('selectedExchangeRawCategoryEnum : $selectedExchangeRawCategoryEnum');
 
       try {
         // 조건에 맞는 ticker를 찾음.
