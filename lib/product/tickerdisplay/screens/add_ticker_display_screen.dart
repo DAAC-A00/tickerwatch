@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 
@@ -19,7 +20,7 @@ class _AddTickerDisplayScreenState
     extends ConsumerState<AddTickerDisplayScreen> {
   List<ExchangeRawCategoryEnum> availableCategories = [];
   final TextEditingController _searchController = TextEditingController();
-  List<String> filteredRawSymbols = [];
+  List<String> availableRawSymbols = [];
   ExchangeRawCategoryEnum? selectedExchangeRawCategoryEnum;
   String? selectedRawSymbol;
 
@@ -38,12 +39,15 @@ class _AddTickerDisplayScreenState
     availableCategories = categories;
   }
 
-  void _filterSymbols(String query) {
+  void _loadAvailableSymbols(String query) {
     final tickers = ref.read(tickerProvider);
-    filteredRawSymbols = tickers
-        .where((ticker) => ticker.info.searchKeywords
-            .toLowerCase()
-            .contains(query.toLowerCase()))
+    availableRawSymbols = tickers
+        .where((ticker) =>
+            (ticker.info.exchangeRawCategoryEnum ==
+                selectedExchangeRawCategoryEnum) &&
+            ticker.info.searchKeywords
+                .toLowerCase()
+                .contains(query.toLowerCase()))
         .map((ticker) => ticker.info.rawSymbol)
         .toList();
     setState(() {});
@@ -52,11 +56,24 @@ class _AddTickerDisplayScreenState
   void _addTickerDisplay() {
     if (selectedRawSymbol != null && selectedExchangeRawCategoryEnum != null) {
       final tickers = ref.read(tickerProvider);
-      final selectedTicker = tickers.firstWhere((ticker) =>
-          ticker.info.rawSymbol == selectedRawSymbol &&
-          ticker.info.exchangeRawCategoryEnum ==
-              selectedExchangeRawCategoryEnum);
 
+      TickerEntity? selectedTicker;
+
+      try {
+        // 조건에 맞는 ticker를 찾음.
+        selectedTicker = tickers.firstWhere((ticker) =>
+            ticker.info.rawSymbol == selectedRawSymbol &&
+            ticker.info.exchangeRawCategoryEnum ==
+                selectedExchangeRawCategoryEnum);
+      } catch (e) {
+        // 선택한 Symbol에 해당하는 ticker가 없을 경우
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('선택한 Symbol에 해당하는 ticker가 없습니다.')),
+        );
+        return; // 함수 종료
+      }
+
+      // selectedTicker가 null인지 확인 (이 경우는 catch에서 처리됨)
       // TickerDisplayEntity 생성 및 추가
       ref.read(tickerDisplayProvider.notifier).insertBox(TickerDisplayEntity(
             categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
@@ -109,7 +126,7 @@ class _AddTickerDisplayScreenState
             const SizedBox(height: 16),
             TextField(
               controller: _searchController,
-              onChanged: _filterSymbols,
+              onChanged: _loadAvailableSymbols,
               decoration: const InputDecoration(
                 hintText: 'Symbol 검색',
                 prefixIcon: Icon(Icons.search),
@@ -118,13 +135,13 @@ class _AddTickerDisplayScreenState
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredRawSymbols.length,
+                itemCount: availableRawSymbols.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(filteredRawSymbols[index]),
+                    title: Text(availableRawSymbols[index]),
                     onTap: () {
                       setState(() {
-                        selectedRawSymbol = filteredRawSymbols[index];
+                        selectedRawSymbol = availableRawSymbols[index];
                       });
                     },
                   );

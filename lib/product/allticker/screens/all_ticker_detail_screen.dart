@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
+import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
 import 'package:tickerwatch/product/tickers/enums/category_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/option_type_enum.dart';
 import '../../tickers/entities/ticker_entity.dart';
@@ -26,9 +27,135 @@ class AllTickerDetailScreen extends ConsumerWidget {
       orElse: () => ticker, // 기본값으로 전달된 ticker를 사용
     );
 
+    // 조건에 맞지 않는 키와 변수명 정보를 위한 리스트
+    final List<String> missingInfo = [];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(currentTicker.info.rawSymbol),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () {
+              String content = '';
+              missingInfo.add('제공되지 않는 정보');
+              content = currentTicker.info.rawSymbol.isEmpty
+                  ? '$content원본 코드    ticker.info.rawSymbol\n'
+                  : content;
+              content = currentTicker.info.symbolSub.isEmpty
+                  ? '$content부제    ticker.info.symbolSub\n'
+                  : content;
+              content = currentTicker.info.unit.toString().isEmpty
+                  ? '$content단위    ticker.info.unit.toString()\n'
+                  : content;
+              content = currentTicker.info.optionTypeEnum.name.isEmpty
+                  ? '$content옵션 종류    ticker.info.optionTypeEnum.name\n'
+                  : content;
+              content = currentTicker.info.strikePrice.isEmpty
+                  ? '$content행사 가격    ticker.info.strikePrice\n'
+                  : content;
+              content = currentTicker.info.expirationDate.isEmpty
+                  ? '$content행사일    ticker.info.expirationDate\n'
+                  : content;
+              content = currentTicker.info.baseCode.isEmpty
+                  ? '$content기초 코드    ticker.info.baseCode\n'
+                  : content;
+              content = currentTicker.info.quoteCode.isEmpty
+                  ? '$content인용 코드    ticker.info.quoteCode\n'
+                  : content;
+              content = currentTicker.info.paymentCode.isEmpty
+                  ? '$content결제 코드    ticker.info.paymentCode\n'
+                  : content;
+              content = currentTicker.info.baseCountry.isEmpty
+                  ? '$content기초 국가    ticker.info.baseCountry\n'
+                  : content;
+              content = currentTicker.info.quoteCountry.isEmpty
+                  ? '$content인용 국가    ticker.info.quoteCountry\n'
+                  : content;
+              content = currentTicker.info.paymentCountry.isEmpty
+                  ? '$content결제 국가    ticker.info.paymentCountry\n'
+                  : content;
+              content = currentTicker.info.categoryEnum.name.isEmpty
+                  ? '$content카테고리    ticker.info.categoryEnum.name\n'
+                  : content;
+              content = currentTicker.info.source.isEmpty
+                  ? '$content정보 출처    ticker.info.source\n'
+                  : content;
+              content = currentTicker.info.remark.isEmpty
+                  ? '$content비고    ticker.info.remark\n'
+                  : content;
+              content = currentTicker.info.searchKeywords.isEmpty
+                  ? '$content검색 키워드    ticker.info.searchKeywords\n'
+                  : content;
+              content = currentTicker.price.isEmpty
+                  ? '$content현재가    ticker.price\n'
+                  : content;
+              content = currentTicker.lastPrice.isEmpty
+                  ? '$content최근 체결가    ticker.lastPrice\n'
+                  : content;
+              content = currentTicker.highPrice24h.isEmpty
+                  ? '$content최고가(24h)    ticker.highPrice24h\n'
+                  : content;
+              content = currentTicker.lowPrice24h.isEmpty
+                  ? '$content최저가(24h)    ticker.lowPrice24h\n'
+                  : content;
+              content = currentTicker.changePercent24h.isEmpty
+                  ? '$content변동률    ticker.changePercent24h\n'
+                  : content;
+              content = currentTicker.volume24h.isEmpty
+                  ? '$content거래량    ticker.volume24h\n'
+                  : content;
+              content = currentTicker.turnOver24h.isEmpty
+                  ? '$content거래대금    ticker.turnOver24h\n'
+                  : content;
+              content = currentTicker.prevPrice24h.isEmpty
+                  ? '$content이전 가격(24h)    ticker.prevPrice24h\n'
+                  : content;
+              content = currentTicker.changePercentUtc0.isEmpty
+                  ? '$content변동률(UTC0)    ticker.changePercentUtc0\n'
+                  : content;
+              content = currentTicker.prevPriceUtc0.isEmpty
+                  ? '$content이전 가격(UTC0)    ticker.prevPriceUtc0\n'
+                  : content;
+              content = currentTicker.highPriceUtc0.isEmpty
+                  ? '$content최고가(UTC0)    ticker.highPriceUtc0\n'
+                  : content;
+              content = currentTicker.lowPriceUtc0.isEmpty
+                  ? '$content최저가(UTC0)    ticker.lowPriceUtc0\n'
+                  : content;
+              content = currentTicker.turnOverUtc0.isEmpty
+                  ? '$content거래대금(UTC0)    ticker.turnOverUtc0\n'
+                  : content;
+              content = currentTicker.volumeUtc0.isEmpty
+                  ? '$content거래량(UTC0)    ticker.volumeUtc0\n'
+                  : content;
+              content = currentTicker.ask1Price.isEmpty
+                  ? '$content매도 1호가    ticker.ask1Price\n'
+                  : content;
+              content = currentTicker.ask1Size.isEmpty
+                  ? '$content매도 1호가 수량    ticker.ask1Size\n'
+                  : content;
+              content = currentTicker.bid1Price.isEmpty
+                  ? '$content매수 1호가    ticker.bid1Price\n'
+                  : content;
+              content = currentTicker.bid1Size.isEmpty
+                  ? '$content매수 1호가 수량    ticker.bid1Size\n'
+                  : content;
+              content = currentTicker.dataAt.isEmpty
+                  ? '$content데이터 기록 시점    ticker.dataAt\n'
+                  : content;
+              content = currentTicker.updatedAt.isEmpty
+                  ? '$content업데이트 시점    ticker.updatedAt\n'
+                  : content;
+              content = currentTicker.priceStatusEnum.name.isEmpty
+                  ? '$content가격 상태    ticker.priceStatusEnum.name\n'
+                  : content;
+              missingInfo.add(content);
+              // BottomSheet 호출
+              showInfoBottomSheet(context, missingInfo);
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

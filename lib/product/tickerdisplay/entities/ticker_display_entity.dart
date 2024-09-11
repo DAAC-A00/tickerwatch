@@ -15,6 +15,7 @@ class TickerDisplayEntity {
   // 자동 세팅 -
   ExchangeRawCategoryEnum exchangeRawCategoryEnum;
   String rawSymbol;
+  DateTime createdAt;
 
   TickerDisplayEntity({
     required this.categoryExchangeEnum,
@@ -23,12 +24,12 @@ class TickerDisplayEntity {
     required this.priceStatusEnum,
     required this.exchangeRawCategoryEnum,
     required this.rawSymbol,
-  });
+  }) : createdAt = DateTime.now();
 }
 
 class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
   @override
-  final typeId = 4;
+  final int typeId = 3;
 
   @override
   TickerDisplayEntity read(BinaryReader reader) {
@@ -39,6 +40,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     final exchangeRawCategoryEnum =
         ExchangeRawCategoryEnum.values[reader.readInt()];
     final rawSymbol = reader.readString();
+    final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
 
     return TickerDisplayEntity(
       categoryExchangeEnum: categoryExchangeEnum,
@@ -47,7 +49,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
       priceStatusEnum: priceStatusEnum,
       exchangeRawCategoryEnum: exchangeRawCategoryEnum,
       rawSymbol: rawSymbol,
-    );
+    )..createdAt = createdAt;
   }
 
   @override
@@ -58,5 +60,6 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     writer.writeInt(obj.priceStatusEnum.index);
     writer.writeInt(obj.exchangeRawCategoryEnum.index);
     writer.writeString(obj.rawSymbol);
+    writer.writeInt(obj.createdAt.millisecondsSinceEpoch);
   }
 }

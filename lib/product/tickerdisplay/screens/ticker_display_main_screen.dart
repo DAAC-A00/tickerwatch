@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
+import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'add_ticker_display_screen.dart';
 
@@ -40,12 +42,13 @@ class _TickerDisplayMainScreenState
 
   @override
   Widget build(BuildContext context) {
-    final tickerDisplaysList = ref.watch(tickerDisplayProvider);
+    final tickerDisplay = ref.watch(tickerDisplayProvider);
     final tickerDisplayNotifier = ref.read(tickerDisplayProvider.notifier);
     final tickers = ref.watch(tickerProvider);
 
     // 검색된 tickerDisplay 리스트
-    final filteredTickerDisplays = tickerDisplaysList.where((tickerDisplay) {
+    final List<TickerDisplayEntity> filteredTickerDisplays =
+        tickerDisplay.where((tickerDisplay) {
       return tickerDisplay.rawSymbol.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase()) ||
           tickerDisplay.exchangeRawCategoryEnum.name.toLowerCase().contains(
@@ -53,20 +56,7 @@ class _TickerDisplayMainScreenState
     }).toList();
 
     // tickerDisplay에 기반하여 해당 ticker의 정보를 필터링
-    final tickerInfoList = tickerDisplaysList
-        .map((tickerDisplay) {
-          return tickers
-              .where((ticker) =>
-                  ticker.info.exchangeRawCategoryEnum ==
-                      tickerDisplay.exchangeRawCategoryEnum &&
-                  ticker.info.rawSymbol == tickerDisplay.rawSymbol)
-              .toList();
-        })
-        .expand((element) => element)
-        .toList();
-
-    // tickerDisplay에 기반하여 해당 ticker의 정보를 필터링
-    final filteredTickerInfoList = filteredTickerDisplays
+    final List<TickerEntity> filteredTickerList = filteredTickerDisplays
         .map((tickerDisplay) {
           return tickers
               .where((ticker) =>
@@ -106,17 +96,18 @@ class _TickerDisplayMainScreenState
           ),
         ],
       ),
-      body: tickerInfoList.isEmpty
+      body: filteredTickerList.isEmpty
           ? const Center(
               child: Text('검색 결과가 없습니다.'),
             )
           : _searchController.text.isEmpty
               ? ReorderableListView.builder(
-                  itemCount: tickerInfoList.length,
+                  itemCount: filteredTickerList.length,
                   itemBuilder: (context, index) {
-                    final ticker = tickerInfoList[index];
+                    final ticker = filteredTickerList[index];
+                    final tickerDisplay = filteredTickerDisplays[index];
                     return ListTile(
-                      key: ValueKey(ticker.info.rawSymbol), // 키 설정
+                      key: ValueKey('${tickerDisplay.createdAt}'),
                       title: Text(
                           '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
                       subtitle: Text(
@@ -130,10 +121,12 @@ class _TickerDisplayMainScreenState
                   },
                 )
               : ListView.builder(
-                  itemCount: filteredTickerInfoList.length,
+                  itemCount: filteredTickerList.length,
                   itemBuilder: (context, index) {
-                    final ticker = filteredTickerInfoList[index];
+                    final ticker = filteredTickerList[index];
+                    final tickerDisplay = filteredTickerDisplays[index];
                     return ListTile(
+                      key: ValueKey('${tickerDisplay.createdAt}'),
                       title: Text(
                           '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
                       subtitle: Text(
