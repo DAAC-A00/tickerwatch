@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
 import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
@@ -17,6 +18,13 @@ class AddTickerDisplayScreen extends ConsumerStatefulWidget {
 
 class _AddTickerDisplayScreenState
     extends ConsumerState<AddTickerDisplayScreen> {
+  final List<String> contentList = [
+    '개요',
+    'ticker display를 등록해 실시간 정보를 확인할 수 있습니다. 설정한 가격을 돌파한 상태가 유지되는 동안 해당 ticker card에 알림을 노출해줍니다.',
+    '추가 가능 ticker 조건',
+    '선택한 category와 symbol이 모두 유효한 경우에만 추가가 가능합니다.',
+  ];
+
   final TextEditingController _searchController = TextEditingController();
 
   List<CategoryExchangeEnum> availableCategoryExchangeEnumList = [];
@@ -103,8 +111,8 @@ class _AddTickerDisplayScreenState
         title: const Text('Add Ticker Display'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _addTickerDisplay,
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => showInfoBottomSheet(context, contentList),
           ),
         ],
       ),
@@ -196,7 +204,7 @@ class _AddTickerDisplayScreenState
                                   selectedCategoryExchangeEnum)
                       ? _addTickerDisplay
                       : null,
-                  child: const Text('Save'),
+                  child: const Text('Add'),
                 ),
               ],
             ),
