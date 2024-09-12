@@ -24,6 +24,9 @@ class _AddTickerDisplayScreenState
   ExchangeRawCategoryEnum? selectedExchangeRawCategoryEnum;
   String? selectedRawSymbol;
 
+  final int keyFlex = 2;
+  final int valueFlex = 5;
+
   @override
   void initState() {
     super.initState();
@@ -95,9 +98,7 @@ class _AddTickerDisplayScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: selectedRawSymbol == null
-            ? const Text('Add')
-            : Text('Add $selectedRawSymbol'),
+        title: const Text('Add'),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -115,9 +116,9 @@ class _AddTickerDisplayScreenState
                   children: [
                     Row(
                       children: [
-                        const Expanded(flex: 1, child: Text('Category')),
+                        Expanded(flex: keyFlex, child: const Text('Category')),
                         Expanded(
-                          flex: 2,
+                          flex: valueFlex,
                           child: DropdownButton<ExchangeRawCategoryEnum>(
                             value: selectedExchangeRawCategoryEnum,
                             hint: const Text('Select Category'),
@@ -132,6 +133,7 @@ class _AddTickerDisplayScreenState
                             onChanged: (value) {
                               setState(() {
                                 selectedExchangeRawCategoryEnum = value;
+                                _loadAvailableSymbols('');
                               });
                             },
                           ),
@@ -141,9 +143,9 @@ class _AddTickerDisplayScreenState
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(flex: 1, child: Text('Symbol')),
+                        Expanded(flex: keyFlex, child: const Text('Symbol')),
                         Expanded(
-                          flex: 2,
+                          flex: valueFlex,
                           child: TextField(
                             controller: _searchController,
                             onChanged: _loadAvailableSymbols,
@@ -158,9 +160,9 @@ class _AddTickerDisplayScreenState
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(flex: 1, child: Text('')),
+                        Expanded(flex: keyFlex, child: const Text('')),
                         Expanded(
-                          flex: 2,
+                          flex: valueFlex,
                           child: ListView.builder(
                             shrinkWrap:
                                 true, // ListView의 크기를 부모에 맞추기 위해 shrinkWrap을 true로 설정
