@@ -95,7 +95,9 @@ class _AddTickerDisplayScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ticker Display 추가'),
+        title: selectedRawSymbol == null
+            ? const Text('Add')
+            : Text('Add $selectedRawSymbol'),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -103,56 +105,103 @@ class _AddTickerDisplayScreenState
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SafeArea(
         child: Column(
           children: [
-            DropdownButton<ExchangeRawCategoryEnum>(
-              value: selectedExchangeRawCategoryEnum,
-              hint: const Text('카테고리 선택'),
-              items: availableCategories
-                  .map((ExchangeRawCategoryEnum exchangeRawCategoryEnum) {
-                return DropdownMenuItem<ExchangeRawCategoryEnum>(
-                  value: exchangeRawCategoryEnum,
-                  child: Text(exchangeRawCategoryEnum.name),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedExchangeRawCategoryEnum = value;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _searchController,
-              onChanged: _loadAvailableSymbols,
-              decoration: const InputDecoration(
-                hintText: 'Symbol 검색',
-                prefixIcon: Icon(Icons.search),
-              ),
-            ),
-            const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                itemCount: availableRawSymbols.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(availableRawSymbols[index]),
-                    onTap: () {
-                      setState(() {
-                        selectedRawSymbol = availableRawSymbols[index];
-                      });
-                    },
-                  );
-                },
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(flex: 1, child: Text('Category')),
+                        Expanded(
+                          flex: 2,
+                          child: DropdownButton<ExchangeRawCategoryEnum>(
+                            value: selectedExchangeRawCategoryEnum,
+                            hint: const Text('Select Category'),
+                            items: availableCategories.map(
+                                (ExchangeRawCategoryEnum
+                                    exchangeRawCategoryEnum) {
+                              return DropdownMenuItem<ExchangeRawCategoryEnum>(
+                                value: exchangeRawCategoryEnum,
+                                child: Text(exchangeRawCategoryEnum.name),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedExchangeRawCategoryEnum = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Expanded(flex: 1, child: Text('Symbol')),
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: _loadAvailableSymbols,
+                            decoration: const InputDecoration(
+                              hintText: 'Search Symbol',
+                              prefixIcon: Icon(Icons.search),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Expanded(flex: 1, child: Text('')),
+                        Expanded(
+                          flex: 2,
+                          child: ListView.builder(
+                            shrinkWrap:
+                                true, // ListView의 크기를 부모에 맞추기 위해 shrinkWrap을 true로 설정
+                            physics:
+                                const NeverScrollableScrollPhysics(), // 스크롤 비활성화
+                            itemCount: availableRawSymbols.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(availableRawSymbols[index]),
+                                onTap: () {
+                                  setState(() {
+                                    selectedRawSymbol =
+                                        availableRawSymbols[index];
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            if (selectedRawSymbol != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('선택된 Symbol: $selectedRawSymbol'),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                OutlinedButton(
+                  // 취소 버튼을 OutlinedButton으로 변경
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('취소'),
+                ),
+                ElevatedButton(
+                  onPressed: selectedRawSymbol != null
+                      ? _addTickerDisplay
+                      : null, // selectedRawSymbol이 있을 때만 활성화
+                  child: const Text('저장하기'),
+                ),
+              ],
+            ),
           ],
         ),
       ),
