@@ -125,6 +125,7 @@ class _AddTickerDisplayScreenState
                 child: Column(
                   children: [
                     DropdownButton<CategoryExchangeEnum>(
+                      icon: const Icon(Icons.check),
                       value: selectedCategoryExchangeEnum,
                       hint: const Text('Select Category'),
                       items: availableCategoryExchangeEnumList
@@ -198,6 +199,9 @@ class _AddTickerDisplayScreenState
                 ElevatedButton(
                   onPressed: selectedSymbol != null &&
                           selectedCategoryExchangeEnum != null &&
+                          // 선택된 symbol 값과 symbol search 값이 동일한지 확인
+                          selectedSymbol == _searchController.text &&
+                          // 유효한 ticker symbol & categoryExchangeEnum인지 확인
                           ref.read(tickerProvider).any((ticker) =>
                               ticker.info.symbol == selectedSymbol &&
                               ticker.info.categoryExchangeEnum ==
