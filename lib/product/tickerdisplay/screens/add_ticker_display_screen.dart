@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
+import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 
@@ -20,11 +20,11 @@ class _AddTickerDisplayScreenState
     extends ConsumerState<AddTickerDisplayScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  List<ExchangeRawCategoryEnum> availableExchangeRawCategories = [];
-  List<String> availableRawSymbols = [];
+  List<CategoryExchangeEnum> availableCategoryExchangeEnumList = [];
+  List<String> availableSymbolList = [];
 
-  ExchangeRawCategoryEnum? selectedExchangeRawCategoryEnum;
-  String? selectedRawSymbol;
+  CategoryExchangeEnum? selectedCategoryExchangeEnum;
+  String? selectedSymbol;
 
   final int keyFlex = 2;
   final int valueFlex = 5;
@@ -32,34 +32,34 @@ class _AddTickerDisplayScreenState
   @override
   void initState() {
     super.initState();
-    _loadAvailableExchangeRawCategories();
+    _loadAvailableCategoryExchangeEnumList();
   }
 
-  void _loadAvailableExchangeRawCategories() {
+  void _loadAvailableCategoryExchangeEnumList() {
     final tickers = ref.read(tickerProvider);
     final categories = tickers
-        .map((ticker) => ticker.info.exchangeRawCategoryEnum)
+        .map((ticker) => ticker.info.categoryExchangeEnum)
         .toSet()
         .toList();
-    availableExchangeRawCategories = categories;
+    availableCategoryExchangeEnumList = categories;
   }
 
-  void _loadAvailableSymbols(String query) {
+  void _loadAvailableSymbolList(String query) {
     final tickers = ref.read(tickerProvider);
-    availableRawSymbols = tickers
+    availableSymbolList = tickers
         .where((ticker) =>
-            (ticker.info.exchangeRawCategoryEnum ==
-                selectedExchangeRawCategoryEnum) &&
+            (ticker.info.categoryExchangeEnum ==
+                selectedCategoryExchangeEnum) &&
             ticker.info.searchKeywords
                 .toLowerCase()
                 .contains(query.toLowerCase()))
-        .map((ticker) => ticker.info.rawSymbol)
+        .map((ticker) => ticker.info.symbol)
         .toList();
     setState(() {});
   }
 
   void _addTickerDisplay() {
-    if (selectedRawSymbol != null && selectedExchangeRawCategoryEnum != null) {
+    if (selectedSymbol != null && selectedCategoryExchangeEnum != null) {
       final tickers = ref.read(tickerProvider);
 
       TickerEntity? selectedTicker;
@@ -67,9 +67,8 @@ class _AddTickerDisplayScreenState
       try {
         // 조건에 맞는 ticker를 찾음.
         selectedTicker = tickers.firstWhere((ticker) =>
-            ticker.info.rawSymbol == selectedRawSymbol &&
-            ticker.info.exchangeRawCategoryEnum ==
-                selectedExchangeRawCategoryEnum);
+            ticker.info.symbol == selectedSymbol &&
+            ticker.info.categoryExchangeEnum == selectedCategoryExchangeEnum);
       } catch (e) {
         // 선택한 Symbol에 해당하는 ticker가 없을 경우
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,14 +81,9 @@ class _AddTickerDisplayScreenState
       // TickerDisplayEntity 생성 및 추가
       ref.read(tickerDisplayProvider.notifier).insertBox(TickerDisplayEntity(
             categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
-            name: selectedTicker.info.unit == 1
-                ? '${selectedTicker.info.baseCode}/${selectedTicker.info.quoteCode}'
-                : '${selectedTicker.info.unit}${selectedTicker.info.baseCode}/${selectedTicker.info.quoteCode}',
+            symbol: selectedTicker.info.symbol,
             price: selectedTicker.price,
             priceStatusEnum: selectedTicker.priceStatusEnum,
-            exchangeRawCategoryEnum:
-                selectedTicker.info.exchangeRawCategoryEnum,
-            rawSymbol: selectedTicker.info.rawSymbol,
           ));
 
       Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
@@ -116,75 +110,50 @@ class _AddTickerDisplayScreenState
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(flex: keyFlex, child: const Text('Category')),
-                        Expanded(
-                          flex: valueFlex,
-                          child: DropdownButton<ExchangeRawCategoryEnum>(
-                            value: selectedExchangeRawCategoryEnum,
-                            hint: const Text('Select Category'),
-                            items: availableExchangeRawCategories.map(
-                                (ExchangeRawCategoryEnum
-                                    exchangeRawCategoryEnum) {
-                              return DropdownMenuItem<ExchangeRawCategoryEnum>(
-                                value: exchangeRawCategoryEnum,
-                                child: Text(exchangeRawCategoryEnum.name),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedExchangeRawCategoryEnum = value;
-                                _loadAvailableSymbols('');
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                    DropdownButton<CategoryExchangeEnum>(
+                      value: selectedCategoryExchangeEnum,
+                      hint: const Text('Select Category'),
+                      items: availableCategoryExchangeEnumList
+                          .map((CategoryExchangeEnum categoryExchangeEnum) {
+                        return DropdownMenuItem<CategoryExchangeEnum>(
+                          value: categoryExchangeEnum,
+                          child: Text(categoryExchangeEnum.getDescription),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCategoryExchangeEnum = value;
+                          _loadAvailableSymbolList('');
+                        });
+                      },
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(flex: keyFlex, child: const Text('Symbol')),
-                        Expanded(
-                          flex: valueFlex,
-                          child: TextField(
-                            controller: _searchController,
-                            onChanged: _loadAvailableSymbols,
-                            decoration: const InputDecoration(
-                              hintText: 'Search Symbol',
-                              prefixIcon: Icon(Icons.search),
-                            ),
-                          ),
-                        ),
-                      ],
+                    TextField(
+                      controller: _searchController,
+                      onChanged: _loadAvailableSymbolList,
+                      decoration: const InputDecoration(
+                        hintText: 'Search Symbol',
+                        prefixIcon: Icon(Icons.search),
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(flex: keyFlex, child: const Text('')),
-                        Expanded(
-                          flex: valueFlex,
-                          child: ListView.builder(
-                            shrinkWrap:
-                                true, // ListView의 크기를 부모에 맞추기 위해 shrinkWrap을 true로 설정
-                            physics:
-                                const NeverScrollableScrollPhysics(), // 스크롤 비활성화
-                            itemCount: availableRawSymbols.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(availableRawSymbols[index]),
-                                onTap: () {
-                                  setState(() {
-                                    selectedRawSymbol =
-                                        availableRawSymbols[index];
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                    ListView.builder(
+                      shrinkWrap:
+                          true, // ListView의 크기를 부모에 맞추기 위해 shrinkWrap을 true로 설정
+                      physics: const NeverScrollableScrollPhysics(), // 스크롤 비활성화
+                      itemCount: availableSymbolList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(availableSymbolList[index]),
+                          onTap: () {
+                            setState(() {
+                              selectedSymbol = availableSymbolList[index];
+                              _searchController.text =
+                                  availableSymbolList[index];
+                            });
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -199,9 +168,10 @@ class _AddTickerDisplayScreenState
                   child: const Text('취소'),
                 ),
                 ElevatedButton(
-                  onPressed: selectedRawSymbol != null
+                  onPressed: selectedSymbol != null &&
+                          selectedSymbol == _searchController.text
                       ? _addTickerDisplay
-                      : null, // selectedRawSymbol이 있을 때만 활성화
+                      : null, // selectedSymbol이 있을 때만 활성화
                   child: const Text('저장하기'),
                 ),
               ],

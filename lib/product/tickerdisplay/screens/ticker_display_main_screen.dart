@@ -49,9 +49,9 @@ class _TickerDisplayMainScreenState
     // 검색된 tickerDisplay 리스트
     final List<TickerDisplayEntity> filteredTickerDisplays =
         tickerDisplay.where((tickerDisplay) {
-      return tickerDisplay.rawSymbol.toLowerCase().contains(
+      return tickerDisplay.symbol.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase()) ||
-          tickerDisplay.exchangeRawCategoryEnum.name.toLowerCase().contains(
+          tickerDisplay.categoryExchangeEnum.name.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase());
     }).toList();
 
@@ -60,9 +60,9 @@ class _TickerDisplayMainScreenState
         .map((tickerDisplay) {
           return tickers
               .where((ticker) =>
-                  ticker.info.exchangeRawCategoryEnum ==
-                      tickerDisplay.exchangeRawCategoryEnum &&
-                  ticker.info.rawSymbol == tickerDisplay.rawSymbol)
+                  ticker.info.categoryExchangeEnum ==
+                      tickerDisplay.categoryExchangeEnum &&
+                  ticker.info.symbol == tickerDisplay.symbol)
               .toList();
         })
         .expand((element) => element)
@@ -109,7 +109,7 @@ class _TickerDisplayMainScreenState
                     return ListTile(
                       key: ValueKey('${tickerDisplay.createdAt}'),
                       title: Text(
-                          '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
+                          '${ticker.info.symbol} ${ticker.info.categoryEnum.name}'),
                       subtitle:
                           Text('${ticker.price}  ${ticker.changePercent24h}%'),
                     );
@@ -128,9 +128,9 @@ class _TickerDisplayMainScreenState
                     return ListTile(
                       key: ValueKey('${tickerDisplay.createdAt}'),
                       title: Text(
-                          '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
-                      subtitle: Text(
-                          '가격: ${ticker.price} / 변동률: ${ticker.changePercent24h}'),
+                          '${ticker.info.symbol} ${ticker.info.categoryEnum.name}'),
+                      subtitle:
+                          Text('${ticker.price}  ${ticker.changePercent24h}'),
                     );
                   },
                 ),

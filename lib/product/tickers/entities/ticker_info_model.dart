@@ -10,11 +10,6 @@ import '../enums/category_enum.dart';
 import '../enums/category_exchange_enum.dart';
 
 class TickerInfoModel {
-  // // tickerId : 현물,무기한 baseCode/quoteCode=paymentCode & 유기한 baseCode/quoteCode=paymentCode-expiration
-  // //    무기한 상품 고유값 ex1 : BTC_0/USDT_0
-  // //    무기한 상품 고유값 ex2 : BTC_1/KRW_0
-  // //    만기 있는 상품 고유값 : BTC_0/USDT_0-20241220
-  // final String tickerId;
   // symbol
   final String rawSymbol; // 1000PEPEPERP
   final String symbolSub; // PERP
