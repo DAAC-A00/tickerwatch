@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
-import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
@@ -59,31 +58,40 @@ class _AddTickerDisplayScreenState
     if (selectedSymbol != null && selectedCategoryExchangeEnum != null) {
       final tickers = ref.read(tickerProvider);
 
-      TickerEntity? selectedTicker;
+      // 조건에 맞는 ticker 목록 필터링
+      final matchingTickers = tickers
+          .where((ticker) =>
+              ticker.info.symbol == selectedSymbol &&
+              ticker.info.categoryExchangeEnum == selectedCategoryExchangeEnum)
+          .toList();
 
-      try {
-        // 조건에 맞는 ticker를 찾음.
-        selectedTicker = tickers.firstWhere((ticker) =>
-            ticker.info.symbol == selectedSymbol &&
-            ticker.info.categoryExchangeEnum == selectedCategoryExchangeEnum);
-      } catch (e) {
-        // 선택한 Symbol에 해당하는 ticker가 없을 경우
+      if (matchingTickers.length == 1) {
+        // 정상 처리
+        final selectedTicker = matchingTickers.first;
+
+        // TickerDisplayEntity 생성 및 추가
+        ref.read(tickerDisplayProvider.notifier).insertBox(TickerDisplayEntity(
+              categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
+              symbol: selectedTicker.info.symbol,
+              price: selectedTicker.price,
+              priceStatusEnum: selectedTicker.priceStatusEnum,
+            ));
+
+        Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
+      } else if (matchingTickers.isEmpty) {
+        // 0개 존재하는 경우
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('선택한 Symbol에 해당하는 ticker가 없습니다.')),
+          const SnackBar(
+              content: Text('선택한 Category와 Symbol에 해당하는 ticker가 없습니다.')),
         );
-        return; // 함수 종료
+      } else {
+        // 2개 이상 존재하는 경우
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  '선택한 Category와 Symbol에 해당하는 ticker가 2개 이상입니다. 관리자에게 문의해주세요.')),
+        );
       }
-
-      // selectedTicker가 null인지 확인 (이 경우는 catch에서 처리됨)
-      // TickerDisplayEntity 생성 및 추가
-      ref.read(tickerDisplayProvider.notifier).insertBox(TickerDisplayEntity(
-            categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
-            symbol: selectedTicker.info.symbol,
-            price: selectedTicker.price,
-            priceStatusEnum: selectedTicker.priceStatusEnum,
-          ));
-
-      Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
     }
   }
 
