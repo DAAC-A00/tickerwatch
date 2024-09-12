@@ -91,7 +91,7 @@ class _AddTickerDisplayScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add'),
+        title: const Text('Add Ticker Display'),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -175,16 +175,19 @@ class _AddTickerDisplayScreenState
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 OutlinedButton(
-                  // 취소 버튼을 OutlinedButton으로 변경
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('취소'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: selectedSymbol != null &&
-                          selectedSymbol == _searchController.text
+                          selectedCategoryExchangeEnum != null &&
+                          ref.read(tickerProvider).any((ticker) =>
+                              ticker.info.symbol == selectedSymbol &&
+                              ticker.info.categoryExchangeEnum ==
+                                  selectedCategoryExchangeEnum)
                       ? _addTickerDisplay
-                      : null, // selectedSymbol이 있을 때만 활성화
-                  child: const Text('저장하기'),
+                      : null,
+                  child: const Text('Save'),
                 ),
               ],
             ),
