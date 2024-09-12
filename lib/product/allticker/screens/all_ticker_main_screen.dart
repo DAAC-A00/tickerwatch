@@ -83,9 +83,8 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 final ticker = filteredTickers[index];
                 return ListTile(
                   title: Text(
-                      '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
-                  subtitle: Text(
-                      '${ticker.price} ${ticker.changePercent24h} ${ticker.info.expirationDate}'),
+                      '${ticker.info.symbol} ${ticker.info.categoryEnum.name}'),
+                  subtitle: Text('${ticker.price} ${ticker.changePercent24h}'),
                   onTap: () {
                     // ListTile 클릭 시 AllTickerDetailScreen으로 이동
                     Navigator.push(

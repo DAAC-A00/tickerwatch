@@ -18,9 +18,11 @@ class AddTickerDisplayScreen extends ConsumerStatefulWidget {
 
 class _AddTickerDisplayScreenState
     extends ConsumerState<AddTickerDisplayScreen> {
-  List<ExchangeRawCategoryEnum> availableCategories = [];
   final TextEditingController _searchController = TextEditingController();
+
+  List<ExchangeRawCategoryEnum> availableExchangeRawCategories = [];
   List<String> availableRawSymbols = [];
+
   ExchangeRawCategoryEnum? selectedExchangeRawCategoryEnum;
   String? selectedRawSymbol;
 
@@ -30,16 +32,16 @@ class _AddTickerDisplayScreenState
   @override
   void initState() {
     super.initState();
-    _loadAvailableCategories();
+    _loadAvailableExchangeRawCategories();
   }
 
-  void _loadAvailableCategories() {
+  void _loadAvailableExchangeRawCategories() {
     final tickers = ref.read(tickerProvider);
     final categories = tickers
         .map((ticker) => ticker.info.exchangeRawCategoryEnum)
         .toSet()
         .toList();
-    availableCategories = categories;
+    availableExchangeRawCategories = categories;
   }
 
   void _loadAvailableSymbols(String query) {
@@ -122,7 +124,7 @@ class _AddTickerDisplayScreenState
                           child: DropdownButton<ExchangeRawCategoryEnum>(
                             value: selectedExchangeRawCategoryEnum,
                             hint: const Text('Select Category'),
-                            items: availableCategories.map(
+                            items: availableExchangeRawCategories.map(
                                 (ExchangeRawCategoryEnum
                                     exchangeRawCategoryEnum) {
                               return DropdownMenuItem<ExchangeRawCategoryEnum>(

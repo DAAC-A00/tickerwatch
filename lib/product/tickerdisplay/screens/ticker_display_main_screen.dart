@@ -110,8 +110,8 @@ class _TickerDisplayMainScreenState
                       key: ValueKey('${tickerDisplay.createdAt}'),
                       title: Text(
                           '${ticker.info.rawSymbol} ${ticker.info.exchangeRawCategoryEnum.name}'),
-                      subtitle: Text(
-                          '가격: ${ticker.price} / 변동률: ${ticker.changePercent24h}'),
+                      subtitle:
+                          Text('${ticker.price}  ${ticker.changePercent24h}%'),
                     );
                   },
                   onReorder: (oldIndex, newIndex) {
