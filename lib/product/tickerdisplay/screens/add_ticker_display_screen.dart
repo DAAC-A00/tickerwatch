@@ -73,7 +73,20 @@ class _AddTickerDisplayScreenState
               ticker.info.categoryExchangeEnum == selectedCategoryExchangeEnum)
           .toList();
 
-      if (matchingTickers.length == 1) {
+      if (selectedCategoryExchangeEnum == null) {
+        // Add 버튼 활성화가 안되도록 해둔 조건이지만, 혹시 놓칠까봐 해당 조건문을 Add 처리 시도시 중복으로 작성
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('category가 선택되지 않았습니다. category를 선택해주세요.')),
+        );
+      } else if (selectedSymbol != _searchController.text) {
+        // Add 버튼 활성화가 안되도록 해둔 조건이지만, 혹시 놓칠까봐 해당 조건문을 Add 처리 시도시 중복으로 작성
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  '선택된 "${selectedCategoryExchangeEnum?.getDescription}"는 "${_searchController.text}" symbol 값이 존재하지 않습니다.')),
+        );
+      } else if (matchingTickers.length == 1) {
         // 정상 처리
         final selectedTicker = matchingTickers.first;
 
@@ -125,7 +138,6 @@ class _AddTickerDisplayScreenState
                 child: Column(
                   children: [
                     DropdownButton<CategoryExchangeEnum>(
-                      icon: const Icon(Icons.check),
                       value: selectedCategoryExchangeEnum,
                       hint: const Text('Select Category'),
                       items: availableCategoryExchangeEnumList
