@@ -10,14 +10,10 @@ import '../enums/category_enum.dart';
 import '../enums/category_exchange_enum.dart';
 
 class TickerInfoModel {
-  // // tickerId : 현물,무기한 baseCode/quoteCode=paymentCode & 유기한 baseCode/quoteCode=paymentCode-expiration
-  // //    무기한 상품 고유값 ex1 : BTC_0/USDT_0
-  // //    무기한 상품 고유값 ex2 : BTC_1/KRW_0
-  // //    만기 있는 상품 고유값 : BTC_0/USDT_0-20241220
-  // final String tickerId;
   // symbol
   final String rawSymbol; // 1000PEPEPERP
   final String symbolSub; // PERP
+  String symbol; // 앱에 표기되는 symbol
   int unit; // 1000
 
   // option 관련
@@ -66,6 +62,7 @@ class TickerInfoModel {
     // raw
     required this.rawSymbol,
     this.symbolSub = '',
+    this.symbol = '',
     this.unit = 1,
     // option 관련
     this.optionTypeEnum = OptionTypeEnum.none,
@@ -422,6 +419,17 @@ class TickerInfoModel {
       paymentCode = quoteCode;
     }
 
+    // 표기되는 symbol 제작
+    symbol = unit == 1
+        ? '${baseCode.split('_').first}/${quoteCode.split('_').first}'
+        : '$unit${baseCode.split('_').first}/${quoteCode.split('_').first}';
+    symbol = expirationDate != '' ? '$symbol-$expirationDate' : symbol;
+    symbol = optionTypeEnum == OptionTypeEnum.call
+        ? '$symbol-${strikePrice}C'
+        : optionTypeEnum == OptionTypeEnum.put
+            ? '$symbol-${strikePrice}P'
+            : symbol;
+
     baseCodeKorean = _getCodeKorean(baseCode);
     quoteCodeKorean = _getCodeKorean(quoteCode);
     paymentCodeKorean = _getCodeKorean(paymentCode);
@@ -439,7 +447,7 @@ class TickerInfoModel {
     paymentCountryKorean = _getCountryKorean(paymentCode);
 
     searchKeywords =
-        '$rawSymbol$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
+        '$symbol$rawSymbol$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
   }
 
   String _extractExpirationDate(String rawExpirationDate) {

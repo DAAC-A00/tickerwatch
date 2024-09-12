@@ -32,13 +32,16 @@ class AllTickerDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(currentTicker.info.rawSymbol),
+        title: Text(currentTicker.info.symbol),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: () {
               String content = '';
               missingInfo.add('제공되지 않는 정보');
+              content = currentTicker.info.symbol.isEmpty
+                  ? '$content코드    ticker.info.sawSymbol\n'
+                  : content;
               content = currentTicker.info.rawSymbol.isEmpty
                   ? '$content원본 코드    ticker.info.rawSymbol\n'
                   : content;
@@ -162,6 +165,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
         child: ListView(
           children: [
             // TickerInfoModel의 데이터 출력
+            if (currentTicker.info.symbol.isNotEmpty)
+              _buildRow('코드', currentTicker.info.symbol),
             if (currentTicker.info.rawSymbol.isNotEmpty)
               _buildRow('원본 코드', currentTicker.info.rawSymbol),
             if (currentTicker.info.symbolSub.isNotEmpty)
