@@ -26,9 +26,6 @@ class _AddTickerDisplayScreenState
   CategoryExchangeEnum? selectedCategoryExchangeEnum;
   String? selectedSymbol;
 
-  final int keyFlex = 2;
-  final int valueFlex = 5;
-
   @override
   void initState() {
     super.initState();
@@ -123,17 +120,31 @@ class _AddTickerDisplayScreenState
                       onChanged: (value) {
                         setState(() {
                           selectedCategoryExchangeEnum = value;
-                          _loadAvailableSymbolList('');
+                          _loadAvailableSymbolList(_searchController.text);
                         });
                       },
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _searchController,
+                      onTap: () {
+                        _loadAvailableSymbolList(_searchController.text);
+                      },
                       onChanged: _loadAvailableSymbolList,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Search Symbol',
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _searchController.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  _loadAvailableSymbolList(
+                                      _searchController.text);
+                                  setState(() {});
+                                },
+                              )
+                            : null,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -150,6 +161,7 @@ class _AddTickerDisplayScreenState
                               selectedSymbol = availableSymbolList[index];
                               _searchController.text =
                                   availableSymbolList[index];
+                              availableSymbolList.clear();
                             });
                           },
                         );
