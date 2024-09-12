@@ -49,7 +49,7 @@ class _TickerDisplayMainScreenState
     // 검색된 tickerDisplay 리스트
     final List<TickerDisplayEntity> filteredTickerDisplays =
         tickerDisplay.where((tickerDisplay) {
-      return tickerDisplay.symbol.toLowerCase().contains(
+      return tickerDisplay.searchKeywords.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase()) ||
           tickerDisplay.categoryExchangeEnum.name.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase());

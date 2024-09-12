@@ -13,12 +13,14 @@ class TickerDisplayEntity {
   PriceStatusEnum priceStatusEnum;
   // 자동 세팅
   DateTime createdAt;
+  String searchKeywords;
 
   TickerDisplayEntity({
     required this.categoryExchangeEnum,
     required this.symbol,
     required this.price,
     required this.priceStatusEnum,
+    required this.searchKeywords,
   }) : createdAt = DateTime.now();
 }
 
@@ -32,6 +34,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     final symbol = reader.readString();
     final price = reader.readString();
     final priceStatusEnum = PriceStatusEnum.values[reader.readInt()];
+    final searchKeywords = reader.readString();
     final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
 
     return TickerDisplayEntity(
@@ -39,6 +42,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
       symbol: symbol,
       price: price,
       priceStatusEnum: priceStatusEnum,
+      searchKeywords: searchKeywords,
     )..createdAt = createdAt;
   }
 
@@ -48,6 +52,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     writer.writeString(obj.symbol);
     writer.writeString(obj.price);
     writer.writeInt(obj.priceStatusEnum.index);
+    writer.writeString(obj.searchKeywords);
     writer.writeInt(obj.createdAt.millisecondsSinceEpoch);
   }
 }

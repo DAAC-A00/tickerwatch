@@ -75,6 +75,7 @@ class _AddTickerDisplayScreenState
               symbol: selectedTicker.info.symbol,
               price: selectedTicker.price,
               priceStatusEnum: selectedTicker.priceStatusEnum,
+              searchKeywords: selectedTicker.info.searchKeywords,
             ));
 
         Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
