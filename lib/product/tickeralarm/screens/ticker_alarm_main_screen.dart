@@ -1,26 +1,25 @@
-// ticker_display_main_screen.dart
+// ticker_alarm_main_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
 import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
-import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
-import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
+import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
+import 'package:tickerwatch/product/tickeralarm/screens/add_ticker_display_screen.dart';
+import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
-import 'add_ticker_display_screen.dart';
 
-class TickerDisplayMainScreen extends ConsumerStatefulWidget {
-  const TickerDisplayMainScreen({super.key});
+class TickerAlarmMainScreen extends ConsumerStatefulWidget {
+  const TickerAlarmMainScreen({super.key});
 
   @override
-  ConsumerState<TickerDisplayMainScreen> createState() =>
-      _TickerDisplayMainScreenState();
+  ConsumerState<TickerAlarmMainScreen> createState() =>
+      _TickerAlarmMainScreenState();
 }
 
-class _TickerDisplayMainScreenState
-    extends ConsumerState<TickerDisplayMainScreen> {
+class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> contentList = [
     '개요',
@@ -35,39 +34,39 @@ class _TickerDisplayMainScreenState
     super.dispose();
   }
 
-  void _navigateToAddTickerDisplay() {
+  void _navigateToAddTickerAlarm() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AddTickerDisplayScreen()),
+      MaterialPageRoute(builder: (context) => const AddTickerAlarmScreen()),
     ); // 추가하기 화면으로 이동
   }
 
   @override
   Widget build(BuildContext context) {
-    final tickerDisplay = ref.watch(tickerDisplayProvider);
-    final tickerDisplayNotifier = ref.read(tickerDisplayProvider.notifier);
+    final tickerAlarm = ref.watch(tickerAlarmProvider);
+    final tickerAlarmNotifier = ref.read(tickerAlarmProvider.notifier);
     final tickers = ref.watch(tickerProvider);
     final tickerSetting = ref.watch(tickerSettingProvider);
     final Color? upColor = tickerSetting.upColor;
     final Color? downColor = tickerSetting.downColor;
 
-    // 검색된 tickerDisplay 리스트
-    final List<TickerDisplayEntity> filteredTickerDisplays =
-        tickerDisplay.where((tickerDisplay) {
-      return tickerDisplay.searchKeywords.toLowerCase().contains(
+    // 검색된 tickerAlarm 리스트
+    final List<TickerAlarmEntity> filteredTickerAlarms =
+        tickerAlarm.where((tickerAlarm) {
+      return tickerAlarm.searchKeywords.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase()) ||
-          tickerDisplay.categoryExchangeEnum.name.toLowerCase().contains(
+          tickerAlarm.categoryExchangeEnum.name.toLowerCase().contains(
               _searchController.text.replaceAll(' ', '').toLowerCase());
     }).toList();
 
-    // tickerDisplay에 기반하여 해당 ticker의 정보를 필터링
-    final List<TickerEntity> filteredTickerList = filteredTickerDisplays
-        .map((tickerDisplay) {
+    // tickerAlarm에 기반하여 해당 ticker의 정보를 필터링
+    final List<TickerEntity> filteredTickerList = filteredTickerAlarms
+        .map((tickerAlarm) {
           return tickers
               .where((ticker) =>
                   ticker.info.categoryExchangeEnum ==
-                      tickerDisplay.categoryExchangeEnum &&
-                  ticker.info.symbol == tickerDisplay.symbol)
+                      tickerAlarm.categoryExchangeEnum &&
+                  ticker.info.symbol == tickerAlarm.symbol)
               .toList();
         })
         .expand((element) => element)
@@ -110,9 +109,9 @@ class _TickerDisplayMainScreenState
                   itemCount: filteredTickerList.length,
                   itemBuilder: (context, index) {
                     final ticker = filteredTickerList[index];
-                    final tickerDisplay = filteredTickerDisplays[index];
+                    final tickerAlarm = filteredTickerAlarms[index];
                     return ListTile(
-                      key: ValueKey('${tickerDisplay.createdAt}'),
+                      key: ValueKey('${tickerAlarm.createdAt}'),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                         children: [
@@ -150,13 +149,13 @@ class _TickerDisplayMainScreenState
                               Expanded(
                                 child: Align(
                                   alignment: Alignment.centerRight, // 오른쪽 정렬
-                                  child: Text(tickerDisplay.alarmPrice),
+                                  child: Text(tickerAlarm.alarmPrice),
                                 ),
                               ),
-                              if (tickerDisplay.priceStatusEnum ==
+                              if (tickerAlarm.priceStatusEnum ==
                                   PriceStatusEnum.up)
                                 Icon(Icons.trending_up, color: upColor)
-                              else if (tickerDisplay.priceStatusEnum ==
+                              else if (tickerAlarm.priceStatusEnum ==
                                   PriceStatusEnum.down)
                                 Icon(Icons.trending_down, color: downColor),
                             ],
@@ -166,8 +165,8 @@ class _TickerDisplayMainScreenState
                     );
                   },
                   onReorder: (oldIndex, newIndex) {
-                    // 상태 업데이트를 위해 tickerDisplayProvider에 순서 변경을 반영
-                    tickerDisplayNotifier.updateOrderBox(oldIndex, newIndex);
+                    // 상태 업데이트를 위해 tickerAlarmProvider에 순서 변경을 반영
+                    tickerAlarmNotifier.updateOrderBox(oldIndex, newIndex);
                     setState(() {});
                   },
                 )
@@ -175,9 +174,9 @@ class _TickerDisplayMainScreenState
                   itemCount: filteredTickerList.length,
                   itemBuilder: (context, index) {
                     final ticker = filteredTickerList[index];
-                    final tickerDisplay = filteredTickerDisplays[index];
+                    final tickerAlarm = filteredTickerAlarms[index];
                     return ListTile(
-                      key: ValueKey('${tickerDisplay.createdAt}'),
+                      key: ValueKey('${tickerAlarm.createdAt}'),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                         children: [
@@ -215,13 +214,13 @@ class _TickerDisplayMainScreenState
                               Expanded(
                                 child: Align(
                                   alignment: Alignment.centerRight, // 오른쪽 정렬
-                                  child: Text(tickerDisplay.alarmPrice),
+                                  child: Text(tickerAlarm.alarmPrice),
                                 ),
                               ),
-                              if (tickerDisplay.priceStatusEnum ==
+                              if (tickerAlarm.priceStatusEnum ==
                                   PriceStatusEnum.up)
                                 Icon(Icons.trending_up, color: upColor)
-                              else if (tickerDisplay.priceStatusEnum ==
+                              else if (tickerAlarm.priceStatusEnum ==
                                   PriceStatusEnum.down)
                                 Icon(Icons.trending_down, color: downColor),
                             ],
@@ -232,7 +231,7 @@ class _TickerDisplayMainScreenState
                   },
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToAddTickerDisplay,
+        onPressed: _navigateToAddTickerAlarm,
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

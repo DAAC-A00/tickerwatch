@@ -3,22 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
-import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
+import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
-import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
+import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 
-class AddTickerDisplayScreen extends ConsumerStatefulWidget {
-  const AddTickerDisplayScreen({super.key});
+class AddTickerAlarmScreen extends ConsumerStatefulWidget {
+  const AddTickerAlarmScreen({super.key});
 
   @override
-  ConsumerState<AddTickerDisplayScreen> createState() =>
-      _AddTickerDisplayScreenState();
+  ConsumerState<AddTickerAlarmScreen> createState() =>
+      _AddTickerAlarmScreenState();
 }
 
-class _AddTickerDisplayScreenState
-    extends ConsumerState<AddTickerDisplayScreen> {
+class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
   final List<String> contentList = [
     '개요',
     'ticker display를 등록해 실시간 정보를 확인할 수 있습니다. 설정한 가격을 돌파한 상태가 유지되는 동안 해당 ticker card에 알림을 노출해줍니다.',
@@ -128,7 +127,7 @@ class _AddTickerDisplayScreenState
         }
 
         // TickerDisplayEntity 생성 및 추가
-        ref.read(tickerDisplayProvider.notifier).insertBox(TickerDisplayEntity(
+        ref.read(tickerAlarmProvider.notifier).insertBox(TickerAlarmEntity(
               categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
               symbol: selectedTicker.info.symbol,
               alarmPrice: alarmPriceText, // alarmPrice를 저장
