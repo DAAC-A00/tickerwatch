@@ -113,41 +113,54 @@ class _TickerDisplayMainScreenState
                     final tickerDisplay = filteredTickerDisplays[index];
                     return ListTile(
                       key: ValueKey('${tickerDisplay.createdAt}'),
-                      title: Row(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                         children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft, // 왼쪽 정렬
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
-                                child: Text(
-                                  '${ticker.info.symbol} ${ticker.info.categoryEnum.name}',
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                                    child: Text(
+                                      '${ticker.info.symbol} ${ticker.info.categoryEnum.name}',
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
+                              Align(
+                                alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                                  child: Text(
+                                    '${ticker.price} ${ticker.changePercent24h}%',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
-                          Align(
-                            alignment: Alignment.centerLeft, // 왼쪽 정렬
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
-                              child: Text(
-                                  '${ticker.price}  ${ticker.changePercent24h}%'),
-                            ),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween, // 좌우 공간을 균등하게
+                            children: [
+                              Text(ticker.volume24h),
+                              // Expanded를 사용하여 alarmPrice를 오른쪽으로 정렬
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight, // 오른쪽 정렬
+                                  child: Text(tickerDisplay.alarmPrice),
+                                ),
+                              ),
+                              if (tickerDisplay.priceStatusEnum ==
+                                  PriceStatusEnum.up)
+                                Icon(Icons.trending_up, color: upColor)
+                              else if (tickerDisplay.priceStatusEnum ==
+                                  PriceStatusEnum.down)
+                                Icon(Icons.trending_down, color: downColor),
+                            ],
                           ),
-                        ],
-                      ),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(ticker.volume24h),
-                          Text(tickerDisplay.alarmPrice),
-                          if (tickerDisplay.priceStatusEnum ==
-                              PriceStatusEnum.up)
-                            Icon(Icons.trending_up, color: upColor)
-                          else if (tickerDisplay.priceStatusEnum ==
-                              PriceStatusEnum.down)
-                            Icon(Icons.trending_down, color: downColor),
                         ],
                       ),
                     );
@@ -165,41 +178,54 @@ class _TickerDisplayMainScreenState
                     final tickerDisplay = filteredTickerDisplays[index];
                     return ListTile(
                       key: ValueKey('${tickerDisplay.createdAt}'),
-                      title: Row(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                         children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft, // 왼쪽 정렬
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
-                                child: Text(
-                                  '${ticker.info.symbol} ${ticker.info.categoryEnum.name}',
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                                    child: Text(
+                                      '${ticker.info.symbol} ${ticker.info.categoryEnum.name}',
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
+                              Align(
+                                alignment: Alignment.centerLeft, // 왼쪽 정렬
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                                  child: Text(
+                                    '${ticker.price} ${ticker.changePercent24h}%',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
-                          Align(
-                            alignment: Alignment.centerLeft, // 왼쪽 정렬
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
-                              child: Text(
-                                  '${ticker.price}  ${ticker.changePercent24h}%'),
-                            ),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween, // 좌우 공간을 균등하게
+                            children: [
+                              Text(ticker.volume24h),
+                              // Expanded를 사용하여 alarmPrice를 오른쪽으로 정렬
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight, // 오른쪽 정렬
+                                  child: Text(tickerDisplay.alarmPrice),
+                                ),
+                              ),
+                              if (tickerDisplay.priceStatusEnum ==
+                                  PriceStatusEnum.up)
+                                Icon(Icons.trending_up, color: upColor)
+                              else if (tickerDisplay.priceStatusEnum ==
+                                  PriceStatusEnum.down)
+                                Icon(Icons.trending_down, color: downColor),
+                            ],
                           ),
-                        ],
-                      ),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(ticker.volume24h),
-                          Text(tickerDisplay.alarmPrice),
-                          if (tickerDisplay.priceStatusEnum ==
-                              PriceStatusEnum.up)
-                            Icon(Icons.trending_up, color: upColor)
-                          else if (tickerDisplay.priceStatusEnum ==
-                              PriceStatusEnum.down)
-                            Icon(Icons.trending_down, color: downColor),
                         ],
                       ),
                     );
