@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
+import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
 import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
+import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'add_ticker_display_screen.dart';
 
@@ -45,6 +47,9 @@ class _TickerDisplayMainScreenState
     final tickerDisplay = ref.watch(tickerDisplayProvider);
     final tickerDisplayNotifier = ref.read(tickerDisplayProvider.notifier);
     final tickers = ref.watch(tickerProvider);
+    final tickerSetting = ref.watch(tickerSettingProvider);
+    final Color? upColor = tickerSetting.upColor;
+    final Color? downColor = tickerSetting.downColor;
 
     // 검색된 tickerDisplay 리스트
     final List<TickerDisplayEntity> filteredTickerDisplays =
@@ -108,10 +113,43 @@ class _TickerDisplayMainScreenState
                     final tickerDisplay = filteredTickerDisplays[index];
                     return ListTile(
                       key: ValueKey('${tickerDisplay.createdAt}'),
-                      title: Text(
-                          '${ticker.info.symbol} ${ticker.info.categoryEnum.name}'),
-                      subtitle:
-                          Text('${ticker.price}  ${ticker.changePercent24h}%'),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft, // 왼쪽 정렬
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                                child: Text(
+                                  '${ticker.info.symbol} ${ticker.info.categoryEnum.name}',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
+                          Align(
+                            alignment: Alignment.centerLeft, // 왼쪽 정렬
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                              child: Text(
+                                  '${ticker.price}  ${ticker.changePercent24h}%'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(ticker.volume24h),
+                          Text(tickerDisplay.alarmPrice),
+                          if (tickerDisplay.priceStatusEnum ==
+                              PriceStatusEnum.up)
+                            Icon(Icons.arrow_drop_up, color: upColor)
+                          else if (tickerDisplay.priceStatusEnum ==
+                              PriceStatusEnum.down)
+                            Icon(Icons.arrow_drop_down, color: downColor),
+                        ],
+                      ),
                     );
                   },
                   onReorder: (oldIndex, newIndex) {
@@ -127,10 +165,43 @@ class _TickerDisplayMainScreenState
                     final tickerDisplay = filteredTickerDisplays[index];
                     return ListTile(
                       key: ValueKey('${tickerDisplay.createdAt}'),
-                      title: Text(
-                          '${ticker.info.symbol} ${ticker.info.categoryEnum.name}'),
-                      subtitle:
-                          Text('${ticker.price}  ${ticker.changePercent24h}'),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft, // 왼쪽 정렬
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                                child: Text(
+                                  '${ticker.info.symbol} ${ticker.info.categoryEnum.name}',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
+                          Align(
+                            alignment: Alignment.centerLeft, // 왼쪽 정렬
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
+                              child: Text(
+                                  '${ticker.price}  ${ticker.changePercent24h}%'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(ticker.volume24h),
+                          Text(tickerDisplay.alarmPrice),
+                          if (tickerDisplay.priceStatusEnum ==
+                              PriceStatusEnum.up)
+                            Icon(Icons.arrow_drop_up, color: upColor)
+                          else if (tickerDisplay.priceStatusEnum ==
+                              PriceStatusEnum.down)
+                            Icon(Icons.arrow_drop_down, color: downColor),
+                        ],
+                      ),
                     );
                   },
                 ),
