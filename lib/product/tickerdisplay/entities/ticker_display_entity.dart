@@ -8,7 +8,7 @@ class TickerDisplayEntity {
   // 이용자 선택 또는 입력
   CategoryExchangeEnum categoryExchangeEnum;
   String symbol;
-  String price;
+  String alarmPrice;
   // 자동 세팅 - tickerDisplay data
   PriceStatusEnum priceStatusEnum;
   // 자동 세팅
@@ -18,7 +18,7 @@ class TickerDisplayEntity {
   TickerDisplayEntity({
     required this.categoryExchangeEnum,
     required this.symbol,
-    required this.price,
+    required this.alarmPrice,
     required this.priceStatusEnum,
     required this.searchKeywords,
   }) : createdAt = DateTime.now();
@@ -32,7 +32,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
   TickerDisplayEntity read(BinaryReader reader) {
     final categoryExchangeEnum = CategoryExchangeEnum.values[reader.readInt()];
     final symbol = reader.readString();
-    final price = reader.readString();
+    final alarmPrice = reader.readString();
     final priceStatusEnum = PriceStatusEnum.values[reader.readInt()];
     final searchKeywords = reader.readString();
     final createdAt = DateTime.fromMillisecondsSinceEpoch(reader.readInt());
@@ -40,7 +40,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
     return TickerDisplayEntity(
       categoryExchangeEnum: categoryExchangeEnum,
       symbol: symbol,
-      price: price,
+      alarmPrice: alarmPrice,
       priceStatusEnum: priceStatusEnum,
       searchKeywords: searchKeywords,
     )..createdAt = createdAt;
@@ -50,7 +50,7 @@ class TickerDisplayEntityAdapter extends TypeAdapter<TickerDisplayEntity> {
   void write(BinaryWriter writer, TickerDisplayEntity obj) {
     writer.writeInt(obj.categoryExchangeEnum.index);
     writer.writeString(obj.symbol);
-    writer.writeString(obj.price);
+    writer.writeString(obj.alarmPrice);
     writer.writeInt(obj.priceStatusEnum.index);
     writer.writeString(obj.searchKeywords);
     writer.writeInt(obj.createdAt.millisecondsSinceEpoch);
