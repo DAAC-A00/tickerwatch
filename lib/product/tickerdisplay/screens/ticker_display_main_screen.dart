@@ -144,10 +144,10 @@ class _TickerDisplayMainScreenState
                           Text(tickerDisplay.alarmPrice),
                           if (tickerDisplay.priceStatusEnum ==
                               PriceStatusEnum.up)
-                            Icon(Icons.arrow_drop_up, color: upColor)
+                            Icon(Icons.trending_up, color: upColor)
                           else if (tickerDisplay.priceStatusEnum ==
                               PriceStatusEnum.down)
-                            Icon(Icons.arrow_drop_down, color: downColor),
+                            Icon(Icons.trending_down, color: downColor),
                         ],
                       ),
                     );
@@ -196,10 +196,10 @@ class _TickerDisplayMainScreenState
                           Text(tickerDisplay.alarmPrice),
                           if (tickerDisplay.priceStatusEnum ==
                               PriceStatusEnum.up)
-                            Icon(Icons.arrow_drop_up, color: upColor)
+                            Icon(Icons.trending_up, color: upColor)
                           else if (tickerDisplay.priceStatusEnum ==
                               PriceStatusEnum.down)
-                            Icon(Icons.arrow_drop_down, color: downColor),
+                            Icon(Icons.trending_down, color: downColor),
                         ],
                       ),
                     );
