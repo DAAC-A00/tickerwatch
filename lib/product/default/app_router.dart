@@ -7,7 +7,7 @@ import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dar
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
-import 'package:tickerwatch/product/tickerdisplay/screens/ticker_display_main_screen.dart';
+import 'package:tickerwatch/product/tickeralarm/screens/ticker_alarm_main_screen.dart';
 import '../counter/counter_main_screen.dart';
 import '../sample_person/person_form_screen.dart';
 import '../setting/screens/exchange_setting_screen.dart';
@@ -41,7 +41,7 @@ List<RouteBase> _buildRoutes() {
         GoRoute(
           path: 'tickerDisplay',
           builder: (BuildContext context, GoRouterState state) =>
-              const TickerDisplayMainScreen(),
+              const TickerAlarmMainScreen(),
         ),
         GoRoute(
           path: 'setting',

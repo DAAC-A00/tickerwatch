@@ -3,21 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
-import 'package:tickerwatch/product/tickerdisplay/entities/ticker_display_entity.dart';
+import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
+import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
-import 'package:tickerwatch/product/tickerdisplay/states/ticker_display_provider.dart';
+import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 
-class AddTickerDisplayScreen extends ConsumerStatefulWidget {
-  const AddTickerDisplayScreen({super.key});
+class AddTickerAlarmScreen extends ConsumerStatefulWidget {
+  const AddTickerAlarmScreen({super.key});
 
   @override
-  ConsumerState<AddTickerDisplayScreen> createState() =>
-      _AddTickerDisplayScreenState();
+  ConsumerState<AddTickerAlarmScreen> createState() =>
+      _AddTickerAlarmScreenState();
 }
 
-class _AddTickerDisplayScreenState
-    extends ConsumerState<AddTickerDisplayScreen> {
+class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
   final List<String> contentList = [
     '개요',
     'ticker display를 등록해 실시간 정보를 확인할 수 있습니다. 설정한 가격을 돌파한 상태가 유지되는 동안 해당 ticker card에 알림을 노출해줍니다.',
@@ -26,6 +26,7 @@ class _AddTickerDisplayScreenState
   ];
 
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _alarmPriceController = TextEditingController();
 
   List<CategoryExchangeEnum> availableCategoryExchangeEnumList = [];
   List<String> availableSymbolList = [];
@@ -73,46 +74,68 @@ class _AddTickerDisplayScreenState
               ticker.info.categoryExchangeEnum == selectedCategoryExchangeEnum)
           .toList();
 
-      if (selectedCategoryExchangeEnum == null) {
-        // Add 버튼 활성화가 안되도록 해둔 조건이지만, 혹시 놓칠까봐 해당 조건문을 Add 처리 시도시 중복으로 작성
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('category가 선택되지 않았습니다. category를 선택해주세요.')),
-        );
-      } else if (selectedSymbol != _searchController.text) {
-        // Add 버튼 활성화가 안되도록 해둔 조건이지만, 혹시 놓칠까봐 해당 조건문을 Add 처리 시도시 중복으로 작성
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  '선택된 "${selectedCategoryExchangeEnum?.getDescription}"는 "${_searchController.text}" symbol 값이 존재하지 않습니다.')),
-        );
-      } else if (matchingTickers.length == 1) {
-        // 정상 처리
-        final selectedTicker = matchingTickers.first;
-
-        // TickerDisplayEntity 생성 및 추가
-        ref.read(tickerDisplayProvider.notifier).insertBox(TickerDisplayEntity(
-              categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
-              symbol: selectedTicker.info.symbol,
-              price: selectedTicker.price,
-              priceStatusEnum: selectedTicker.priceStatusEnum,
-              searchKeywords: selectedTicker.info.searchKeywords,
-            ));
-
-        Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
-      } else if (matchingTickers.isEmpty) {
-        // 0개 존재하는 경우
+      if (matchingTickers.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('선택한 Category와 Symbol에 해당하는 ticker가 없습니다.')),
         );
-      } else {
-        // 2개 이상 존재하는 경우
+      } else if (matchingTickers.length > 1) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text(
-                  '선택한 Category와 Symbol에 해당하는 ticker가 2개 이상입니다. 관리자에게 문의해주세요.')),
+              content: Text('선택한 Category와 Symbol에 해당하는 ticker가 2개 이상입니다.')),
         );
+      } else {
+        final selectedTicker = matchingTickers.first;
+
+        // alarmPrice 입력값 검증
+        final alarmPriceText = _alarmPriceController.text;
+        if (alarmPriceText.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Alarm Price를 입력해주세요.')),
+          );
+          return;
+        }
+
+        final alarmPrice = double.tryParse(alarmPriceText);
+        if (alarmPrice == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('유효한 Alarm Price를 입력해주세요.')),
+          );
+          return;
+        }
+
+        final currentPrice = double.tryParse(selectedTicker.price);
+        if (currentPrice == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('ticker의 price 정보가 없어 알람을 등록할 수 없습니다.')),
+          );
+          return;
+        }
+
+        // priceStatusEnum 설정
+        PriceStatusEnum priceStatusEnum;
+        if (alarmPrice > currentPrice) {
+          priceStatusEnum = PriceStatusEnum.up;
+        } else if (alarmPrice < currentPrice) {
+          priceStatusEnum = PriceStatusEnum.down;
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Alarm Price가 현재 가격과 같습니다.')),
+          );
+          return; // 동일하면 추가하지 않음
+        }
+
+        // TickerDisplayEntity 생성 및 추가
+        ref.read(tickerAlarmProvider.notifier).insertBox(TickerAlarmEntity(
+              categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
+              symbol: selectedTicker.info.symbol,
+              alarmPrice: alarmPriceText, // alarmPrice를 저장
+              priceStatusEnum: priceStatusEnum,
+              searchKeywords: selectedTicker.info.searchKeywords,
+            ));
+
+        Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
       }
     }
   }
@@ -175,6 +198,36 @@ class _AddTickerDisplayScreenState
                                 },
                               )
                             : null,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ListView.builder(
+                      shrinkWrap:
+                          true, // ListView의 크기를 부모에 맞추기 위해 shrinkWrap을 true로 설정
+                      physics: const NeverScrollableScrollPhysics(), // 스크롤 비활성화
+                      itemCount: availableSymbolList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(availableSymbolList[index]),
+                          onTap: () {
+                            setState(() {
+                              selectedSymbol = availableSymbolList[index];
+                              _searchController.text =
+                                  availableSymbolList[index];
+                              availableSymbolList.clear();
+                            });
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    // Alarm Price 입력 필드 추가
+                    TextField(
+                      controller: _alarmPriceController,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter Alarm Price',
                       ),
                     ),
                     const SizedBox(height: 16),
