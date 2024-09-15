@@ -87,16 +87,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
       } else {
         final selectedTicker = matchingTickers.first;
 
-        // alarmPrice 입력값 검증
-        final alarmPriceText = _alarmPriceController.text;
-        if (alarmPriceText.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Alarm Price를 입력해주세요.')),
-          );
-          return;
-        }
-
-        final alarmPrice = double.tryParse(alarmPriceText);
+        final alarmPrice = double.tryParse(_alarmPriceController.text);
         if (alarmPrice == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('유효한 Alarm Price를 입력해주세요.')),
@@ -107,8 +98,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
         final currentPrice = double.tryParse(selectedTicker.price);
         if (currentPrice == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('ticker의 price 정보가 없어 알람을 등록할 수 없습니다.')),
+            const SnackBar(content: Text('잘못된 alarm price가 입력되었습니다.')),
           );
           return;
         }
@@ -126,11 +116,32 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
           return; // 동일하면 추가하지 않음
         }
 
+        // currentPrice의 소수점 자릿수 결정
+        final currentPriceText = selectedTicker.price;
+        final currentDecimalPlaces = currentPriceText.contains('.')
+            ? currentPriceText.split('.').last.length
+            : 0;
+
+        // alarmPrice의 소수점 자릿수 결정
+        final alarmPriceText = _alarmPriceController.text;
+        final alarmDecimalPlaces = alarmPriceText.contains('.')
+            ? alarmPriceText.split('.').last.length
+            : 0;
+
+        // 더 긴 소수점 자릿수에 맞춰 포맷팅
+        final maxDecimalPlaces = alarmDecimalPlaces > currentDecimalPlaces
+            ? alarmDecimalPlaces
+            : currentDecimalPlaces;
+
+        // alarmPriceText 포맷팅
+        final formattedAlarmPriceText =
+            alarmPrice.toStringAsFixed(maxDecimalPlaces);
+
         // TickerDisplayEntity 생성 및 추가
         ref.read(tickerAlarmProvider.notifier).insertBox(TickerAlarmEntity(
               categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
               symbol: selectedTicker.info.symbol,
-              alarmPrice: alarmPriceText, // alarmPrice를 저장
+              alarmPrice: formattedAlarmPriceText,
               priceStatusEnum: priceStatusEnum,
               searchKeywords: selectedTicker.info.searchKeywords,
             ));

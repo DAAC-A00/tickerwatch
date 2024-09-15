@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
 import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
-import 'package:tickerwatch/product/tickeralarm/screens/add_ticker_display_screen.dart';
+import 'package:tickerwatch/product/tickeralarm/screens/add_ticker_alarm_screen.dart';
 import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
