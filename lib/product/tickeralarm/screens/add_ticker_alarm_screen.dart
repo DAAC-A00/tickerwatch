@@ -1,4 +1,4 @@
-// add_ticker_display_screen.dart
+// add_ticker_alarm_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +20,7 @@ class AddTickerAlarmScreen extends ConsumerStatefulWidget {
 class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
   final List<String> contentList = [
     '개요',
-    'ticker display를 등록해 실시간 정보를 확인할 수 있습니다. 설정한 가격을 돌파한 상태가 유지되는 동안 해당 ticker card에 알림을 노출해줍니다.',
+    'ticker alarm를 등록해 실시간 정보를 확인할 수 있습니다. 설정한 가격을 돌파한 상태가 유지되는 동안 해당 ticker card에 알림을 노출해줍니다.',
     '추가 가능 ticker 조건',
     '선택한 category와 symbol이 모두 유효한 경우에만 추가가 가능합니다.',
   ];
@@ -63,7 +63,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
     setState(() {});
   }
 
-  void _addTickerDisplay() {
+  void _addTickerAlarm() {
     if (selectedSymbol != null && selectedCategoryExchangeEnum != null) {
       final tickers = ref.read(tickerProvider);
 
@@ -137,7 +137,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
         final formattedAlarmPriceText =
             alarmPrice.toStringAsFixed(maxDecimalPlaces);
 
-        // TickerDisplayEntity 생성 및 추가
+        // TickerAlarmEntity 생성 및 추가
         ref.read(tickerAlarmProvider.notifier).insertBox(TickerAlarmEntity(
               categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
               symbol: selectedTicker.info.symbol,
@@ -153,9 +153,11 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final alarmPrice = double.tryParse(_alarmPriceController.text);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Ticker Display'),
+        title: const Text('Add Ticker Alarm'),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -232,7 +234,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    // Alarm Price 입력 필드 추가
+                    // Alarm Price
                     TextField(
                       controller: _alarmPriceController,
                       keyboardType: TextInputType.number,
@@ -240,6 +242,9 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
                       decoration: const InputDecoration(
                         hintText: 'Enter Alarm Price',
                       ),
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                     ),
                     const SizedBox(height: 16),
                     ListView.builder(
@@ -277,12 +282,14 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
                           selectedCategoryExchangeEnum != null &&
                           // 선택된 symbol 값과 symbol search 값이 동일한지 확인
                           selectedSymbol == _searchController.text &&
+                          alarmPrice != null &&
+                          alarmPrice > 0 &&
                           // 유효한 ticker symbol & categoryExchangeEnum인지 확인
                           ref.read(tickerProvider).any((ticker) =>
                               ticker.info.symbol == selectedSymbol &&
                               ticker.info.categoryExchangeEnum ==
                                   selectedCategoryExchangeEnum)
-                      ? _addTickerDisplay
+                      ? _addTickerAlarm
                       : null,
                   child: const Text('Add'),
                 ),
