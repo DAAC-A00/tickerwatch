@@ -1,5 +1,7 @@
 // add_ticker_alarm_screen.dart
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
@@ -88,32 +90,40 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
         final selectedTicker = matchingTickers.first;
 
         final alarmPrice = double.tryParse(_alarmPriceController.text);
-        if (alarmPrice == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('유효한 Alarm Price를 입력해주세요.')),
-          );
-          return;
-        }
-
         final currentPrice = double.tryParse(selectedTicker.price);
-        if (currentPrice == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('잘못된 alarm price가 입력되었습니다.')),
-          );
-          return;
-        }
-
         // priceStatusEnum 설정
         PriceStatusEnum priceStatusEnum;
-        if (alarmPrice > currentPrice) {
-          priceStatusEnum = PriceStatusEnum.up;
-        } else if (alarmPrice < currentPrice) {
-          priceStatusEnum = PriceStatusEnum.down;
-        } else {
+        if (currentPrice == null) {
+          // 현재 가격 정보가 없는 경우
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Alarm Price가 현재 가격과 같습니다.')),
+            const SnackBar(
+                content: Text('해당 거래소에서 현재 가격을 불러오지 못하고 있어 알람을 등록할 수 없습니다.')),
           );
-          return; // 동일하면 추가하지 않음
+          return;
+        } else if (alarmPrice == null) {
+          // 알람 가격 정보가 잘못된 경우 ex. 숫자가 아니거나 값이 없는 경우
+          log('[WARN][AddTickerAlarmScreen._addTickerAlarm] Add 버튼 활성화가 안되어있어야하는데 활성화되어 잘못 처리됨');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text(
+                    '잘못된 Alarm Price가 입력되었습니다. 정상적인 Alarm Price를 입력해주세요.')),
+          );
+          return;
+        } else {
+          // 정상인 경우
+          if (alarmPrice > currentPrice) {
+            // 상승 돌파시 알람
+            priceStatusEnum = PriceStatusEnum.up;
+          } else if (alarmPrice < currentPrice) {
+            // 하락 돌파시 알람
+            priceStatusEnum = PriceStatusEnum.down;
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Alarm Price가 현재 가격과 같습니다. 다른 값으로 설정해주세요.')),
+            );
+            return; // 동일하면 추가하지 않음
+          }
         }
 
         // currentPrice의 소수점 자릿수 결정
