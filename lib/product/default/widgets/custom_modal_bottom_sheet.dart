@@ -9,9 +9,9 @@ void showCustomModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
       final currentTextTheme = Theme.of(context).textTheme;
+      final double titleSize = currentTextTheme.titleMedium?.fontSize ?? 22;
       final double bodySmall = currentTextTheme.bodySmall?.fontSize ?? 20;
       final double paddingSize = bodySmall * 2;
-      final double titleSize = currentTextTheme.titleMedium?.fontSize ?? 22;
       return Padding(
         padding: EdgeInsets.only(
           top: paddingSize,
@@ -43,9 +43,9 @@ void showCustomModalBottomSheet(
                 ],
               ),
               SizedBox(
-                height: paddingSize,
+                height: bodySmall,
               ),
-              ..._buildContent(contentList),
+              ..._buildContent(contentList, bodySmall),
             ],
           ),
         ),
@@ -55,7 +55,7 @@ void showCustomModalBottomSheet(
 }
 
 // content 리스트를 받아서 Text 위젯으로 변환하는 메서드
-List<Widget> _buildContent(List<String> contentList) {
+List<Widget> _buildContent(List<String> contentList, double bodySmall) {
   return List<Widget>.generate(contentList.length, (index) {
     if (index % 2 == 0) {
       // 홀수 인덱스는 제목
@@ -65,7 +65,12 @@ List<Widget> _buildContent(List<String> contentList) {
       );
     } else {
       // 짝수 인덱스는 내용
-      return Text('${contentList[index]}\n');
+      return Column(
+        children: [
+          Text(contentList[index]),
+          SizedBox(height: bodySmall), // SizedBox 추가
+        ],
+      );
     }
   });
 }
