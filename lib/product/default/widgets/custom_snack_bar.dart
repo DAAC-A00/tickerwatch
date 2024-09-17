@@ -43,15 +43,11 @@ void showCustomSnackBar(BuildContext context) {
           ],
         ),
       ),
-      // action: SnackBarAction(
-      //   label: 'UNDO',
-      //   onPressed: () {
-      //     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      //   },
-      // ),
+      backgroundColor: currentTheme.secondary,
+      duration: const Duration(seconds: 3),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(paddingSize / 2),
       ),
       // margin: const EdgeInsets.all(16),
     ),
