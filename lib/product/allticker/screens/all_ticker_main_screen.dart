@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_detail_screen.dart';
-import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
+import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
 
 import '../../tickers/states/ticker_provider.dart';
 
@@ -69,7 +69,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoBottomSheet(context, contentList),
+            onPressed: () => showCustomModalBottomSheet(context, contentList),
           ),
         ],
       ),

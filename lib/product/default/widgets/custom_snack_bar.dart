@@ -11,8 +11,8 @@ void showCustomSnackBar(BuildContext context) {
     SnackBar(
       content: Padding(
         padding: EdgeInsets.symmetric(
-          vertical: paddingSize / 2,
-          horizontal: paddingSize,
+          vertical: paddingSize / 4,
+          horizontal: paddingSize / 2,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -21,7 +21,7 @@ void showCustomSnackBar(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  '완료',
+                  '🎉 완료',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),

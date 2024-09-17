@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
-import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
+import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/tickers/enums/category_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/option_type_enum.dart';
 import '../../tickers/entities/ticker_entity.dart';
@@ -155,7 +155,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
                   : content;
               missingInfo.add(content);
               // BottomSheet 호출
-              showInfoBottomSheet(context, missingInfo);
+              showCustomModalBottomSheet(context, missingInfo);
             },
           )
         ],

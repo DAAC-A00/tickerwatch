@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tickerwatch/product/default/widgets/info_bottom_sheet.dart';
+import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
@@ -171,7 +171,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showInfoBottomSheet(context, contentList),
+            onPressed: () => showCustomModalBottomSheet(context, contentList),
           ),
         ],
       ),
