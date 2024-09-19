@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/default/widgets/custom_snack_bar.dart';
 
 import '../../default/handler/device_back_button_handler.dart';
 import '../../watch/screens/watch_main_screen.dart';
@@ -17,13 +18,16 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Text(
+            const Text(
               'Welcome to the Home Screen!',
             ),
+            ElevatedButton(
+                onPressed: () => showCustomSnackBar(context),
+                child: const Text('snackbar test')),
           ],
         ),
       ),
