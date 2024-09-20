@@ -12,7 +12,10 @@ import '../../tickers/states/ticker_provider.dart';
 import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 
 class AddTickerAlarmScreen extends ConsumerStatefulWidget {
-  const AddTickerAlarmScreen({super.key});
+  final int? index; // 수정할 TickerAlarm의 인덱스
+  final TickerAlarmEntity? tickerAlarm; // 수정할 TickerAlarm
+
+  const AddTickerAlarmScreen({super.key, this.index, this.tickerAlarm});
 
   @override
   ConsumerState<AddTickerAlarmScreen> createState() =>
@@ -40,6 +43,14 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
   void initState() {
     super.initState();
     _loadAvailableCategoryExchangeEnumList();
+
+    // 수정 모드일 경우 기존 TickerAlarm 정보 로드
+    if (widget.index != null && widget.tickerAlarm != null) {
+      selectedCategoryExchangeEnum = widget.tickerAlarm!.categoryExchangeEnum;
+      _searchController.text = widget.tickerAlarm!.symbol;
+      selectedSymbol = widget.tickerAlarm!.symbol;
+      _alarmPriceController.text = widget.tickerAlarm!.alarmPrice;
+    }
   }
 
   void _loadAvailableCategoryExchangeEnumList() {
@@ -55,8 +66,9 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
     final tickers = ref.read(tickerProvider);
     availableSymbolList = tickers
         .where((ticker) =>
-            (ticker.info.categoryExchangeEnum ==
-                selectedCategoryExchangeEnum) &&
+            (ticker.info.symbol != '' &&
+                ticker.info.categoryExchangeEnum ==
+                    selectedCategoryExchangeEnum) &&
             ticker.info.searchKeywords
                 .toLowerCase()
                 .contains(query.toLowerCase()))
@@ -65,7 +77,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
     setState(() {});
   }
 
-  void _addTickerAlarm() {
+  void _addOrUpdateTickerAlarm() {
     if (selectedSymbol != null && selectedCategoryExchangeEnum != null) {
       final tickers = ref.read(tickerProvider);
 
@@ -147,14 +159,27 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
         final formattedAlarmPriceText =
             alarmPrice.toStringAsFixed(maxDecimalPlaces);
 
-        // TickerAlarmEntity 생성 및 추가
-        ref.read(tickerAlarmProvider.notifier).insertBox(TickerAlarmEntity(
-              categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
-              symbol: selectedTicker.info.symbol,
-              alarmPrice: formattedAlarmPriceText,
-              priceStatusEnum: priceStatusEnum,
-              searchKeywords: selectedTicker.info.searchKeywords,
-            ));
+        if (widget.index != null) {
+          // 수정 로직
+          ref.read(tickerAlarmProvider.notifier).updateBox(
+              widget.index!,
+              TickerAlarmEntity(
+                categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
+                symbol: selectedTicker.info.symbol,
+                alarmPrice: formattedAlarmPriceText,
+                priceStatusEnum: priceStatusEnum,
+                searchKeywords: selectedTicker.info.searchKeywords,
+              ));
+        } else {
+          // 추가 로직
+          ref.read(tickerAlarmProvider.notifier).insertBox(TickerAlarmEntity(
+                categoryExchangeEnum: selectedTicker.info.categoryExchangeEnum,
+                symbol: selectedTicker.info.symbol,
+                alarmPrice: formattedAlarmPriceText,
+                priceStatusEnum: priceStatusEnum,
+                searchKeywords: selectedTicker.info.searchKeywords,
+              ));
+        }
 
         Navigator.of(context).pop(); // 화면을 닫고 이전 화면으로 돌아감
       }
@@ -167,7 +192,9 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Ticker Alarm'),
+        title: widget.index == null
+            ? const Text('Add Ticker Alarm')
+            : const Text('Edit Ticker Alarm'),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -299,9 +326,11 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
                               ticker.info.symbol == selectedSymbol &&
                               ticker.info.categoryExchangeEnum ==
                                   selectedCategoryExchangeEnum)
-                      ? _addTickerAlarm
+                      ? _addOrUpdateTickerAlarm
                       : null,
-                  child: const Text('Add'),
+                  child: widget.index == null
+                      ? const Text('Add')
+                      : const Text('Edit'),
                 ),
               ],
             ),

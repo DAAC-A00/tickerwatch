@@ -108,8 +108,9 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
               ? ReorderableListView.builder(
                   itemCount: filteredTickerList.length,
                   itemBuilder: (context, index) {
-                    final ticker = filteredTickerList[index];
-                    final tickerAlarm = filteredTickerAlarms[index];
+                    final TickerEntity ticker = filteredTickerList[index];
+                    final TickerAlarmEntity tickerAlarm =
+                        filteredTickerAlarms[index];
                     return ListTile(
                       key: ValueKey('${tickerAlarm.createdAt}'),
                       title: Column(
@@ -162,6 +163,17 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                           ),
                         ],
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddTickerAlarmScreen(
+                              index: index,
+                              tickerAlarm: tickerAlarm,
+                            ), // 인덱스 전달
+                          ),
+                        );
+                      },
                     );
                   },
                   onReorder: (oldIndex, newIndex) {
@@ -227,6 +239,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                           ),
                         ],
                       ),
+                      // TODO onTab 넣을 예정
                     );
                   },
                 ),
