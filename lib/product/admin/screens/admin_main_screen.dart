@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/actiontest/screens/action_test_main_screen.dart';
 import '../../allticker/screens/all_ticker_main_screen.dart';
 import '../../default/handler/device_back_button_handler.dart';
 
@@ -21,15 +22,30 @@ class _AdminMainScreenState extends ConsumerState<AdminMainScreen> {
           ListTile(
             leading: const Icon(Icons.data_thresholding_outlined),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text(
-              '전체 Ticker 정보 조회',
-            ),
+            title: const Text('전체 Ticker 정보 조회'),
             onTap: () {
               DeviceBackButtonHandler.disable();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const AllTickerMainScreen(),
+                ),
+              ).then((_) {
+                DeviceBackButtonHandler.enable();
+              });
+            },
+          ),
+          ListTile(
+            // 새로운 ListTile 추가
+            leading: const Icon(Icons.attractions),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('Action Test Screen'),
+            onTap: () {
+              DeviceBackButtonHandler.disable();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ActionTestMainScreen(),
                 ),
               ).then((_) {
                 DeviceBackButtonHandler.enable();
