@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-void showCustomSnackBar(BuildContext context) {
+void showCustomSnackBar(BuildContext context, String title, String content) {
   final ColorScheme currentTheme = Theme.of(context).colorScheme;
   final double bodySmallSize =
       Theme.of(context).textTheme.bodySmall?.fontSize ?? 20;
@@ -22,17 +22,17 @@ void showCustomSnackBar(BuildContext context) {
         ),
         child: Stack(
           children: [
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '🎉 완료',
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  '값 변경 안내의 정보성 메시지를 주로 담아요',
+                  ' $content',
                 ),
               ],
             ),

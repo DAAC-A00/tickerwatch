@@ -25,7 +25,7 @@ class _ActionTestMainScreenState extends ConsumerState<ActionTestMainScreen> {
             trailing: const Icon(Icons.textsms),
             title: const Text(' Custom SnackBar 띄우기'),
             onTap: () {
-              showCustomSnackBar(context);
+              showCustomSnackBar(context, '🎉 완료', '값 변경 안내의 정보성 메시지를 주로 담아요');
             },
           ),
         ],
