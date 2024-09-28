@@ -7,7 +7,6 @@ import 'package:tickerwatch/product/setting/screens/setting_main_screen.dart';
 import 'package:tickerwatch/product/tickeralarm/screens/ticker_alarm_main_screen.dart';
 
 import '../../admin/screens/admin_main_screen.dart';
-import '../../sample_person/person_main_screen.dart';
 import '../../setting/states/common_setting_provider.dart';
 import '../handler/device_back_button_handler.dart';
 
@@ -62,12 +61,8 @@ class _DefaultScreenState extends ConsumerState<DefaultScreen> {
         label: 'Home',
       ),
       const BottomNavigationBarItem(
-        icon: Icon(Icons.playlist_add_circle_outlined),
-        label: 'Display',
-      ),
-      const BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Person',
+        icon: Icon(Icons.alarm),
+        label: 'Alarm',
       ),
       const BottomNavigationBarItem(
         icon: Icon(Icons.settings),
@@ -88,10 +83,8 @@ class _DefaultScreenState extends ConsumerState<DefaultScreen> {
       case 1:
         return const TickerAlarmMainScreen();
       case 2:
-        return const PersonMainScreen();
-      case 3:
         return const SettingMainScreen();
-      case 4:
+      case 3:
         return const AdminMainScreen();
       default:
         return const HomeMainScreen();

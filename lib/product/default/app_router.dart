@@ -39,7 +39,7 @@ List<RouteBase> _buildRoutes() {
               const HomeMainScreen(),
         ),
         GoRoute(
-          path: 'tickerDisplay',
+          path: 'tickerAlarm',
           builder: (BuildContext context, GoRouterState state) =>
               const TickerAlarmMainScreen(),
         ),
@@ -66,7 +66,7 @@ List<RouteBase> _buildRoutes() {
               const AdminMainScreen(),
         ),
         GoRoute(
-          path: 'alltickers',
+          path: 'allticker',
           builder: (BuildContext context, GoRouterState state) =>
               const AllTickerMainScreen(),
         ),
