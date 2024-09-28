@@ -1,17 +1,19 @@
 // custom_snack_bar_test_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/custom_snack_bar.dart';
 
-class CustomSnackBarTestScreen extends StatefulWidget {
+class CustomSnackBarTestScreen extends ConsumerStatefulWidget {
   const CustomSnackBarTestScreen({super.key});
 
   @override
-  _CustomSnackBarTestScreenState createState() =>
+  ConsumerState<CustomSnackBarTestScreen> createState() =>
       _CustomSnackBarTestScreenState();
 }
 
-class _CustomSnackBarTestScreenState extends State<CustomSnackBarTestScreen> {
+class _CustomSnackBarTestScreenState
+    extends ConsumerState<CustomSnackBarTestScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
@@ -95,7 +97,7 @@ class _CustomSnackBarTestScreenState extends State<CustomSnackBarTestScreen> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
