@@ -114,13 +114,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             onChanged: (bool value) {
               tickerSettingNotifier.updateIsBorderEnabled(value);
             },
-            title: 'Blink Border',
+            title: '  Blink Border',
             subtitle: Text(
               tickerSetting.isBorderEnabled != null
                   ? tickerSetting.isBorderEnabled!
-                      ? 'On'
-                      : 'Off'
-                  : 'Off',
+                      ? '  On'
+                      : '  Off'
+                  : '  Off',
               style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),
@@ -129,13 +129,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             onChanged: (bool value) {
               tickerSettingNotifier.updateIsQuoteUnitSignEnabled(value);
             },
-            title: 'Unit',
+            title: '  Unit',
             subtitle: Text(
               tickerSetting.isQuoteUnitSignEnabled != null
                   ? tickerSetting.isQuoteUnitSignEnabled!
-                      ? 'On'
-                      : 'Off'
-                  : 'Off',
+                      ? '  On'
+                      : '  Off'
+                  : '  Off',
               style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),
