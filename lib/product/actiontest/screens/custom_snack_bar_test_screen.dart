@@ -28,7 +28,7 @@ class _CustomSnackBarTestScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Custom SnackBar Test'),
+        title: const Text('SnackBar Test'),
       ),
       body: ListView(
         children: [

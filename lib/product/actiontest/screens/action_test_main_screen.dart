@@ -17,14 +17,14 @@ class _ActionTestMainScreenState extends ConsumerState<ActionTestMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Action Test Screen'),
+        title: const Text('Action Test Lab'),
       ),
       body: ListView(
         children: [
           ListTile(
             leading: const Icon(Icons.textsms),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('Custom SnackBar Test'),
+            title: const Text('SnackBar Test'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

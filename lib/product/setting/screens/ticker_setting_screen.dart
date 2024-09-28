@@ -71,13 +71,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
                 ChangePercentSampleWidget(
                     sampleIcon: Icons.arrow_drop_up,
                     sampleColor: tickerSetting.upColor,
-                    sampleText: '+0.78%',
+                    sampleText: '+0.73%',
                     isPercentEnabled: true),
                 const Spacer(),
                 ChangePercentSampleWidget(
                     sampleIcon: Icons.arrow_drop_down,
                     sampleColor: tickerSetting.downColor,
-                    sampleText: '-0.31%',
+                    sampleText: '-0.24%',
                     isPercentEnabled: true)
               ],
             ),
