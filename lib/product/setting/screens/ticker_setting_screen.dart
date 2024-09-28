@@ -100,14 +100,17 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             title: 'Grey',
           ),
           // 다른 설정 항목들 추가 가능
-          ListTile(
-            title: PriceSampleWidget(
-              sampleText: '\$ 60,000',
-              color: tickerSetting.upColor,
-              isQuoteUnitEnabled: tickerSetting.isQuoteUnitSignEnabled,
-              isBorderEnabled: tickerSetting.isBorderEnabled,
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: ListTile(
+              title: PriceSampleWidget(
+                sampleText: '\$ 60,000',
+                color: tickerSetting.upColor,
+                isQuoteUnitEnabled: tickerSetting.isQuoteUnitSignEnabled,
+                isBorderEnabled: tickerSetting.isBorderEnabled,
+              ),
+              leading: const Icon(Icons.price_change),
             ),
-            leading: const Icon(Icons.price_change),
           ),
           buildSwitchListTile(
             value: tickerSetting.isBorderEnabled,

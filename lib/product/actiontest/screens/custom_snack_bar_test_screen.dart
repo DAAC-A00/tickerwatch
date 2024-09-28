@@ -43,13 +43,15 @@ class _CustomSnackBarTestScreenState
               showCustomSnackBar(context, '✅ 완료', '값 변경 안내의 정보성 메시지를 주로 담아요');
             },
           ),
-          const ListTile(
-            leading: Icon(Icons.smart_toy),
-            title: Text('Test with Custom Input'),
+          const Padding(
+            padding: EdgeInsets.only(top: 24),
+            child: ListTile(
+              leading: Icon(Icons.smart_toy),
+              title: Text('Test with Custom Input'),
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Column(
+          ListTile(
+            title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
