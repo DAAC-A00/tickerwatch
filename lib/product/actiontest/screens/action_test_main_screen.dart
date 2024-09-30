@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tickerwatch/product/default/widgets/custom_snack_bar.dart';
+import 'package:tickerwatch/product/actiontest/screens/custom_snack_bar_test_screen.dart';
 
 class ActionTestMainScreen extends ConsumerStatefulWidget {
   const ActionTestMainScreen({super.key});
@@ -17,15 +17,20 @@ class _ActionTestMainScreenState extends ConsumerState<ActionTestMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Action Test Screen'),
+        title: const Text('Action Test Lab'),
       ),
       body: ListView(
         children: [
           ListTile(
-            trailing: const Icon(Icons.textsms),
-            title: const Text(' Custom SnackBar 띄우기'),
+            leading: const Icon(Icons.textsms),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            title: const Text('SnackBar Test'),
             onTap: () {
-              showCustomSnackBar(context, '🎉 완료', '값 변경 안내의 정보성 메시지를 주로 담아요');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const CustomSnackBarTestScreen(),
+                ),
+              );
             },
           ),
         ],

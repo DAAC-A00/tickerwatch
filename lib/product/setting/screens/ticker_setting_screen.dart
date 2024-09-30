@@ -71,13 +71,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
                 ChangePercentSampleWidget(
                     sampleIcon: Icons.arrow_drop_up,
                     sampleColor: tickerSetting.upColor,
-                    sampleText: '+0.78%',
+                    sampleText: '+0.73%',
                     isPercentEnabled: true),
                 const Spacer(),
                 ChangePercentSampleWidget(
                     sampleIcon: Icons.arrow_drop_down,
                     sampleColor: tickerSetting.downColor,
-                    sampleText: '-0.31%',
+                    sampleText: '-0.24%',
                     isPercentEnabled: true)
               ],
             ),
@@ -100,27 +100,30 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             title: 'Grey',
           ),
           // 다른 설정 항목들 추가 가능
-          ListTile(
-            title: PriceSampleWidget(
-              sampleText: '\$ 60,000',
-              color: tickerSetting.upColor,
-              isQuoteUnitEnabled: tickerSetting.isQuoteUnitSignEnabled,
-              isBorderEnabled: tickerSetting.isBorderEnabled,
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: ListTile(
+              title: PriceSampleWidget(
+                sampleText: '\$ 60,000',
+                color: tickerSetting.upColor,
+                isQuoteUnitEnabled: tickerSetting.isQuoteUnitSignEnabled,
+                isBorderEnabled: tickerSetting.isBorderEnabled,
+              ),
+              leading: const Icon(Icons.price_change),
             ),
-            leading: const Icon(Icons.price_change),
           ),
           buildSwitchListTile(
             value: tickerSetting.isBorderEnabled,
             onChanged: (bool value) {
               tickerSettingNotifier.updateIsBorderEnabled(value);
             },
-            title: 'Blink Border',
+            title: '  Blink Border',
             subtitle: Text(
               tickerSetting.isBorderEnabled != null
                   ? tickerSetting.isBorderEnabled!
-                      ? 'On'
-                      : 'Off'
-                  : 'Off',
+                      ? '  On'
+                      : '  Off'
+                  : '  Off',
               style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),
@@ -129,13 +132,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             onChanged: (bool value) {
               tickerSettingNotifier.updateIsQuoteUnitSignEnabled(value);
             },
-            title: 'Unit',
+            title: '  Unit',
             subtitle: Text(
               tickerSetting.isQuoteUnitSignEnabled != null
                   ? tickerSetting.isQuoteUnitSignEnabled!
-                      ? 'On'
-                      : 'Off'
-                  : 'Off',
+                      ? '  On'
+                      : '  Off'
+                  : '  Off',
               style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),

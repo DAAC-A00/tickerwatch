@@ -27,7 +27,7 @@ class _HomeMainScreenState extends ConsumerState<HomeMainScreen> {
             ),
             ElevatedButton(
                 onPressed: () => showCustomSnackBar(
-                    context, '🇰🇷 대한민국 만세', ' 이얏호 테스트 으쌰으쌰~'),
+                    context, '🇰🇷 대한민국 만세', '이얏호 테스트 으쌰으쌰~'),
                 child: const Text('snackbar test')),
           ],
         ),

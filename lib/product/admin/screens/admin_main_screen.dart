@@ -22,7 +22,7 @@ class _AdminMainScreenState extends ConsumerState<AdminMainScreen> {
           ListTile(
             leading: const Icon(Icons.data_thresholding_outlined),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('전체 Ticker 정보 조회'),
+            title: const Text('All Ticker Data'),
             onTap: () {
               DeviceBackButtonHandler.disable();
               Navigator.push(
@@ -37,9 +37,9 @@ class _AdminMainScreenState extends ConsumerState<AdminMainScreen> {
           ),
           ListTile(
             // 새로운 ListTile 추가
-            leading: const Icon(Icons.attractions),
+            leading: const Icon(Icons.biotech),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text('Action Test Screen'),
+            title: const Text('Action Test Lab'),
             onTap: () {
               DeviceBackButtonHandler.disable();
               Navigator.push(
