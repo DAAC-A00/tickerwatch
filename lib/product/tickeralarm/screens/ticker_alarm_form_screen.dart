@@ -1,4 +1,4 @@
-// add_ticker_alarm_screen.dart
+// ticker_alarm_form_screen.dart
 
 import 'dart:developer';
 
@@ -11,18 +11,18 @@ import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import '../../tickers/states/ticker_provider.dart';
 import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 
-class AddTickerAlarmScreen extends ConsumerStatefulWidget {
+class TickerAlarmFormScreen extends ConsumerStatefulWidget {
   final int? index; // 수정할 TickerAlarm의 인덱스
   final TickerAlarmEntity? tickerAlarm; // 수정할 TickerAlarm
 
-  const AddTickerAlarmScreen({super.key, this.index, this.tickerAlarm});
+  const TickerAlarmFormScreen({super.key, this.index, this.tickerAlarm});
 
   @override
-  ConsumerState<AddTickerAlarmScreen> createState() =>
-      _AddTickerAlarmScreenState();
+  ConsumerState<TickerAlarmFormScreen> createState() =>
+      _TickerAlarmScreeFormnState();
 }
 
-class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
+class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
   final List<String> contentList = [
     '개요',
     'ticker alarm를 등록해 실시간 정보를 확인할 수 있습니다. 설정한 가격을 돌파한 상태가 유지되는 동안 해당 ticker card에 알림을 노출해줍니다.',
@@ -114,7 +114,7 @@ class _AddTickerAlarmScreenState extends ConsumerState<AddTickerAlarmScreen> {
           return;
         } else if (alarmPrice == null) {
           // 알람 가격 정보가 잘못된 경우 ex. 숫자가 아니거나 값이 없는 경우
-          log('[WARN][AddTickerAlarmScreen._addTickerAlarm] Add 버튼 활성화가 안되어있어야하는데 활성화되어 잘못 처리됨');
+          log('[WARN][TickerAlarmFormScreen._addTickerAlarm] Add 버튼 활성화가 안되어있어야하는데 활성화되어 잘못 처리됨');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text(
