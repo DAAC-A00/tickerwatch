@@ -186,6 +186,13 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
     }
   }
 
+  void _deleteTickerAlarm() {
+    if (widget.index != null) {
+      ref.read(tickerAlarmProvider.notifier).deleteBox(widget.index!);
+      Navigator.of(context).pop(); // 삭제 후 이전 화면으로 돌아감
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final alarmPrice = double.tryParse(_alarmPriceController.text);
@@ -200,6 +207,38 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
             icon: const Icon(Icons.info_outline),
             onPressed: () => showCustomModalBottomSheet(context, contentList),
           ),
+          // 삭제 버튼 추가
+          if (widget.index != null)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                // 삭제 확인 다이얼로그
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Delete Ticker Alarm'),
+                      content: const Text('이 알람을 삭제하시겠습니까?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                          },
+                          child: const Text('취소'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            _deleteTickerAlarm(); // 삭제 실행
+                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                          },
+                          child: const Text('삭제'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
         ],
       ),
       body: SafeArea(
