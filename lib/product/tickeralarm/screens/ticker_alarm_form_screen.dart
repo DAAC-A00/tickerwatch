@@ -102,7 +102,7 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
         final selectedTicker = matchingTickers.first;
 
         final alarmPrice = double.tryParse(_alarmPriceController.text);
-        final currentPrice = double.tryParse(selectedTicker.price);
+        final currentPrice = double.tryParse(selectedTicker.recentData.price);
         // priceStatusEnum 설정
         PriceStatusEnum priceStatusEnum;
         if (currentPrice == null) {
@@ -139,7 +139,7 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
         }
 
         // currentPrice의 소수점 자릿수 결정
-        final currentPriceText = selectedTicker.price;
+        final currentPriceText = selectedTicker.recentData.price;
         final currentDecimalPlaces = currentPriceText.contains('.')
             ? currentPriceText.split('.').last.length
             : 0;
@@ -189,7 +189,7 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
   void _deleteTickerAlarm() {
     if (widget.index != null) {
       ref.read(tickerAlarmProvider.notifier).deleteBox(widget.index!);
-      Navigator.of(context).pop(); // 삭제 후 이전 화면으로 돌아감
+      Navigator.of(context).pop(); // 팝업 닫기
     }
   }
 
@@ -222,14 +222,14 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
                       actions: [
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                            Navigator.of(context).pop();
                           },
                           child: const Text('취소'),
                         ),
                         TextButton(
                           onPressed: () {
-                            _deleteTickerAlarm(); // 삭제 실행
-                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                            _deleteTickerAlarm();
+                            Navigator.of(context).pop(); // 현재 form screen 닫기
                           },
                           child: const Text('삭제'),
                         ),
