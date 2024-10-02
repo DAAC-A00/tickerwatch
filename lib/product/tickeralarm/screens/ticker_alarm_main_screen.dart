@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
-import 'package:tickerwatch/product/tickeralarm/screens/add_ticker_alarm_screen.dart';
+import 'package:tickerwatch/product/tickeralarm/screens/ticker_alarm_form_screen.dart';
 import 'package:tickerwatch/product/tickeralarm/states/ticker_alarm_provider.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
@@ -37,7 +37,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
   void _navigateToAddTickerAlarm() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const AddTickerAlarmScreen()),
+      MaterialPageRoute(builder: (context) => const TickerAlarmFormScreen()),
     ); // 추가하기 화면으로 이동
   }
 
@@ -167,7 +167,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddTickerAlarmScreen(
+                            builder: (context) => TickerAlarmFormScreen(
                               index: index,
                               tickerAlarm: tickerAlarm,
                             ), // 인덱스 전달
