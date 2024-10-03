@@ -96,7 +96,8 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showCustomModalBottomSheet(context, contentList),
+            onPressed: () =>
+                showCustomModalBottomSheet(context, 'ℹ️ 유의사항', contentList),
           ),
         ],
       ),
@@ -135,7 +136,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
                                   child: Text(
-                                    '${ticker.price} ${ticker.changePercent24h}%',
+                                    '${ticker.recentData.price} ${ticker.recentData.changePercent24h}%',
                                   ),
                                 ),
                               ),
@@ -145,7 +146,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween, // 좌우 공간을 균등하게
                             children: [
-                              Text(ticker.volume24h),
+                              Text(ticker.recentData.volume24h),
                               // Expanded를 사용하여 alarmPrice를 오른쪽으로 정렬
                               Expanded(
                                 child: Align(
@@ -211,7 +212,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
                                   child: Text(
-                                    '${ticker.price} ${ticker.changePercent24h}%',
+                                    '${ticker.recentData.price} ${ticker.recentData.changePercent24h}%',
                                   ),
                                 ),
                               ),
@@ -221,7 +222,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween, // 좌우 공간을 균등하게
                             children: [
-                              Text(ticker.volume24h),
+                              Text(ticker.recentData.volume24h),
                               // Expanded를 사용하여 alarmPrice를 오른쪽으로 정렬
                               Expanded(
                                 child: Align(

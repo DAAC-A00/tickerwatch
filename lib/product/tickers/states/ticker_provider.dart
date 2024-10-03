@@ -59,7 +59,10 @@ class TickerNotifier extends StateNotifier<List<TickerEntity>> {
 
       if (index != -1) {
         // 해당 인덱스가 있으면 수정
-        _tickerBox.putAt(index, updatedTicker);
+        updatedTicker.beforeData = _tickerBox
+            .getAt(index)
+            ?.recentData; // recentData 업데이트 전에, 기존의 recentData를 beforeData로 복사
+        _tickerBox.putAt(index, updatedTicker); // recentDat와 beforeData 수정 적용
       } else {
         // 없으면 추가
         _tickerBox.add(updatedTicker);

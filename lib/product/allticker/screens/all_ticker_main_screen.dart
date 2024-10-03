@@ -69,7 +69,8 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showCustomModalBottomSheet(context, contentList),
+            onPressed: () =>
+                showCustomModalBottomSheet(context, 'ℹ️ 유의사항', contentList),
           ),
         ],
       ),
@@ -84,7 +85,8 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 return ListTile(
                   title: Text(
                       '${ticker.info.symbol} ${ticker.info.categoryExchangeEnum.name}'),
-                  subtitle: Text('${ticker.price} ${ticker.changePercent24h}'),
+                  subtitle: Text(
+                      '${ticker.recentData.price} ${ticker.recentData.changePercent24h}'),
                   onTap: () {
                     // ListTile 클릭 시 AllTickerDetailScreen으로 이동
                     Navigator.push(

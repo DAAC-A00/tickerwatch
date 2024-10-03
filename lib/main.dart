@@ -7,6 +7,7 @@ import 'package:tickerwatch/product/setting/states/common_setting_provider.dart'
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
 
 import 'external/bybit/schedulers/bybit_all_ticker_api_service.dart';
 import 'product/default/app_router.dart';
@@ -21,6 +22,7 @@ void main() async {
   // Register Adapters
   Hive.registerAdapter(PersonAdapter());
   Hive.registerAdapter(TickerEntityAdapter());
+  Hive.registerAdapter(TickerModelAdapter());
   Hive.registerAdapter(TickerInfoModelAdapter());
   Hive.registerAdapter(TickerAlarmEntityAdapter());
 

@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 import 'package:tickerwatch/product/tickers/utils/ticker_utils.dart';
 
@@ -53,23 +54,25 @@ class BybitAllLinearApiService {
         PriceStatusEnum priceStatusEnum =
             TickerUtils.determinePriceStatus(changePercent24h);
 
+        final TickerModel recentTickerModel = TickerModel(
+            price: price ?? '',
+            lastPrice: data.lastPrice ?? '',
+            ask1Price: data.ask1Price ?? '',
+            ask1Size: data.ask1Size ?? '',
+            bid1Price: data.bid1Price ?? '',
+            bid1Size: data.bid1Size ?? '',
+            changePercent24h: priceStatusEnum == PriceStatusEnum.up
+                ? '+$changePercent24h'
+                : changePercent24h,
+            prevPrice24h: data.prevPrice24h ?? '',
+            highPrice24h: data.highPrice24h ?? '',
+            lowPrice24h: data.lowPrice24h ?? '',
+            turnOver24h: data.turnover24h ?? '',
+            volume24h: data.volume24h ?? '',
+            priceStatusEnum: priceStatusEnum);
         final TickerEntity ticker = TickerEntity(
           info: tickerInfoModel,
-          price: price ?? '',
-          lastPrice: data.lastPrice ?? '',
-          ask1Price: data.ask1Price ?? '',
-          ask1Size: data.ask1Size ?? '',
-          bid1Price: data.bid1Price ?? '',
-          bid1Size: data.bid1Size ?? '',
-          changePercent24h: priceStatusEnum == PriceStatusEnum.up
-              ? '+$changePercent24h'
-              : changePercent24h,
-          prevPrice24h: data.prevPrice24h ?? '',
-          highPrice24h: data.highPrice24h ?? '',
-          lowPrice24h: data.lowPrice24h ?? '',
-          turnOver24h: data.turnover24h ?? '',
-          volume24h: data.volume24h ?? '',
-          priceStatusEnum: priceStatusEnum,
+          recentData: recentTickerModel,
         );
         tickerList.add(ticker);
       }
