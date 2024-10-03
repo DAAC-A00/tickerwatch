@@ -205,7 +205,8 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showCustomModalBottomSheet(context, contentList),
+            onPressed: () =>
+                showCustomModalBottomSheet(context, 'ℹ️ 유의사항', contentList),
           ),
           // 삭제 버튼 추가
           if (widget.index != null)

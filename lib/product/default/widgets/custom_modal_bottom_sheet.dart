@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 void showCustomModalBottomSheet(
-    BuildContext context, List<String> contentList) {
+    BuildContext context, String title, List<String> contentList) {
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -28,7 +28,7 @@ void showCustomModalBottomSheet(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'ℹ️ 유의사항',
+                    title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold, fontSize: titleSize),
                   ),

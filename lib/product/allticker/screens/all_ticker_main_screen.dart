@@ -69,7 +69,8 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => showCustomModalBottomSheet(context, contentList),
+            onPressed: () =>
+                showCustomModalBottomSheet(context, 'ℹ️ 유의사항', contentList),
           ),
         ],
       ),

@@ -38,7 +38,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
               icon: const Icon(Icons.info_outline),
               onPressed: () {
                 String content = '';
-                missingInfo.add('제공되지 않는 정보');
+                missingInfo.add('기본 Ticker 정보');
                 content = currentTicker.info.symbol.isEmpty
                     ? '$content코드    ticker.info.sawSymbol\n'
                     : content;
@@ -90,7 +90,6 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 content = currentTicker.info.searchKeywords.isEmpty
                     ? '$content검색 키워드    ticker.info.searchKeywords\n'
                     : content;
-                content = '$content\n';
                 content = currentTicker.recentData.price.isEmpty
                     ? '$content현재가    ticker.recentData.price\n'
                     : content;
@@ -154,9 +153,11 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 content = currentTicker.recentData.priceStatusEnum.name.isEmpty
                     ? '$content가격 상태    ticker.recentData.priceStatusEnum.name\n'
                     : content;
-                missingInfo.add(content);
+                content.length <= 2
+                    ? missingInfo.add(content)
+                    : missingInfo.add(content.substring(0, content.length - 2));
                 // beforeData
-                missingInfo.add('제공되지 않는 beforeData 정보');
+                missingInfo.add('beforeData 정보');
                 String contentBeforeData = '';
                 if (currentTicker.beforeData != null) {
                   contentBeforeData = currentTicker.beforeData!.price.isEmpty
@@ -242,7 +243,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 }
                 missingInfo.add(contentBeforeData);
                 // BottomSheet 호출
-                showCustomModalBottomSheet(context, missingInfo);
+                showCustomModalBottomSheet(
+                    context, 'ℹ️ 제공되지 않는 정보', missingInfo);
               })
         ],
       ),
