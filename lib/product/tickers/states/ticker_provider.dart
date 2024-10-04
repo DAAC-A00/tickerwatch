@@ -3,6 +3,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/default/db/box_enum.dart';
+import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
+import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 
 import '../entities/ticker_entity.dart';
 
@@ -59,9 +61,22 @@ class TickerNotifier extends StateNotifier<List<TickerEntity>> {
 
       if (index != -1) {
         // 해당 인덱스가 있으면 수정
-        updatedTicker.beforeData = _tickerBox
-            .getAt(index)
-            ?.recentData; // recentData 업데이트 전에, 기존의 recentData를 beforeData로 복사
+        updatedTicker.beforeData = _tickerBox.getAt(index)?.recentData ??
+            TickerModel(
+                price: '',
+                lastPrice: '',
+                ask1Price: '',
+                ask1Size: '',
+                bid1Price: '',
+                bid1Size: '',
+                changePercent24h: '',
+                prevPrice24h: '',
+                highPrice24h: '',
+                lowPrice24h: '',
+                turnOver24h: '',
+                volume24h: '',
+                priceStatusEnum: PriceStatusEnum
+                    .stay); // recentData 업데이트 전에, 기존의 recentData를 beforeData로 복사
         _tickerBox.putAt(index, updatedTicker); // recentDat와 beforeData 수정 적용
       } else {
         // 없으면 추가
