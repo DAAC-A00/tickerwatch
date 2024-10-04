@@ -155,7 +155,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
                     : content;
                 content.length <= 2
                     ? missingInfo.add(content)
-                    : missingInfo.add(content.substring(0, content.length - 2));
+                    : missingInfo.add(content.substring(
+                        0, content.length - 2)); // 마지막 "\n"은 삭제해주기
                 // beforeData
                 missingInfo.add('beforeData 정보');
                 String contentBeforeData = '';
