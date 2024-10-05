@@ -73,30 +73,36 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
     _tickerSettingBox = await Hive.openBox<String>(BoxEnum.setting.name);
     final String upColorString = _tickerSettingBox.get(
       BoxSettingEnum.upColor.name,
-      defaultValue: colorToString(Colors.red),
+      defaultValue: colorToString(defaultTickerSetting.upColor ?? Colors.red),
     )!;
     final String downColorString = _tickerSettingBox.get(
       BoxSettingEnum.downColor.name,
-      defaultValue: colorToString(Colors.blue),
+      defaultValue:
+          colorToString(defaultTickerSetting.downColor ?? Colors.blue),
     )!;
     final bool isBorderEnabled = _tickerSettingBox.get(
           BoxSettingEnum.isBorderEnabled.name,
-          defaultValue: true.toString(),
+          defaultValue:
+              (defaultTickerSetting.isBorderEnabled ?? true).toString(),
         )! ==
         true.toString();
     final bool isPriceBackgroundAlarmEnabled = _tickerSettingBox.get(
           BoxSettingEnum.isPriceBackgroundAlarmEnabled.name,
-          defaultValue: true.toString(),
+          defaultValue:
+              (defaultTickerSetting.isPriceBackgroundAlarmEnabled ?? true)
+                  .toString(),
         )! ==
         true.toString();
     final bool isQuoteUnitSignEnabled = _tickerSettingBox.get(
           BoxSettingEnum.isQuoteUnitSignEnabled.name,
-          defaultValue: false.toString(),
+          defaultValue:
+              (defaultTickerSetting.isQuoteUnitSignEnabled ?? false).toString(),
         )! ==
         true.toString();
     final bool isPercentSignEnabled = _tickerSettingBox.get(
           BoxSettingEnum.isPercentSignEnabled.name,
-          defaultValue: true.toString(),
+          defaultValue:
+              (defaultTickerSetting.isPercentSignEnabled ?? true).toString(),
         )! ==
         true.toString();
 
