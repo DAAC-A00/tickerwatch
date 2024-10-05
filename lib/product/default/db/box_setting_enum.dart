@@ -8,12 +8,13 @@ enum BoxSettingEnum {
   isPriceBackgroundAlarmEnabled,
   isQuoteUnitSignEnabled,
   isPercentSignEnabled,
+  // Exchange Setting
+  bybitApiKey,
+  bybitSecretKey,
   // Common Setting
   isLightMode,
   isAdminMode,
   isSuperMode,
-  // tickerPriceDisplay
-  tickerPriceDisplayColumnCount,
 }
 
 extension BoxSettingEnumExtension on BoxSettingEnum {
@@ -32,6 +33,11 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
         return 'isQuoteUnitSignEnabled';
       case BoxSettingEnum.isPercentSignEnabled:
         return 'isPercentSignEnabled';
+      // Exchange Setting
+      case BoxSettingEnum.bybitApiKey:
+        return 'bybitApiKey';
+      case BoxSettingEnum.bybitSecretKey:
+        return 'bybitSecretKey';
       // Common Setting
       case BoxSettingEnum.isLightMode:
         return 'isLightMode';
@@ -39,9 +45,6 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
         return 'isAdminMode';
       case BoxSettingEnum.isSuperMode:
         return 'isSuperMode';
-      // tickerPriceDisplay
-      case BoxSettingEnum.tickerPriceDisplayColumnCount:
-        return 'tickerPriceDisplayColumnCount';
     }
   }
 }

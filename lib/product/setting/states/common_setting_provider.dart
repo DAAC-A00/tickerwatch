@@ -50,12 +50,6 @@ class CommonSettingNotifier extends StateNotifier<CommonSetting> {
     );
   }
 
-  void updateBox(CommonSetting commonSetting) {
-    _commonSettingBox.put(
-        BoxSettingEnum.isLightMode.name, commonSetting.isLightMode.toString());
-    state = commonSetting;
-  }
-
   void updateIsLightModeBox(bool isLightMode) {
     _commonSettingBox.put(
         BoxSettingEnum.isLightMode.name, isLightMode.toString());
