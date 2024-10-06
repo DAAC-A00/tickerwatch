@@ -52,32 +52,36 @@ class _ImageTestScreenState extends ConsumerState<ImageTestScreen> {
               ],
             ),
           ),
-          ListTile(
-            title: Row(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: const Text('Spot Bybit'),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: SizedBox(
-                        height: currentTextTheme.titleMedium?.fontSize,
-                        child: CategoryExchangeEnum.spotBybit.logoImage),
+          ...CategoryExchangeEnum.values.map((category) {
+            return ListTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Text(category.getDescription),
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: SizedBox(
+                  Expanded(
+                    flex: 1,
+                    child: Center(
+                      child: SizedBox(
                         height: currentTextTheme.titleMedium?.fontSize,
-                        child: CategoryExchangeEnum.none.logoImage),
+                        child: category.logoImage,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                  Expanded(
+                    flex: 1,
+                    child: Center(
+                      child: SizedBox(
+                        height: currentTextTheme.titleMedium?.fontSize,
+                        child: CategoryExchangeEnum.none.logoImage,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );
