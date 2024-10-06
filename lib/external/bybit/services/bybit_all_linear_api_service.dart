@@ -71,9 +71,22 @@ class BybitAllLinearApiService {
             volume24h: data.volume24h ?? '',
             priceStatusEnum: priceStatusEnum);
         final TickerEntity ticker = TickerEntity(
-          info: tickerInfoModel,
-          recentData: recentTickerModel,
-        );
+            info: tickerInfoModel,
+            recentData: recentTickerModel,
+            beforeData: TickerModel(
+                price: '',
+                lastPrice: '',
+                ask1Price: '',
+                ask1Size: '',
+                bid1Price: '',
+                bid1Size: '',
+                changePercent24h: '',
+                prevPrice24h: '',
+                highPrice24h: '',
+                lowPrice24h: '',
+                turnOver24h: '',
+                volume24h: '',
+                priceStatusEnum: PriceStatusEnum.stay));
         tickerList.add(ticker);
       }
     }

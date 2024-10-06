@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "261967154396",
+    "project_id": "tickerwatch-983c4",
+    "storage_bucket": "tickerwatch-983c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261967154396:android:03dec75a10eb731efcb819",
+        "android_client_info": {
+          "package_name": "com.example.tickerwatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFGA4EfPrQ_pQdSf73K4Le_6FNuYUcJu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

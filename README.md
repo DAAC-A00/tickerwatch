@@ -24,3 +24,5 @@
     1. 최대 3개만 배치합니다.
     2. 기본적으로는 왼쪽부터 오른쪽으로 다음 순서대로 배치를 합니다. {main action} {유의사항} {sub action} {main action}
     3. 4개 이상의 action button 배치를 희망할 경우, {더보기 버튼}을 배치하며, 그의 위치는 기본적으로 {sub action} 위치로 둡니다. 단 필요에 따라 {main action} 위치로 둘 수 있습니다.
+2. 스낵바 SnackBar
+    1. title의 이모티콘 후보 : ✅

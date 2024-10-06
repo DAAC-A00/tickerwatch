@@ -155,92 +155,83 @@ class AllTickerDetailScreen extends ConsumerWidget {
                     : content;
                 content.length <= 2
                     ? missingInfo.add(content)
-                    : missingInfo.add(content.substring(0, content.length - 2));
+                    : missingInfo.add(content.substring(
+                        0, content.length - 2)); // 마지막 "\n"은 삭제해주기
                 // beforeData
                 missingInfo.add('beforeData 정보');
                 String contentBeforeData = '';
-                if (currentTicker.beforeData != null) {
-                  contentBeforeData = currentTicker.beforeData!.price.isEmpty
-                      ? '$contentBeforeData현재가    ticker.beforeData.price\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.lastPrice.isEmpty
-                      ? '$contentBeforeData최근 체결가    ticker.beforeData.lastPrice\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.highPrice24h.isEmpty
-                      ? '$contentBeforeData최고가(24h)    ticker.beforeData.highPrice24h\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.lowPrice24h.isEmpty
-                      ? '$contentBeforeData최저가(24h)    ticker.beforeData.lowPrice24h\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.changePercent24h.isEmpty
-                      ? '$contentBeforeData변동률    ticker.beforeData.changePercent24h\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.volume24h.isEmpty
-                      ? '$contentBeforeData거래량    ticker.beforeData.volume24h\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.turnOver24h.isEmpty
-                      ? '$contentBeforeData거래대금    ticker.beforeData.turnOver24h\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.prevPrice24h.isEmpty
-                      ? '$contentBeforeData이전 가격(24h)    ticker.beforeData.prevPrice24h\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.changePercentUtc0.isEmpty
-                      ? '$contentBeforeData변동률(UTC0)    ticker.beforeData.changePercentUtc0\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.prevPriceUtc0.isEmpty
-                      ? '$contentBeforeData이전 가격(UTC0)    ticker.beforeData.prevPriceUtc0\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.highPriceUtc0.isEmpty
-                      ? '$contentBeforeData최고가(UTC0)    ticker.beforeData.highPriceUtc0\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.lowPriceUtc0.isEmpty
-                      ? '$contentBeforeData최저가(UTC0)    ticker.beforeData.lowPriceUtc0\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.turnOverUtc0.isEmpty
-                      ? '$contentBeforeData거래대금(UTC0)    ticker.beforeData.turnOverUtc0\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.volumeUtc0.isEmpty
-                      ? '$contentBeforeData거래량(UTC0)    ticker.beforeData.volumeUtc0\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.ask1Price.isEmpty
-                      ? '$contentBeforeData매도 1호가    ticker.beforeData.ask1Price\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker.beforeData!.ask1Size.isEmpty
-                      ? '$contentBeforeData매도 1호가 수량    ticker.beforeData.ask1Size\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.bid1Price.isEmpty
-                      ? '$contentBeforeData매수 1호가    ticker.beforeData.bid1Price\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker.beforeData!.bid1Size.isEmpty
-                      ? '$contentBeforeData매수 1호가 수량    ticker.beforeData.bid1Size\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker.beforeData!.dataAt.isEmpty
-                      ? '$contentBeforeData데이터 기록 시점    ticker.beforeData.dataAt\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.updatedAt.isEmpty
-                      ? '$contentBeforeData업데이트 시점    ticker.beforeData.updatedAt\n'
-                      : contentBeforeData;
-                  contentBeforeData = currentTicker
-                          .beforeData!.priceStatusEnum.name.isEmpty
-                      ? '$contentBeforeData가격 상태    ticker.beforeData.priceStatusEnum.name\n'
-                      : contentBeforeData;
-                }
+                contentBeforeData = currentTicker.beforeData.price.isEmpty
+                    ? '$contentBeforeData현재가    ticker.beforeData.price\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.lastPrice.isEmpty
+                    ? '$contentBeforeData최근 체결가    ticker.beforeData.lastPrice\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.highPrice24h.isEmpty
+                    ? '$contentBeforeData최고가(24h)    ticker.beforeData.highPrice24h\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.lowPrice24h.isEmpty
+                    ? '$contentBeforeData최저가(24h)    ticker.beforeData.lowPrice24h\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.changePercent24h.isEmpty
+                    ? '$contentBeforeData변동률    ticker.beforeData.changePercent24h\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.volume24h.isEmpty
+                    ? '$contentBeforeData거래량    ticker.beforeData.volume24h\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.turnOver24h.isEmpty
+                    ? '$contentBeforeData거래대금    ticker.beforeData.turnOver24h\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.prevPrice24h.isEmpty
+                    ? '$contentBeforeData이전 가격(24h)    ticker.beforeData.prevPrice24h\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.changePercentUtc0.isEmpty
+                    ? '$contentBeforeData변동률(UTC0)    ticker.beforeData.changePercentUtc0\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.prevPriceUtc0.isEmpty
+                    ? '$contentBeforeData이전 가격(UTC0)    ticker.beforeData.prevPriceUtc0\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.highPriceUtc0.isEmpty
+                    ? '$contentBeforeData최고가(UTC0)    ticker.beforeData.highPriceUtc0\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.lowPriceUtc0.isEmpty
+                    ? '$contentBeforeData최저가(UTC0)    ticker.beforeData.lowPriceUtc0\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.turnOverUtc0.isEmpty
+                    ? '$contentBeforeData거래대금(UTC0)    ticker.beforeData.turnOverUtc0\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.volumeUtc0.isEmpty
+                    ? '$contentBeforeData거래량(UTC0)    ticker.beforeData.volumeUtc0\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.ask1Price.isEmpty
+                    ? '$contentBeforeData매도 1호가    ticker.beforeData.ask1Price\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.ask1Size.isEmpty
+                    ? '$contentBeforeData매도 1호가 수량    ticker.beforeData.ask1Size\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.bid1Price.isEmpty
+                    ? '$contentBeforeData매수 1호가    ticker.beforeData.bid1Price\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.bid1Size.isEmpty
+                    ? '$contentBeforeData매수 1호가 수량    ticker.beforeData.bid1Size\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.dataAt.isEmpty
+                    ? '$contentBeforeData데이터 기록 시점    ticker.beforeData.dataAt\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker.beforeData.updatedAt.isEmpty
+                    ? '$contentBeforeData업데이트 시점    ticker.beforeData.updatedAt\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.priceStatusEnum.name.isEmpty
+                    ? '$contentBeforeData가격 상태    ticker.beforeData.priceStatusEnum.name\n'
+                    : contentBeforeData;
                 missingInfo.add(contentBeforeData);
                 // BottomSheet 호출
                 showCustomModalBottomSheet(
@@ -351,70 +342,50 @@ class AllTickerDetailScreen extends ConsumerWidget {
               leading: Icon(Icons.looks_two_outlined),
               title: Text('beforeData'),
             ),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.price.isNotEmpty)
-              _buildRow('현재가', currentTicker.beforeData!.price),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.lastPrice.isNotEmpty)
-              _buildRow('최근 체결가', currentTicker.beforeData!.lastPrice),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.highPrice24h.isNotEmpty)
-              _buildRow('최고가(24h)', currentTicker.beforeData!.highPrice24h),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.lowPrice24h.isNotEmpty)
-              _buildRow('최저가(24h)', currentTicker.beforeData!.lowPrice24h),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.changePercent24h.isNotEmpty)
-              _buildRow('변동률', currentTicker.beforeData!.changePercent24h),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.volume24h.isNotEmpty)
-              _buildRow('거래량', currentTicker.beforeData!.volume24h),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.turnOver24h.isNotEmpty)
-              _buildRow('거래대금', currentTicker.beforeData!.turnOver24h),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.prevPrice24h.isNotEmpty)
-              _buildRow('이전 가격(24h)', currentTicker.beforeData!.prevPrice24h),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.changePercentUtc0.isNotEmpty)
+            if (currentTicker.beforeData.price.isNotEmpty)
+              _buildRow('현재가', currentTicker.beforeData.price),
+            if (currentTicker.beforeData.lastPrice.isNotEmpty)
+              _buildRow('최근 체결가', currentTicker.beforeData.lastPrice),
+            if (currentTicker.beforeData.highPrice24h.isNotEmpty)
+              _buildRow('최고가(24h)', currentTicker.beforeData.highPrice24h),
+            if (currentTicker.beforeData.lowPrice24h.isNotEmpty)
+              _buildRow('최저가(24h)', currentTicker.beforeData.lowPrice24h),
+            if (currentTicker.beforeData.changePercent24h.isNotEmpty)
+              _buildRow('변동률', currentTicker.beforeData.changePercent24h),
+            if (currentTicker.beforeData.volume24h.isNotEmpty)
+              _buildRow('거래량', currentTicker.beforeData.volume24h),
+            if (currentTicker.beforeData.turnOver24h.isNotEmpty)
+              _buildRow('거래대금', currentTicker.beforeData.turnOver24h),
+            if (currentTicker.beforeData.prevPrice24h.isNotEmpty)
+              _buildRow('이전 가격(24h)', currentTicker.beforeData.prevPrice24h),
+            if (currentTicker.beforeData.changePercentUtc0.isNotEmpty)
               _buildRow(
-                  '변동률(UTC0)', currentTicker.beforeData!.changePercentUtc0),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.prevPriceUtc0.isNotEmpty)
-              _buildRow('이전 가격(UTC0)', currentTicker.beforeData!.prevPriceUtc0),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.highPriceUtc0.isNotEmpty)
-              _buildRow('최고가(UTC0)', currentTicker.beforeData!.highPriceUtc0),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.lowPriceUtc0.isNotEmpty)
-              _buildRow('최저가(UTC0)', currentTicker.beforeData!.lowPriceUtc0),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.turnOverUtc0.isNotEmpty)
-              _buildRow('거래대금(UTC0)', currentTicker.beforeData!.turnOverUtc0),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.volumeUtc0.isNotEmpty)
-              _buildRow('거래량(UTC0)', currentTicker.beforeData!.volumeUtc0),
+                  '변동률(UTC0)', currentTicker.beforeData.changePercentUtc0),
+            if (currentTicker.beforeData.prevPriceUtc0.isNotEmpty)
+              _buildRow('이전 가격(UTC0)', currentTicker.beforeData.prevPriceUtc0),
+            if (currentTicker.beforeData.highPriceUtc0.isNotEmpty)
+              _buildRow('최고가(UTC0)', currentTicker.beforeData.highPriceUtc0),
+            if (currentTicker.beforeData.lowPriceUtc0.isNotEmpty)
+              _buildRow('최저가(UTC0)', currentTicker.beforeData.lowPriceUtc0),
+            if (currentTicker.beforeData.turnOverUtc0.isNotEmpty)
+              _buildRow('거래대금(UTC0)', currentTicker.beforeData.turnOverUtc0),
+            if (currentTicker.beforeData.volumeUtc0.isNotEmpty)
+              _buildRow('거래량(UTC0)', currentTicker.beforeData.volumeUtc0),
 
             // beforeData인 TickerModel 추가 데이터 출력
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.ask1Price.isNotEmpty)
-              _buildRow('매도 1호가', currentTicker.beforeData!.ask1Price),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.ask1Size.isNotEmpty)
-              _buildRow('매도 1호가 수량', currentTicker.beforeData!.ask1Size),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.bid1Price.isNotEmpty)
-              _buildRow('매수 1호가', currentTicker.beforeData!.bid1Price),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.bid1Size.isNotEmpty)
-              _buildRow('매수 1호가 수량', currentTicker.beforeData!.bid1Size),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.dataAt.isNotEmpty)
-              _buildRow('데이터 기록 시점', currentTicker.beforeData!.dataAt),
-            if (currentTicker.beforeData != null &&
-                currentTicker.beforeData!.updatedAt.isNotEmpty)
-              _buildRow('업데이트 시점', currentTicker.beforeData!.updatedAt),
-            _buildRow('가격 상태', currentTicker.beforeData!.priceStatusEnum.name),
+            if (currentTicker.beforeData.ask1Price.isNotEmpty)
+              _buildRow('매도 1호가', currentTicker.beforeData.ask1Price),
+            if (currentTicker.beforeData.ask1Size.isNotEmpty)
+              _buildRow('매도 1호가 수량', currentTicker.beforeData.ask1Size),
+            if (currentTicker.beforeData.bid1Price.isNotEmpty)
+              _buildRow('매수 1호가', currentTicker.beforeData.bid1Price),
+            if (currentTicker.beforeData.bid1Size.isNotEmpty)
+              _buildRow('매수 1호가 수량', currentTicker.beforeData.bid1Size),
+            if (currentTicker.beforeData.dataAt.isNotEmpty)
+              _buildRow('데이터 기록 시점', currentTicker.beforeData.dataAt),
+            if (currentTicker.beforeData.updatedAt.isNotEmpty)
+              _buildRow('업데이트 시점', currentTicker.beforeData.updatedAt),
+            _buildRow('가격 상태', currentTicker.beforeData.priceStatusEnum.name),
           ],
         ),
       ),

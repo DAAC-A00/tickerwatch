@@ -9,11 +9,11 @@ class TickerEntity {
   // -- raw
   final TickerInfoModel info;
   final TickerModel recentData;
-  TickerModel? beforeData;
+  TickerModel beforeData;
   TickerEntity({
     required this.info,
     required this.recentData,
-    this.beforeData,
+    required this.beforeData,
   });
 }
 

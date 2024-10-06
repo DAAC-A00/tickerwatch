@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/setting/screens/exchange_setting_screen.dart';
 import '../../default/handler/device_back_button_handler.dart';
 import 'common_setting_screen.dart';
 import 'ticker_setting_screen.dart';
-import 'exchange_setting_screen.dart';
 
 class SettingMainScreen extends ConsumerStatefulWidget {
   const SettingMainScreen({super.key});
