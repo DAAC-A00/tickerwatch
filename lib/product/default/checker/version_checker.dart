@@ -3,12 +3,47 @@
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:tickerwatch/product/default/checker/version_info.dart';
 
 class VersionChecker {
   static String urlString = 'https://icaruswhale.tistory.com/2';
+  // pre.text 포맷 : 버전 # 일시
 
   /// 웹 페이지에서 버전 정보를 가져오는 함수
-  static Future<String> fetchVersionFromWeb() async {
+  static Future<List<VersionInfo>> getVersionHistoryFromWeb() async {
+    final url = Uri.parse(urlString);
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var document = parser.parse(response.body);
+
+      // <pre> 태그에서 버전 정보 찾기
+      var preTags = document.getElementsByTagName('pre');
+
+      List<VersionInfo> versionList = [];
+
+      for (var pre in preTags) {
+        var versions = pre.text.trim().split('\n');
+
+        for (var version in versions) {
+          if (version.split(' | ').first != ' 버전 ') {
+            var versionInfo = VersionInfo(
+              version.split(' | ').first,
+              version.split(' | ').last.split(' || ').first,
+              version.split(' || ').last,
+            );
+            versionList.add(versionInfo);
+          }
+        }
+      }
+      return versionList;
+    } else {
+      throw Exception('웹 페이지를 불러오지 못했습니다. 상태 코드: ${response.statusCode}');
+    }
+  }
+
+  /// 웹 페이지에서 버전 정보를 가져오는 함수
+  static Future<String> getLastVersionFromWeb() async {
     final url = Uri.parse(urlString);
 
     final response = await http.get(url);
@@ -20,9 +55,10 @@ class VersionChecker {
       var preTags = document.getElementsByTagName('pre');
 
       for (var pre in preTags) {
-        String text = pre.text.trim();
-        if (_isValidVersion(text)) {
-          return text;
+        String minRecommandedVersion = pre.text.trim().split(' | ').first;
+
+        if (_isValidVersion(minRecommandedVersion)) {
+          return minRecommandedVersion;
         }
       }
 
@@ -53,11 +89,11 @@ class VersionChecker {
   static Future<bool> isUpdateRequired() async {
     try {
       // 현재 앱의 버전 정보 가져오기
-      final String currentVersion = '1.0.2';
+      final String currentVersion = '1.0.0';
       log('현재 앱 버전: $currentVersion');
 
       // 웹 페이지에서 버전 정보 크롤링
-      final String fetchedVersion = await fetchVersionFromWeb();
+      final String fetchedVersion = await getLastVersionFromWeb();
       log('업데이트 권고 최소 버전: $fetchedVersion - $urlString');
 
       // 버전 비교
