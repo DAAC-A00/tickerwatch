@@ -2,6 +2,8 @@
 
 // 내부 데이터 저장용
 
+import 'package:flutter/material.dart';
+
 enum CategoryExchangeEnum {
   none,
   // Bybit
@@ -165,7 +167,7 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
       case CategoryExchangeEnum.spotBybit:
       case CategoryExchangeEnum.umBybit:
       case CategoryExchangeEnum.cmBybit:
-        return "Bybit";
+        return 'Bybit';
       case CategoryExchangeEnum.spotBitget:
       case CategoryExchangeEnum.umBitget:
       case CategoryExchangeEnum.cmBitget:
@@ -188,7 +190,7 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
     }
   }
 
-  String get logoPath {
+  String get logoPathString {
     switch (this) {
       case CategoryExchangeEnum.none:
         return '';
@@ -196,26 +198,37 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
       case CategoryExchangeEnum.spotBybit:
       case CategoryExchangeEnum.umBybit:
       case CategoryExchangeEnum.cmBybit:
-        return "lib/product/resources/images/exchangeBybit.jpeg";
+        return 'lib/product/resources/images/exchangeBybit.jpeg';
       case CategoryExchangeEnum.spotBitget:
       case CategoryExchangeEnum.umBitget:
       case CategoryExchangeEnum.cmBitget:
-        return "lib/product/resources/images/exchangeBitget.png";
+        return 'lib/product/resources/images/exchangeBitget.png';
       case CategoryExchangeEnum.spotOkx:
       case CategoryExchangeEnum.umOkx:
       case CategoryExchangeEnum.cmOkx:
       case CategoryExchangeEnum.cmOptionOkx:
-        return "lib/product/resources/images/exchangeOkx.jpeg";
+        return 'lib/product/resources/images/exchangeOkx.jpeg';
       case CategoryExchangeEnum.spotBinance:
       case CategoryExchangeEnum.umBinance:
       case CategoryExchangeEnum.cmBinance:
       case CategoryExchangeEnum.umOptionBinance:
       case CategoryExchangeEnum.cmOptionBinance:
-        return "lib/product/resources/images/exchangeBinance.png";
+        return 'lib/product/resources/images/exchangeBinance.png';
       case CategoryExchangeEnum.spotUpbit:
-        return "lib/product/resources/images/exchangeUpbit.png";
+        return 'lib/product/resources/images/exchangeUpbit.png';
       case CategoryExchangeEnum.spotBithumb:
-        return "lib/product/resources/images/exchangeBithumb.png";
+        return 'lib/product/resources/images/exchangeBithumb.png';
     }
+  }
+
+  Widget get logoImage {
+    return Image.asset(
+      logoPathString,
+      errorBuilder:
+          (BuildContext context, Object error, StackTrace? stackTrace) {
+        // 이미지 로딩 오류 발생 시 대체 이미지나 메시지 표시
+        return const Icon(Icons.error, color: Colors.red);
+      },
+    );
   }
 }
