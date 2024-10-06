@@ -227,7 +227,8 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
       errorBuilder:
           (BuildContext context, Object error, StackTrace? stackTrace) {
         // 이미지 로딩 오류 발생 시 대체 이미지나 메시지 표시
-        return const Icon(Icons.error, color: Colors.red);
+        // return Text('');
+        return Icon(Icons.cloud_off);
       },
     );
   }

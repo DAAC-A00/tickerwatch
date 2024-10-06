@@ -36,7 +36,7 @@ class _ExchangeSettingScreenState extends ConsumerState<ExchangeSettingScreen> {
                   height: currentTextTheme.titleMedium?.fontSize,
                   child: CategoryExchangeEnum.spotBybit.logoImage,
                 ),
-                const Text(' Bybit Key 설정'),
+                const Text('  Bybit Key 설정'),
               ],
             ),
             onTap: () {
