@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tickerwatch/product/admin/screens/admin_main_screen.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_main_screen.dart';
+import 'package:tickerwatch/product/default/screens/splash_screen.dart';
 import 'package:tickerwatch/product/home/screens/home_main_screen.dart';
 import 'package:tickerwatch/product/sample_person/person_main_screen.dart';
 import 'package:tickerwatch/product/setting/screens/exchange_setting_screen.dart';
@@ -15,7 +16,6 @@ import '../setting/screens/ticker_setting_screen.dart';
 import 'screens/default_screen.dart';
 import 'screens/route_error_screen.dart';
 
-// GoRouter 인스턴스를 생성하고 초기 위치를 '/'로 설정
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: _buildRoutes(),
@@ -31,8 +31,13 @@ List<RouteBase> _buildRoutes() {
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) =>
-          const DefaultScreen(),
+          const SplashScreen(),
       routes: [
+        GoRoute(
+          path: 'default',
+          builder: (BuildContext context, GoRouterState state) =>
+              const DefaultScreen(),
+        ),
         GoRoute(
           path: 'home',
           builder: (BuildContext context, GoRouterState state) =>

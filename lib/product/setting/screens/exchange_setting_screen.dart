@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
+import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import 'bybit_exchange_setting_screen.dart';
 
 class ExchangeSettingScreen extends ConsumerStatefulWidget {
@@ -15,21 +17,27 @@ class ExchangeSettingScreen extends ConsumerStatefulWidget {
 class _ExchangeSettingScreenState extends ConsumerState<ExchangeSettingScreen> {
   @override
   Widget build(BuildContext context) {
-    // final currentTheme = Theme.of(context).colorScheme;
-    // final currentTextTheme = Theme.of(context).textTheme;
-    // final settings = ref.watch(tickerSettingProvider);
+    final currentTextTheme = Theme.of(context).textTheme;
+    final commonSetting = ref.watch(commonSettingProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('거래소 설정'),
+        title: const Text('거래소 설정'),
       ),
       body: ListView(
         children: [
           ListTile(
-            leading: const Icon(Icons.looks_one),
+            leading:
+                commonSetting.isLightMode ? const Text('⚪') : const Text('⚫'),
             trailing: const Icon(Icons.arrow_forward_ios),
-            title: const Text(
-              'Bybit Key 설정',
+            title: Row(
+              children: [
+                SizedBox(
+                  height: currentTextTheme.titleMedium?.fontSize,
+                  child: CategoryExchangeEnum.spotBybit.logoImage,
+                ),
+                const Text('  Bybit Key 설정'),
+              ],
             ),
             onTap: () {
               Navigator.push(
