@@ -18,7 +18,7 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    NaverMarketIndexService.getData();
+    NaverMarketIndexService.getDataList();
     _checkForUpdate();
   }
 

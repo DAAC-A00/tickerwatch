@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tickerwatch/external/naver/schedulers/naver_finance_scheduler.dart';
 import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
@@ -44,11 +45,13 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   late final BybitAllTickerScheduler bybitTickerScheduler;
+  late final NaverFinanceScheduler naverFinanceScheduler;
 
   @override
   void initState() {
     super.initState();
     bybitTickerScheduler = BybitAllTickerScheduler(ref);
+    naverFinanceScheduler = NaverFinanceScheduler(ref);
     _fetchInitialData(); // 비동기 초기 데이터 가져오기
   }
 
@@ -60,9 +63,12 @@ class _MyAppState extends ConsumerState<MyApp> {
     final commonSettingState = ref.read(commonSettingProvider);
     if (commonSettingState.isSuperMode) {
       bybitTickerScheduler.start();
+      naverFinanceScheduler.start();
     } else {
       bybitTickerScheduler.stop();
       bybitTickerScheduler.fetchOnce();
+      naverFinanceScheduler.stop();
+      naverFinanceScheduler.fetchOnce();
     }
   }
 
