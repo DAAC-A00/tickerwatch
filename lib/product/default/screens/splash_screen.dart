@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tickerwatch/external/naver/services/naver_market_index_service.dart';
 import 'package:tickerwatch/product/default/checker/version_checker.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    NaverMarketIndexService.getDataList();
     _checkForUpdate();
   }
 

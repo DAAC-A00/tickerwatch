@@ -31,6 +31,9 @@ class TickerModel {
   String turnOverUtc0; // 거래대금 = quoteCode 기준 거래량
   String volumeUtc0; // 거래량 = baseCode 기준 거래량
 
+  // -- UTC9
+  String changePercentUtc9;
+
   // -- dataAt : 해당 데이터가 타기관에서 기록된 시점
   // -- updatedAt : 해당 데이터가 본 프로그램 내에서 수정된 시점
   late String dataAt;
@@ -42,24 +45,25 @@ class TickerModel {
 
   TickerModel({
     required this.price,
-    required this.lastPrice,
-    required this.ask1Price,
-    required this.ask1Size,
-    required this.bid1Price,
-    required this.bid1Size,
-    required this.changePercent24h,
-    required this.prevPrice24h,
-    required this.highPrice24h,
-    required this.lowPrice24h,
-    required this.turnOver24h,
-    required this.volume24h,
+    this.lastPrice = '',
+    this.ask1Price = '',
+    this.ask1Size = '',
+    this.bid1Price = '',
+    this.bid1Size = '',
+    this.changePercent24h = '',
+    this.prevPrice24h = '',
+    this.highPrice24h = '',
+    this.lowPrice24h = '',
+    this.turnOver24h = '',
+    this.volume24h = '',
     this.changePercentUtc0 = '',
     this.prevPriceUtc0 = '',
     this.highPriceUtc0 = '',
     this.lowPriceUtc0 = '',
     this.turnOverUtc0 = '',
     this.volumeUtc0 = '',
-    required this.priceStatusEnum,
+    this.changePercentUtc9 = '',
+    this.priceStatusEnum = PriceStatusEnum.stay,
     String? dataAt,
   }) {
     var now = DateTime.now().toUtc().add(const Duration(hours: 9));
