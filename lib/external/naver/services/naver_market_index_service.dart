@@ -1,28 +1,34 @@
 // naver_market_index_service.dart
 
 import 'dart:developer';
-import 'dart:io'; // 추가: 네트워크 관련 예외 처리
+import 'dart:io';
 import 'package:html/dom.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
+import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
+import 'dart:convert'; // 추가: utf8.decode를 사용하기 위해
 
 class NaverMarketIndexService {
-  static String urlString =
-      'https://finance.naver.com/marketindex/?tabSel=exchange#tab_section';
+  static const ExchangeRawCategoryEnum exchangeRawCategoryEnum =
+      ExchangeRawCategoryEnum.naverMarketIndexWeb;
+  static String endPoint = exchangeRawCategoryEnum.allTickerListApiEndPoint;
 
   /// 웹 페이지에서 환율 정보를 가져오는 함수
   static Future<List<TickerEntity>?> getDataList() async {
-    final url = Uri.parse(urlString);
+    final url = Uri.parse(endPoint);
 
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         var document = parser.parse(response.body);
+        // var document = parser.parse(utf8.decode(response.bodyBytes));
+        // EUC-KR로 디코딩
+        // var document = parser.parse(_decodeEucKr(response.bodyBytes)); // 수정된 부분
 
         // <ul> 태그에서 환율 정보 찾기
         final List<Element> dataList =
@@ -34,6 +40,7 @@ class NaverMarketIndexService {
           String value = data.querySelector('.value')?.text.trim() ?? '';
           String change = data.querySelector('.change')?.text.trim() ?? '';
           String trend = data.querySelector('.blind')?.text.trim() ?? '';
+          log('trend: $trend');
           String source = data.querySelector('.source')?.text.trim() ?? '';
           String time = data.querySelector('.time')?.text.trim() ?? '';
           String count = data.querySelector('.count .num')?.text.trim() ?? '';
@@ -49,12 +56,8 @@ class NaverMarketIndexService {
                   ? PriceStatusEnum.down
                   : PriceStatusEnum.stay;
 
-          TickerInfoModel tickerInfo = TickerInfoModel(
-            rawSymbol: currencyName,
-            source: source,
-            remark: count,
-            searchKeywords: 'naverfiatrates$currencyName$source$count',
-          );
+          TickerInfoModel tickerInfo =
+              _createTickerInfoModel(currencyName, source, count);
           TickerModel tickerModel = TickerModel(
             price: value,
             changePercentUtc9: changePercentUtc9?.toStringAsFixed(2) ?? '',
@@ -78,11 +81,28 @@ class NaverMarketIndexService {
     } on SocketException catch (e) {
       // 소켓 예외 처리
       log('[ NaverMarketIndexService.getDataList ] SocketException: $e');
-      return null; // 또는 빈 리스트를 반환
+      return null;
     } catch (e) {
       // 다른 예외 처리
       log('[ NaverMarketIndexService.getDataList ] Error: $e');
       return null;
     }
+  }
+
+  // /// EUC-KR로 디코딩하는 함수
+  // static String _decodeEucKr(List<int> bytes) {
+  //   // EUC-KR로 디코딩하기 위해 latin1을 사용
+  //   return utf8.decode(bytes, allowMalformed: true);
+  // }
+
+  static TickerInfoModel _createTickerInfoModel(
+      String rawSymbol, String source, String count) {
+    final tickerInfoModel = TickerInfoModel(
+      rawSymbol: rawSymbol,
+      symbolSub: '$source&&$count',
+      exchangeRawCategoryEnum: exchangeRawCategoryEnum,
+    );
+    tickerInfoModel.rawToTickerInfo();
+    return tickerInfoModel;
   }
 }

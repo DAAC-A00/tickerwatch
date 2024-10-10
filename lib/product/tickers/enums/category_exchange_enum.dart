@@ -29,6 +29,9 @@ enum CategoryExchangeEnum {
   spotUpbit,
   // Bithumb
   spotBithumb,
+  // traditional
+  spotFiatCurrency,
+  spotRawMaterial,
 }
 
 extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
@@ -70,6 +73,10 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
         return CategoryExchangeEnum.spotUpbit;
       case 'spotBithumb':
         return CategoryExchangeEnum.spotBithumb;
+      case 'spotFiatCurrency':
+        return CategoryExchangeEnum.spotFiatCurrency;
+      case 'spotRawMaterial':
+        return CategoryExchangeEnum.spotRawMaterial;
       default:
         throw Exception('Unknown enum value: $enumString');
     }
@@ -114,6 +121,10 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
         return '🆂 Spot (Upbit)';
       case CategoryExchangeEnum.spotBithumb:
         return '🆂 Spot (Bithumb)';
+      case CategoryExchangeEnum.spotFiatCurrency:
+        return '🆂 Spot Fiat Currency';
+      case CategoryExchangeEnum.spotRawMaterial:
+        return '🆂 Spot Raw Material';
     }
   }
 
@@ -156,6 +167,10 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
         return 'spotUpbit';
       case CategoryExchangeEnum.spotBithumb:
         return 'spotBithumb';
+      case CategoryExchangeEnum.spotFiatCurrency:
+        return 'spotFiatCurrency';
+      case CategoryExchangeEnum.spotRawMaterial:
+        return 'spotRawMaterial';
     }
   }
 
@@ -187,6 +202,10 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
         return 'Upbit';
       case CategoryExchangeEnum.spotBithumb:
         return 'Bithumb';
+      case CategoryExchangeEnum.spotFiatCurrency:
+        return 'Fiat Curreny';
+      case CategoryExchangeEnum.spotRawMaterial:
+        return 'Raw Material';
     }
   }
 
@@ -218,18 +237,28 @@ extension CategoryExchangeEnumExtension on CategoryExchangeEnum {
         return 'lib/product/resources/images/exchangeUpbit.png';
       case CategoryExchangeEnum.spotBithumb:
         return 'lib/product/resources/images/exchangeBithumb.png';
+      case CategoryExchangeEnum.spotFiatCurrency:
+        return '🏦';
+      case CategoryExchangeEnum.spotRawMaterial:
+        return '🌏';
     }
   }
 
   Widget get logoImage {
-    return Image.asset(
-      logoPathString,
-      errorBuilder:
-          (BuildContext context, Object error, StackTrace? stackTrace) {
-        // 이미지 로딩 오류 발생 시 대체 이미지나 메시지 표시
-        // return Text('');
-        return Icon(Icons.cloud_off);
-      },
-    );
+    if (logoPathString.length > 5) {
+      // logoPathString에 있는 이미지 파일을 Image 위젯으로 제공하는 경우
+      return Image.asset(
+        logoPathString,
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          // 이미지 로딩 오류 발생 시 대체 이미지 or 대체 아이콘 or 대체 Text 표시
+          // return Text('');
+          return Icon(Icons.cloud_off);
+        },
+      );
+    } else {
+      // logoPathString 자체를 Text 위젯으로 제공하는 경우
+      return Text(logoPathString);
+    }
   }
 }

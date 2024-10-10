@@ -17,7 +17,8 @@ enum ExchangeRawCategoryEnum {
   binanceCm,
   binanceUm,
   upbitSpot,
-  bithumbSpot
+  bithumbSpot,
+  naverMarketIndexWeb,
 }
 
 extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
@@ -57,6 +58,8 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
         return 'upbitSpot';
       case ExchangeRawCategoryEnum.bithumbSpot:
         return 'bithumbSpot';
+      case ExchangeRawCategoryEnum.naverMarketIndexWeb:
+        return 'naverMarketIndexWeb';
     }
   }
 
@@ -98,6 +101,8 @@ extension ExchangeRawCategoryEnumExtension on ExchangeRawCategoryEnum {
       // https://api.upbit.com/v1/market/all?isDetails=true
       case ExchangeRawCategoryEnum.bithumbSpot:
         return 'https://api.bithumb.com/public/ticker';
+      case ExchangeRawCategoryEnum.naverMarketIndexWeb:
+        return 'https://finance.naver.com/marketindex/?tabSel=exchange';
     }
   }
 }

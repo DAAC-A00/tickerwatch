@@ -12,7 +12,8 @@ import '../enums/category_exchange_enum.dart';
 class TickerInfoModel {
   // symbol
   final String rawSymbol; // 1000PEPEPERP
-  final String symbolSub; // PERP
+  String
+      symbolSub; // PERP or rawSymbol 자체가 육안으로 확인되지 않는 형태인 경우 Description으로 tmpSymbol을 넣어줌
   String symbol; // 앱에 표기되는 symbol
   int unit; // 1000
 
@@ -115,6 +116,7 @@ class TickerInfoModel {
   //    binance um : BTCUSDT_241227, BTCUSDC, 1000PEPEUSDT, 1000SHIBUSDC
   //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
   //    bithumb spot : BTC, ETH
+  //    naver market index : ¹Ì±¹ USD, ÀÏº» JPY(100¿£), À¯·´¿¬ÇÕ EUR, Áß±¹ CNY, ±¹³» ±Ý
 
   void rawToTickerInfo({String? subData, bool isPreferToFiat = false}) {
     late String tmpSymbol;
@@ -134,320 +136,359 @@ class TickerInfoModel {
       case ExchangeRawCategoryEnum.okxSwap:
         tmpSymbol = rawSymbol.replaceFirst('_SWAP', '');
         break;
+      case ExchangeRawCategoryEnum.naverMarketIndexWeb:
+        switch (rawSymbol) {
+          case '¹Ì±¹ USD':
+            symbolSub = '미국 USD';
+            tmpSymbol = 'USD-KRW';
+            break;
+          case 'ÀÏº» JPY(100¿£)':
+            symbolSub = '일본 JPY(엔)';
+            tmpSymbol = '100JPY-KRW';
+            break;
+          case 'À¯·´¿¬ÇÕ EUR':
+            symbolSub = '유럽연합 EUR';
+            tmpSymbol = 'EUR-KRW';
+            break;
+          case 'Áß±¹ CNY':
+            symbolSub = '중국 CNY';
+            tmpSymbol = 'CNY-KRW';
+            break;
+          case '±¹³» ±Ý':
+            symbolSub = '국내 금';
+            tmpSymbol = 'KGC-KRW';
+            break;
+          case '´Þ·¯/ÀÏº» ¿£': // 달러/일본 엔
+          case 'À¯·Î/´Þ·¯': // 유로/달러
+          case '¿µ±¹ ÆÄ¿îµå/´Þ·¯': // 영국파운드/달러
+          case '´Þ·¯ÀÎµ¦½º': // 달러인덱스
+          case 'WTI': // WTI
+          case 'ÈÖ¹ßÀ¯': // 휘발유
+          case '±¹Á¦ ±Ý': // 국제 금
+            // 실시간 데이터가 아니기 때문에 미취급
+            tmpSymbol = '';
+            break;
+          default:
+            log('[WARN][TickerInfoModel.rawToTickerInfo] New rawSymbol Appeared : "$rawSymbol" IN ${exchangeRawCategoryEnum.name}');
+            tmpSymbol = '';
+            break;
+        }
       default:
         tmpSymbol = rawSymbol; // 나머지는 rawSymbol 그대로 tmpSymbol로 가져오기
     }
 
-    // tmpSymbol 예시
-    //    bybit spot : BTCBRL, PEPEUSDC, DOGEEUR, 1SOLUSDT, 1INCHUSDT
-    //    bybit linear : 10000000AIDOGEUSDT, 1000000PEIPEIUSDT, 10000COQUSDT, SHIB1000PERP, BTCPERP, BTC-06SEP24, BTC-25OCT24, BTC-27DEC24, BTC-27JUN25, BTC-27SEP24, BTC-28MAR25, BTC-30AUG24
-    //    bybit inverse : BTCUSDZ24, BTCUSDU24, DOTUSD
-    //    bitget spot : BTCUSDT, PEPEEUR, USDTBRL
-    //    bitget umcbl : BTCUSDT
-    //    bitget dmcbl : BTCUSD, ETHUSD_240927
-    //    bitget cmcbl : ETHPERP
-    //    okx SPOT : BTC-USDT
-    //    okx SWAP : BTC-USD, ETH-USDC
-    //    okx FUTURES : XRP-USDT-241227
-    //    okx OPTION : BTC-USD-240906-62000-P, BTC-USD-241108-50000-C
-    //    binance spot : BNBETH, ETHUSDT, 1000SATSTRY, 1000SATSFDUSD
-    //    binance cm : ETHUSD_240927, ETHUSD_PERP, UNIUSD_PERP, LTCUSD_241227
-    //    binance um : BTCUSDT_241227, BTCUSDC, 1000PEPEUSDT, 1000SHIBUSDC
-    //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
-    //    bithumb spot : BTC, ETH
-    switch (exchangeRawCategoryEnum) {
-      case ExchangeRawCategoryEnum.bitgetDmcbl:
-      case ExchangeRawCategoryEnum.binanceCm:
-      case ExchangeRawCategoryEnum.binanceUm:
-        splitSymbol = tmpSymbol.split('_');
-        break;
-      default:
-        splitSymbol = tmpSymbol.split('-');
-    }
+    if (tmpSymbol != '') {
+      // tmpSymbol이 ''인 경우, 해당 정보는 가공하지 않음
 
-    // splitSymbol 예시
-    //    bybit spot : length 1 -> ['BTCBRL'], ['PEPEUSDC'], ['DOGEEUR'], ['1SOLUSDT'], ['1INCHUSDT']
-    //    bybit linear : length 1 /// 2 유기한 -> ['10000000AIDOGEUSDT'], ['1000000PEIPEIUSDT'], ['10000COQUSDT'], ['SHIB1000PERP'], ['BTCPERP'] /// ['BTC', '06SEP24'], ['BTC', '25OCT24'], ['BTC', '27DEC24'], ['BTC', '27JUN25'], ['BTC', '27SEP24'], ['BTC', '28MAR25'], ['BTC', '30AUG24']
-    //    bybit inverse : length 1 -> ['BTCUSDZ24'], ['BTCUSDU24'], ['DOTUSD']
-    //    bitget spot : length 1 -> ['BTCUSDT'], ['PEPEEUR'], ['USDTBRL']
-    //    bitget umcbl : length 1 -> ['BTCUSDT']
-    //    bitget dmcbl : length 1 /// 2 유기한 -> ['BTCUSD'] /// ['ETHUSD', '240927']
-    //    bitget cmcbl : length 1 -> ['ETHPERP']
-    //    okx SPOT : length 2 -> ['BTC', 'USDT']
-    //    okx SWAP : length 2 -> ['BTC', 'USD'], ['ETH', 'USDC']
-    //    okx FUTURES : length 3 유기한 -> ['XRP', 'USDT', '241227']
-    //    okx OPTION : length 5 유기한 -> ['BTC', 'USD', '240906', '62000', 'P'], ['BTC', 'USD', '241108', '50000', 'C']
-    //    binance spot : length 1 -> ['BNBETH'], ['ETHUSDT'], ['1000SATSTRY'], ['1000SATSFDUSD']
-    //    binance cm : length 2 무/유기한 -> ['ETHUSD', '240927'], ['ETHUSD', 'PERP'], ['UNIUSD', 'PERP'], ['LTCUSD', '241227']
-    //    binance um : length 1 /// 2 유기한 -> ['BTCUSDC'], ['1000PEPEUSDT'], ['1000SHIBUSDC'] /// ['BTCUSDT', '241227']
-    //    upbit spot : length 2 -> ['KRW', 'BTC'], ['USDT', 'BTC'], ['BTC', 'APE']       (quoteCode-baseCode)
-    //    bithumb spot : length 1 -> ['BTC'], ['ETH']
+      // tmpSymbol 예시
+      //    bybit spot : BTCBRL, PEPEUSDC, DOGEEUR, 1SOLUSDT, 1INCHUSDT
+      //    bybit linear : 10000000AIDOGEUSDT, 1000000PEIPEIUSDT, 10000COQUSDT, SHIB1000PERP, BTCPERP, BTC-06SEP24, BTC-25OCT24, BTC-27DEC24, BTC-27JUN25, BTC-27SEP24, BTC-28MAR25, BTC-30AUG24
+      //    bybit inverse : BTCUSDZ24, BTCUSDU24, DOTUSD
+      //    bitget spot : BTCUSDT, PEPEEUR, USDTBRL
+      //    bitget umcbl : BTCUSDT
+      //    bitget dmcbl : BTCUSD, ETHUSD_240927
+      //    bitget cmcbl : ETHPERP
+      //    okx SPOT : BTC-USDT
+      //    okx SWAP : BTC-USD, ETH-USDC
+      //    okx FUTURES : XRP-USDT-241227
+      //    okx OPTION : BTC-USD-240906-62000-P, BTC-USD-241108-50000-C
+      //    binance spot : BNBETH, ETHUSDT, 1000SATSTRY, 1000SATSFDUSD
+      //    binance cm : ETHUSD_240927, ETHUSD_PERP, UNIUSD_PERP, LTCUSD_241227
+      //    binance um : BTCUSDT_241227, BTCUSDC, 1000PEPEUSDT, 1000SHIBUSDC
+      //    upbit spot : KRW-BTC, USDT-BTC, BTC-APE   (quoteCode-baseCode)
+      //    bithumb spot : BTC, ETH
+      //    naver market index : USD-KRW, 100JPY-KRW, EUR-KRW, CNY-KRW, KGX-KRW
+      // symbolSub 예시
+      //    naver market index : 미국 USD, 일본 JPY(엔), 유럽연합 EUR, 중국 CNY, 국내 금
+      switch (exchangeRawCategoryEnum) {
+        case ExchangeRawCategoryEnum.bitgetDmcbl:
+        case ExchangeRawCategoryEnum.binanceCm:
+        case ExchangeRawCategoryEnum.binanceUm:
+          splitSymbol = tmpSymbol.split('_');
+          break;
+        default:
+          splitSymbol = tmpSymbol.split('-');
+      }
 
-    expirationDate =
-        _getExpirationDateAndUpdateOptionData(exchangeRawCategoryEnum);
+      // splitSymbol 예시
+      //    bybit spot : length 1 -> ['BTCBRL'], ['PEPEUSDC'], ['DOGEEUR'], ['1SOLUSDT'], ['1INCHUSDT']
+      //    bybit linear : length 1 /// 2 유기한 -> ['10000000AIDOGEUSDT'], ['1000000PEIPEIUSDT'], ['10000COQUSDT'], ['SHIB1000PERP'], ['BTCPERP'] /// ['BTC', '06SEP24'], ['BTC', '25OCT24'], ['BTC', '27DEC24'], ['BTC', '27JUN25'], ['BTC', '27SEP24'], ['BTC', '28MAR25'], ['BTC', '30AUG24']
+      //    bybit inverse : length 1 -> ['BTCUSDZ24'], ['BTCUSDU24'], ['DOTUSD']
+      //    bitget spot : length 1 -> ['BTCUSDT'], ['PEPEEUR'], ['USDTBRL']
+      //    bitget umcbl : length 1 -> ['BTCUSDT']
+      //    bitget dmcbl : length 1 /// 2 유기한 -> ['BTCUSD'] /// ['ETHUSD', '240927']
+      //    bitget cmcbl : length 1 -> ['ETHPERP']
+      //    okx SPOT : length 2 -> ['BTC', 'USDT']
+      //    okx SWAP : length 2 -> ['BTC', 'USD'], ['ETH', 'USDC']
+      //    okx FUTURES : length 3 유기한 -> ['XRP', 'USDT', '241227']
+      //    okx OPTION : length 5 유기한 -> ['BTC', 'USD', '240906', '62000', 'P'], ['BTC', 'USD', '241108', '50000', 'C']
+      //    binance spot : length 1 -> ['BNBETH'], ['ETHUSDT'], ['1000SATSTRY'], ['1000SATSFDUSD']
+      //    binance cm : length 2 무/유기한 -> ['ETHUSD', '240927'], ['ETHUSD', 'PERP'], ['UNIUSD', 'PERP'], ['LTCUSD', '241227']
+      //    binance um : length 1 /// 2 유기한 -> ['BTCUSDC'], ['1000PEPEUSDT'], ['1000SHIBUSDC'] /// ['BTCUSDT', '241227']
+      //    upbit spot : length 2 -> ['KRW', 'BTC'], ['USDT', 'BTC'], ['BTC', 'APE']       (quoteCode-baseCode)
+      //    bithumb spot : length 1 -> ['BTC'], ['ETH']
+      //    naver market index : 미국 USD, 일본 JPY(엔), 유럽연합 EUR, 중국 CNY, 국내 금
+      //    naver market index : ['USD', 'KRW'], ['100JPY', 'KRW'], ['EUR', 'KRW'], ['CNY', 'KRW'], ['KGX', 'KRW']
 
-    // category & source
-    switch (exchangeRawCategoryEnum) {
-      case ExchangeRawCategoryEnum.none:
-        break;
-      case ExchangeRawCategoryEnum.bybitSpot:
-        categoryExchangeEnum = CategoryExchangeEnum.spotBybit;
-        categoryEnum = CategoryEnum.spot;
-        source = 'bybit';
-        break;
-      case ExchangeRawCategoryEnum.bitgetSpot:
-        categoryExchangeEnum = CategoryExchangeEnum.spotBitget;
-        categoryEnum = CategoryEnum.spot;
-        source = 'bitget';
-        break;
-      case ExchangeRawCategoryEnum.okxSpot:
-        categoryExchangeEnum = CategoryExchangeEnum.spotOkx;
-        categoryEnum = CategoryEnum.spot;
-        source = 'okx';
-        break;
-      case ExchangeRawCategoryEnum.binanceSpot:
-        categoryExchangeEnum = CategoryExchangeEnum.spotBinance;
-        categoryEnum = CategoryEnum.spot;
-        source = 'binance';
-        break;
-      case ExchangeRawCategoryEnum.upbitSpot:
-        categoryExchangeEnum = CategoryExchangeEnum.spotUpbit;
-        categoryEnum = CategoryEnum.spot;
-        source = 'upbit';
-        break;
-      case ExchangeRawCategoryEnum.bithumbSpot:
-        categoryExchangeEnum = CategoryExchangeEnum.spotBithumb;
-        categoryEnum = CategoryEnum.spot;
-        source = 'bithumb';
-        break;
-      case ExchangeRawCategoryEnum.bybitLinear:
-        categoryExchangeEnum = CategoryExchangeEnum.umBybit;
-        categoryEnum = CategoryEnum.um;
-        source = 'bybit';
-        break;
-      case ExchangeRawCategoryEnum.bitgetUmcbl:
-      case ExchangeRawCategoryEnum.bitgetCmcbl:
-        categoryExchangeEnum = CategoryExchangeEnum.umBitget;
-        categoryEnum = CategoryEnum.um;
-        source = 'bitget';
-        break;
-      case ExchangeRawCategoryEnum.okxSwap:
-        source = 'okx';
-        if (splitSymbol.last == 'USD') {
-          categoryExchangeEnum = CategoryExchangeEnum.cmOkx;
-          categoryEnum = CategoryEnum.cm;
-        } else {
+      expirationDate =
+          _getExpirationDateAndUpdateOptionData(exchangeRawCategoryEnum);
+
+      // category & source & remark
+      switch (exchangeRawCategoryEnum) {
+        case ExchangeRawCategoryEnum.none:
+          break;
+        case ExchangeRawCategoryEnum.bybitSpot:
+          categoryExchangeEnum = CategoryExchangeEnum.spotBybit;
+          categoryEnum = CategoryEnum.spot;
+          source = 'bybit';
+          break;
+        case ExchangeRawCategoryEnum.bitgetSpot:
+          categoryExchangeEnum = CategoryExchangeEnum.spotBitget;
+          categoryEnum = CategoryEnum.spot;
+          source = 'bitget';
+          break;
+        case ExchangeRawCategoryEnum.okxSpot:
+          categoryExchangeEnum = CategoryExchangeEnum.spotOkx;
+          categoryEnum = CategoryEnum.spot;
+          source = 'okx';
+          break;
+        case ExchangeRawCategoryEnum.binanceSpot:
+          categoryExchangeEnum = CategoryExchangeEnum.spotBinance;
+          categoryEnum = CategoryEnum.spot;
+          source = 'binance';
+          break;
+        case ExchangeRawCategoryEnum.upbitSpot:
+          categoryExchangeEnum = CategoryExchangeEnum.spotUpbit;
+          categoryEnum = CategoryEnum.spot;
+          source = 'upbit';
+          break;
+        case ExchangeRawCategoryEnum.bithumbSpot:
+          categoryExchangeEnum = CategoryExchangeEnum.spotBithumb;
+          categoryEnum = CategoryEnum.spot;
+          source = 'bithumb';
+          break;
+        case ExchangeRawCategoryEnum.bybitLinear:
+          categoryExchangeEnum = CategoryExchangeEnum.umBybit;
+          categoryEnum = CategoryEnum.um;
+          source = 'bybit';
+          break;
+        case ExchangeRawCategoryEnum.bitgetUmcbl:
+        case ExchangeRawCategoryEnum.bitgetCmcbl:
+          categoryExchangeEnum = CategoryExchangeEnum.umBitget;
+          categoryEnum = CategoryEnum.um;
+          source = 'bitget';
+          break;
+        case ExchangeRawCategoryEnum.okxSwap:
+          source = 'okx';
+          if (splitSymbol.last == 'USD') {
+            categoryExchangeEnum = CategoryExchangeEnum.cmOkx;
+            categoryEnum = CategoryEnum.cm;
+          } else {
+            categoryExchangeEnum = CategoryExchangeEnum.umOkx;
+            categoryEnum = CategoryEnum.um;
+          }
+          break;
+        case ExchangeRawCategoryEnum.okxFutures:
           categoryExchangeEnum = CategoryExchangeEnum.umOkx;
           categoryEnum = CategoryEnum.um;
-        }
-        break;
-      case ExchangeRawCategoryEnum.okxFutures:
-        categoryExchangeEnum = CategoryExchangeEnum.umOkx;
-        categoryEnum = CategoryEnum.um;
-        source = 'okx';
-        break;
-      case ExchangeRawCategoryEnum.binanceUm:
-        categoryExchangeEnum = CategoryExchangeEnum.umBinance;
-        categoryEnum = CategoryEnum.um;
-        source = 'binance';
-        break;
-      case ExchangeRawCategoryEnum.bybitInverse:
-        categoryExchangeEnum = CategoryExchangeEnum.cmBybit;
-        categoryEnum = CategoryEnum.cm;
-        source = 'bybit';
-        break;
-      case ExchangeRawCategoryEnum.bitgetDmcbl:
-        categoryExchangeEnum = CategoryExchangeEnum.cmBitget;
-        categoryEnum = CategoryEnum.cm;
-        source = 'bitget';
-        break;
-      case ExchangeRawCategoryEnum.binanceCm:
-        categoryExchangeEnum = CategoryExchangeEnum.cmBinance;
-        categoryEnum = CategoryEnum.cm;
-        source = 'binance';
-        break;
-      case ExchangeRawCategoryEnum.okxOption:
-        categoryExchangeEnum = CategoryExchangeEnum.cmOptionOkx;
-        categoryEnum = CategoryEnum.option;
-        source = 'option';
-        break;
-    }
+          source = 'okx';
+          break;
+        case ExchangeRawCategoryEnum.binanceUm:
+          categoryExchangeEnum = CategoryExchangeEnum.umBinance;
+          categoryEnum = CategoryEnum.um;
+          source = 'binance';
+          break;
+        case ExchangeRawCategoryEnum.bybitInverse:
+          categoryExchangeEnum = CategoryExchangeEnum.cmBybit;
+          categoryEnum = CategoryEnum.cm;
+          source = 'bybit';
+          break;
+        case ExchangeRawCategoryEnum.bitgetDmcbl:
+          categoryExchangeEnum = CategoryExchangeEnum.cmBitget;
+          categoryEnum = CategoryEnum.cm;
+          source = 'bitget';
+          break;
+        case ExchangeRawCategoryEnum.binanceCm:
+          categoryExchangeEnum = CategoryExchangeEnum.cmBinance;
+          categoryEnum = CategoryEnum.cm;
+          source = 'binance';
+          break;
+        case ExchangeRawCategoryEnum.okxOption:
+          categoryExchangeEnum = CategoryExchangeEnum.cmOptionOkx;
+          categoryEnum = CategoryEnum.option;
+          source = 'option';
+          break;
+        case ExchangeRawCategoryEnum.naverMarketIndexWeb:
+          if (tmpSymbol == '국내 금') {
+            categoryExchangeEnum = CategoryExchangeEnum.spotRawMaterial;
+          } else {
+            categoryExchangeEnum = CategoryExchangeEnum.spotFiatCurrency;
+          }
+          categoryEnum = CategoryEnum.spot;
+          source = subData?.split('&&').first ?? '';
+          remark = subData?.split('&&').last ?? '';
+      }
 
-    // splitSymbol 예시
-    //    bybit spot : length 1 -> ['BTCBRL'], ['PEPEUSDC'], ['DOGEEUR'], ['1SOLUSDT'], ['1INCHUSDT']
-    //    bybit linear : length 1 /// 2 유기한 -> ['10000000AIDOGEUSDT'], ['1000000PEIPEIUSDT'], ['10000COQUSDT'], ['SHIB1000PERP'], ['BTCPERP'] /// ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC'], ['BTC']
-    //    bybit inverse : length 1 -> ['BTCUSD'], ['BTCUSD'], ['DOTUSD']
-    //    bitget spot : length 1 -> ['BTCUSDT'], ['PEPEEUR'], ['USDTBRL']
-    //    bitget umcbl : length 1 -> ['BTCUSDT']
-    //    bitget dmcbl : length 1 /// 2 유기한 -> ['BTCUSD'] /// ['ETHUSD']
-    //    bitget cmcbl : length 1 -> ['ETHPERP']
-    //    okx SPOT : length 2 -> ['BTC', 'USDT']
-    //    okx SWAP : length 2 -> ['BTC', 'USD'], ['ETH', 'USDC']
-    //    okx FUTURES : length 3 유기한 -> ['XRP', 'USDT']
-    //    okx OPTION : length 5 유기한 -> ['BTC', 'USD'], ['BTC', 'USD']
-    //    binance spot : length 1 -> ['BNBETH'], ['ETHUSDT'], ['1000SATSTRY'], ['1000SATSFDUSD']
-    //    binance cm : length 2 무/유기한 -> ['ETHUSD'], ['ETHUSD'], ['UNIUSD'], ['LTCUSD']
-    //    binance um : length 1 /// 2 유기한 -> ['BTCUSDC'], ['1000PEPEUSDT'], ['1000SHIBUSDC'] /// ['BTCUSDT']
-    //    upbit spot : length 2 -> ['KRW', 'BTC'], ['USDT', 'BTC'], ['BTC', 'APE']       (quoteCode-baseCode)
-    //    bithumb spot : length 1 -> ['BTC'], ['ETH']
+      // quoteCode 분리
 
-    // quoteCode 분리
-
-    String unitAndBaseCode = '';
-    switch (exchangeRawCategoryEnum) {
-      case ExchangeRawCategoryEnum.upbitSpot:
-        unitAndBaseCode = splitSymbol.last;
-        quoteCode = '${splitSymbol.first}_0';
-        break;
-      case ExchangeRawCategoryEnum.bithumbSpot:
-        unitAndBaseCode = splitSymbol.first;
-        quoteCode = subData ?? '';
-        break;
-      case ExchangeRawCategoryEnum.okxSpot:
-      case ExchangeRawCategoryEnum.okxSwap:
-      case ExchangeRawCategoryEnum.okxFutures:
-      case ExchangeRawCategoryEnum.okxOption:
-        unitAndBaseCode = splitSymbol.first;
-        quoteCode = '${splitSymbol.last}_0';
-        break;
-      default:
-        // quoteCode 확보 완료 여부
-        bool hasQuoteCode = false;
-        if (splitSymbol.first.length > 5) {
-          final String suffix5 =
-              splitSymbol.first.substring(splitSymbol.first.length - 5);
-          if (['BUSDS', 'FDUSD'].contains(suffix5)) {
-            quoteCode = suffix5;
-            unitAndBaseCode =
-                splitSymbol.first.substring(0, splitSymbol.first.length - 5);
+      String unitAndBaseCode = '';
+      switch (exchangeRawCategoryEnum) {
+        case ExchangeRawCategoryEnum.upbitSpot:
+          unitAndBaseCode = splitSymbol.last;
+          quoteCode = '${splitSymbol.first}_0';
+          break;
+        case ExchangeRawCategoryEnum.bithumbSpot:
+          unitAndBaseCode = splitSymbol.first;
+          quoteCode = subData ?? '';
+          break;
+        case ExchangeRawCategoryEnum.okxSpot:
+        case ExchangeRawCategoryEnum.okxSwap:
+        case ExchangeRawCategoryEnum.okxFutures:
+        case ExchangeRawCategoryEnum.okxOption:
+        case ExchangeRawCategoryEnum.naverMarketIndexWeb:
+          unitAndBaseCode = splitSymbol.first;
+          quoteCode = '${splitSymbol.last}_0';
+          break;
+        default:
+          // quoteCode 확보 완료 여부
+          bool hasQuoteCode = false;
+          if (splitSymbol.first.length > 5) {
+            final String suffix5 =
+                splitSymbol.first.substring(splitSymbol.first.length - 5);
+            if (['BUSDS', 'FDUSD'].contains(suffix5)) {
+              quoteCode = suffix5;
+              unitAndBaseCode =
+                  splitSymbol.first.substring(0, splitSymbol.first.length - 5);
+              hasQuoteCode = true;
+            }
+          }
+          if (!hasQuoteCode && splitSymbol.first.length > 4) {
+            final String suffix4 =
+                splitSymbol.first.substring(splitSymbol.first.length - 4);
+            if (splitSymbol.first !=
+                    'DOTUSD' // DOT USD로 나뉘어야하는데, 해당 로직에서 DO TUSD로 잘못 나뉘는 문제가 있어 제외하고 진행
+                &&
+                [
+                  // coin
+                  'DOGE', //
+                  // $
+                  'TUSD',
+                  'USDT',
+                  'USDC', 'PERP',
+                  'USDP', // = PAX
+                  // fiat
+                  'BKRW',
+                  'BIDR',
+                  'IDRT',
+                  'BVND',
+                  'AEUR', // Anchored Coins EUR
+                  'USDS', // United States Digital Service
+                  'USDE' // 에테나(Ethena) : 이더리움 기반 담보형 합성 스테이블코인 프로토콜 = ETH를 예치하면 자동으로 현물 + 숏 포지션으로 이루어진 합성 포지션이 구축되고 동일한 가치의 USDe를 받도록 설계
+                ].contains(suffix4)) {
+              quoteCode = suffix4 == 'PERP'
+                  ? 'USDC_0'
+                  : '${suffix4}_0'; // PERP인 경우 USDC로 변경
+              unitAndBaseCode =
+                  splitSymbol.first.substring(0, splitSymbol.first.length - 4);
+              hasQuoteCode = true;
+            }
+          }
+          if (!hasQuoteCode && splitSymbol.first.length > 3) {
+            final String suffix3 =
+                splitSymbol.first.substring(splitSymbol.first.length - 3);
+            if ([
+              // coin
+              'BTC',
+              'ETH',
+              'XRP',
+              'UST', // 루나 USD
+              'BNB',
+              'TRX', // 트론
+              'DOT',
+              'BRZ', // Brazilian Digital Token = 브라질 헤알과 1:1 페깅을 유지하도록 설계된 이더리움 블록체인 위에 구축된 ERC-20 토큰
+              // $
+              'USD',
+              'DAI',
+              'PAX', // = USDP
+              'VAI',
+              // fiat
+              'NGN', // 나이지리아 Nigerian - 나이라 Naira
+              'TRY', // 터키 - 리라
+              'ARS', // 아르헨티나 Argentine - 페소 Peso
+              'EUR', // 유럽연합 - 유로
+              'AUD', // 호주 - 달러
+              'GBP', // 영국 - 파운드
+              'BRL', // 브라질 - 레알
+              'PLN', // 폴란드 - 즐로티
+              'RUB', // 러시아 - 루블
+              'RON', // 루마니아 - 레우
+              'ZAR', // 남아프리카 공화국 - 랜드
+              'UAH', // 우크라이나 Ukrainian - 흐리브냐 Hryvnia
+              'JPY', // 일본 Japan - 엔
+              'MXN', // 멕시코 페소
+              'CZK', // 체코 코루나
+              'COP', // 콜롬비아 COLUMBIA - 페소
+              'KRW', // 대한민국 Republic of Korea - 원 won
+            ].contains(suffix3)) {
+              quoteCode = '${suffix3}_0';
+              unitAndBaseCode =
+                  splitSymbol.first.substring(0, splitSymbol.first.length - 3);
+              hasQuoteCode = true;
+            }
+          }
+          // bybitLinear 내에서 유기한 Futures의 경우, BTC, ETH, SOL 등으로만 데이터가 남는 경우가 있음 -> 각각 BTCUSD, ETHUSD, SOLUSD임.
+          if (exchangeRawCategoryEnum == ExchangeRawCategoryEnum.bybitLinear &&
+              quoteCode == '') {
+            quoteCode = 'USD_0';
+            unitAndBaseCode = splitSymbol.first; // BTC, ETH, SOL
             hasQuoteCode = true;
           }
-        }
-        if (!hasQuoteCode && splitSymbol.first.length > 4) {
-          final String suffix4 =
-              splitSymbol.first.substring(splitSymbol.first.length - 4);
-          if (splitSymbol.first !=
-                  'DOTUSD' // DOT USD로 나뉘어야하는데, 해당 로직에서 DO TUSD로 잘못 나뉘는 문제가 있어 제외하고 진행
-              &&
-              [
-                // coin
-                'DOGE', //
-                // $
-                'TUSD',
-                'USDT',
-                'USDC', 'PERP',
-                'USDP', // = PAX
-                // fiat
-                'BKRW',
-                'BIDR',
-                'IDRT',
-                'BVND',
-                'AEUR', // Anchored Coins EUR
-                'USDS', // United States Digital Service
-                'USDE' // 에테나(Ethena) : 이더리움 기반 담보형 합성 스테이블코인 프로토콜 = ETH를 예치하면 자동으로 현물 + 숏 포지션으로 이루어진 합성 포지션이 구축되고 동일한 가치의 USDe를 받도록 설계
-              ].contains(suffix4)) {
-            quoteCode = suffix4 == 'PERP'
-                ? 'USDC_0'
-                : '${suffix4}_0'; // PERP인 경우 USDC로 변경
-            unitAndBaseCode =
-                splitSymbol.first.substring(0, splitSymbol.first.length - 4);
-            hasQuoteCode = true;
+          if (!hasQuoteCode) {
+            log('[WARN][TickerInfoModel.rawToTickerInfo] quoteCode 분리 실패 - $exchangeRawCategoryEnum, raw: $rawSymbol, tmp: $tmpSymbol, splitSymbol.first: ${splitSymbol.first}');
           }
-        }
-        if (!hasQuoteCode && splitSymbol.first.length > 3) {
-          final String suffix3 =
-              splitSymbol.first.substring(splitSymbol.first.length - 3);
-          if ([
-            // coin
-            'BTC',
-            'ETH',
-            'XRP',
-            'UST', // 루나 USD
-            'BNB',
-            'TRX', // 트론
-            'DOT',
-            'BRZ', // Brazilian Digital Token = 브라질 헤알과 1:1 페깅을 유지하도록 설계된 이더리움 블록체인 위에 구축된 ERC-20 토큰
-            // $
-            'USD',
-            'DAI',
-            'PAX', // = USDP
-            'VAI',
-            // fiat
-            'NGN', // 나이지리아 Nigerian - 나이라 Naira
-            'TRY', // 터키 - 리라
-            'ARS', // 아르헨티나 Argentine - 페소 Peso
-            'EUR', // 유럽연합 - 유로
-            'AUD', // 호주 - 달러
-            'GBP', // 영국 - 파운드
-            'BRL', // 브라질 - 레알
-            'PLN', // 폴란드 - 즐로티
-            'RUB', // 러시아 - 루블
-            'RON', // 루마니아 - 레우
-            'ZAR', // 남아프리카 공화국 - 랜드
-            'UAH', // 우크라이나 Ukrainian - 흐리브냐 Hryvnia
-            'JPY', // 일본 Japan - 엔
-            'MXN', // 멕시코 페소
-            'CZK', // 체코 코루나
-            'COP', // 콜롬비아 COLUMBIA - 페소
-          ].contains(suffix3)) {
-            quoteCode = '${suffix3}_0';
-            unitAndBaseCode =
-                splitSymbol.first.substring(0, splitSymbol.first.length - 3);
-            hasQuoteCode = true;
-          }
-        }
-        // bybitLinear 내에서 유기한 Futures의 경우, BTC, ETH, SOL 등으로만 데이터가 남는 경우가 있음 -> 각각 BTCUSD, ETHUSD, SOLUSD임.
-        if (exchangeRawCategoryEnum == ExchangeRawCategoryEnum.bybitLinear &&
-            quoteCode == '') {
-          quoteCode = 'USD_0';
-          unitAndBaseCode = splitSymbol.first; // BTC, ETH, SOL
-          hasQuoteCode = true;
-        }
-        if (!hasQuoteCode) {
-          log('[WARN][TickerInfoModel.rawToTickerInfo] quoteCode 분리 실패 - $exchangeRawCategoryEnum $rawSymbol, splitSymbol.first: ${splitSymbol.first}');
-        }
-        break;
+          break;
+      }
+
+      // unit & baseCode 분리
+      _updateUnitAndBaseCode(unitAndBaseCode);
+
+      // paymentCode
+      if (splitSymbol.last == 'USD') {
+        paymentCode = baseCode;
+      } else {
+        paymentCode = quoteCode;
+      }
+
+      // 표기되는 symbol 제작
+      symbol = unit == 1
+          ? '${baseCode.split('_').first}/${quoteCode.split('_').first}'
+          : '$unit${baseCode.split('_').first}/${quoteCode.split('_').first}';
+      symbol = expirationDate != '' ? '$symbol-$expirationDate' : symbol;
+      symbol = optionTypeEnum == OptionTypeEnum.call
+          ? '$symbol-${strikePrice}C'
+          : optionTypeEnum == OptionTypeEnum.put
+              ? '$symbol-${strikePrice}P'
+              : symbol;
+
+      baseCodeKorean = _getCodeKorean(baseCode);
+      quoteCodeKorean = _getCodeKorean(quoteCode);
+      paymentCodeKorean = _getCodeKorean(paymentCode);
+      baseGroup = _getGroup(baseCode);
+      quoteGroup = _getGroup(quoteCode);
+      paymentGroup = _getGroup(paymentCode);
+      baseGroupKorean = _getGroupKorean(baseGroup);
+      quoteGroupKorean = _getGroupKorean(quoteGroup);
+      paymentGroupKorean = _getGroupKorean(paymentGroup);
+      baseCountry = _getCountryEnglish(baseCode);
+      quoteCountry = _getCountryEnglish(quoteCode);
+      paymentCountry = _getCountryEnglish(paymentCode);
+      baseCountryKorean = _getCountryKorean(baseCode);
+      quoteCountryKorean = _getCountryKorean(quoteCode);
+      paymentCountryKorean = _getCountryKorean(paymentCode);
+
+      searchKeywords =
+          '${categoryExchangeEnum.getString}${categoryExchangeEnum.getDescription.replaceAll(' ', '')}$symbol$rawSymbol${subData ?? ''}$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean$source$remark${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
     }
-
-    // unit & baseCode 분리
-    _updateUnitAndBaseCode(unitAndBaseCode);
-
-    // paymentCode
-    if (splitSymbol.last == 'USD') {
-      paymentCode = baseCode;
-    } else {
-      paymentCode = quoteCode;
-    }
-
-    // 표기되는 symbol 제작
-    symbol = unit == 1
-        ? '${baseCode.split('_').first}/${quoteCode.split('_').first}'
-        : '$unit${baseCode.split('_').first}/${quoteCode.split('_').first}';
-    symbol = expirationDate != '' ? '$symbol-$expirationDate' : symbol;
-    symbol = optionTypeEnum == OptionTypeEnum.call
-        ? '$symbol-${strikePrice}C'
-        : optionTypeEnum == OptionTypeEnum.put
-            ? '$symbol-${strikePrice}P'
-            : symbol;
-
-    baseCodeKorean = _getCodeKorean(baseCode);
-    quoteCodeKorean = _getCodeKorean(quoteCode);
-    paymentCodeKorean = _getCodeKorean(paymentCode);
-    baseGroup = _getGroup(baseCode);
-    quoteGroup = _getGroup(quoteCode);
-    paymentGroup = _getGroup(paymentCode);
-    baseGroupKorean = _getGroupKorean(baseGroup);
-    quoteGroupKorean = _getGroupKorean(quoteGroup);
-    paymentGroupKorean = _getGroupKorean(paymentGroup);
-    baseCountry = _getCountryEnglish(baseCode);
-    quoteCountry = _getCountryEnglish(quoteCode);
-    paymentCountry = _getCountryEnglish(paymentCode);
-    baseCountryKorean = _getCountryKorean(baseCode);
-    quoteCountryKorean = _getCountryKorean(quoteCode);
-    paymentCountryKorean = _getCountryKorean(paymentCode);
-
-    searchKeywords =
-        '$symbol$rawSymbol$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
   }
 
   String _extractExpirationDate(String rawExpirationDate) {
@@ -767,7 +808,12 @@ String _getGroup(String? code, {bool isPreferToFiat = false}) {
           'CLF':
       return 'fiat';
     // 원자재
-    case 'XPD' || 'XPT' || 'XAG' || 'XAU':
+    case 'XPD' || 'XPT' || 'XAG' || 'XAU' || 'KGC':
+      // XPD → 팔라듐 (Palladium): 귀금속 중 하나로, 자동차 촉매 변환기 등 여러 산업에서 사용
+      // XPT → 플래티넘 (Platinum): 귀금속으로, 주로 주얼리, 산업 및 자동차 부품에 사용
+      // XAG → 은 (Silver): 귀금속으로, 주로 주얼리, 전자제품, 산업용 및 투자 자산으로 사용됩니다.
+      // XAU → 금 (Gold): 귀금속으로, 주로 주얼리, 투자 자산 및 산업용으로 사용됩니다.
+      // 국내 금 → Korea Gold Exchange: 한국에서 금 거래를 위한 거래소의 약자로, 국내 금 거래와 관련된 ticker
       return 'raw materials';
     // 권리
     case 'XDR':
