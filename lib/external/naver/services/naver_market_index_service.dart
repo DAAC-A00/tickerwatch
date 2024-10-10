@@ -10,7 +10,6 @@ import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
-import 'dart:convert'; // 추가: utf8.decode를 사용하기 위해
 
 class NaverMarketIndexService {
   static const ExchangeRawCategoryEnum exchangeRawCategoryEnum =
@@ -26,9 +25,6 @@ class NaverMarketIndexService {
 
       if (response.statusCode == 200) {
         var document = parser.parse(response.body);
-        // var document = parser.parse(utf8.decode(response.bodyBytes));
-        // EUC-KR로 디코딩
-        // var document = parser.parse(_decodeEucKr(response.bodyBytes)); // 수정된 부분
 
         // <ul> 태그에서 환율 정보 찾기
         final List<Element> dataList =
@@ -88,12 +84,6 @@ class NaverMarketIndexService {
       return null;
     }
   }
-
-  // /// EUC-KR로 디코딩하는 함수
-  // static String _decodeEucKr(List<int> bytes) {
-  //   // EUC-KR로 디코딩하기 위해 latin1을 사용
-  //   return utf8.decode(bytes, allowMalformed: true);
-  // }
 
   static TickerInfoModel _createTickerInfoModel(
       String rawSymbol, String source, String count) {

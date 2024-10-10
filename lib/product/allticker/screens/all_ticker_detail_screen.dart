@@ -40,7 +40,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 String content = '';
                 missingInfo.add('기본 Ticker 정보');
                 content = currentTicker.info.symbol.isEmpty
-                    ? '$content코드    ticker.info.sawSymbol\n'
+                    ? '$content코드    ticker.info.rawSymbol\n'
                     : content;
                 content = currentTicker.info.rawSymbol.isEmpty
                     ? '$content원본 코드    ticker.info.rawSymbol\n'

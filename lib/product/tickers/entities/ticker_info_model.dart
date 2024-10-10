@@ -158,13 +158,27 @@ class TickerInfoModel {
             symbolSub = '국내 금';
             tmpSymbol = 'KGC-KRW';
             break;
-          case '´Þ·¯/ÀÏº» ¿£': // 달러/일본 엔
-          case 'À¯·Î/´Þ·¯': // 유로/달러
-          case '¿µ±¹ ÆÄ¿îµå/´Þ·¯': // 영국파운드/달러
-          case '´Þ·¯ÀÎµ¦½º': // 달러인덱스
-          case 'WTI': // WTI
-          case 'ÈÖ¹ßÀ¯': // 휘발유
-          case '±¹Á¦ ±Ý': // 국제 금
+          case '´Þ·¯/ÀÏº» ¿£':
+            symbolSub = '달러/일본 엔';
+            tmpSymbol = 'USD-JPY';
+          case 'À¯·Î/´Þ·¯':
+            symbolSub = '유로/달러';
+            tmpSymbol = 'EUR-USD';
+          case '¿µ±¹ ÆÄ¿îµå/´Þ·¯':
+            symbolSub = '영국파운드/달러';
+            tmpSymbol = 'GBP-USD';
+          case '´Þ·¯ÀÎµ¦½º':
+            symbolSub = '달러인덱스';
+            tmpSymbol = 'DXY-INDEX';
+          case 'WTI':
+            symbolSub = 'WTI';
+            tmpSymbol = 'WTI-USD';
+          case 'ÈÖ¹ßÀ¯':
+            symbolSub = '휘발유';
+            tmpSymbol = 'KRB-KRW';
+          case '±¹Á¦ ±Ý':
+            symbolSub = '국제 금';
+            tmpSymbol = 'GC-USD';
             // 실시간 데이터가 아니기 때문에 미취급
             tmpSymbol = '';
             break;
@@ -487,7 +501,7 @@ class TickerInfoModel {
       paymentCountryKorean = _getCountryKorean(paymentCode);
 
       searchKeywords =
-          '${categoryExchangeEnum.getString}${categoryExchangeEnum.getDescription.replaceAll(' ', '')}$symbol$rawSymbol${subData ?? ''}$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean$source$remark${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
+          '${categoryExchangeEnum.getString}${categoryExchangeEnum.getDescription.replaceAll(' ', '')}$symbol$rawSymbol${symbolSub.replaceAll(' ', '')}$unit${baseCode.split('_').first}${quoteCode.split('_').first}${baseCode.split('_').first}${paymentCode.split('_').first}$baseCodeKorean$quoteCodeKorean$paymentCodeKorean$source$remark${exchangeRawCategoryEnum.name}${categoryEnum.name}$baseGroup$quoteGroup$paymentGroup$baseGroupKorean$quoteCodeKorean$paymentCodeKorean$baseCountry$quoteCountry$paymentCountry$baseCountryKorean$quoteCountryKorean$paymentCountryKorean';
     }
   }
 
