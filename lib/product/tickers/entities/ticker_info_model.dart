@@ -179,9 +179,6 @@ class TickerInfoModel {
           case '±¹Á¦ ±Ý':
             symbolSub = '국제 금';
             tmpSymbol = 'GC-USD';
-            // 실시간 데이터가 아니기 때문에 미취급
-            tmpSymbol = '';
-            break;
           default:
             log('[WARN][TickerInfoModel.rawToTickerInfo] New rawSymbol Appeared : "$rawSymbol" IN ${exchangeRawCategoryEnum.name}');
             tmpSymbol = '';
