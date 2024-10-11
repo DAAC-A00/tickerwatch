@@ -65,14 +65,14 @@ class NaverMarketIndexService {
                       ? 'COMEX(뉴욕상품거래소)'
                       : source.contains('ÇÑ±¹¼®À¯°ø»ç') ||
                               source.contains('Opinet')
-                          ? '한국석유공사 Opinet'
+                          ? 'Opinet(한국석유공사)'
                           : source.contains('NYMEX') ||
                                   source.contains('´º¿å»ó¾÷°Å·¡¼Ò')
                               ? 'NYMEX(뉴욕상업거래소)'
                               : source.contains('ICE')
                                   ? 'ICE'
                                   : source.contains('¸ð´×½ºÅ¸')
-                                      ? '모닝스타'
+                                      ? 'MorningStar(모닝스타)'
                                       : '';
 
           double? price = double.tryParse(value.replaceAll(',', ''));

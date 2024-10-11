@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
+import 'package:tickerwatch/product/default/widgets/custom_snack_bar.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
@@ -89,15 +90,14 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
           .toList();
 
       if (matchingTickers.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('선택한 Category와 Symbol에 해당하는 ticker가 없습니다.')),
+        showCustomSnackBar(
+          context,
+          '실패',
+          '선택한 Category와 Symbol에 해당하는 ticker가 없습니다.',
         );
       } else if (matchingTickers.length > 1) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('선택한 Category와 Symbol에 해당하는 ticker가 2개 이상입니다.')),
-        );
+        showCustomSnackBar(
+            context, '실패', '선택한 Category와 Symbol에 해당하는 ticker가 2개 이상입니다.');
       } else {
         final selectedTicker = matchingTickers.first;
 
@@ -107,19 +107,14 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
         PriceStatusEnum priceStatusEnum;
         if (currentPrice == null) {
           // 현재 가격 정보가 없는 경우
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('해당 거래소에서 현재 가격을 불러오지 못하고 있어 알람을 등록할 수 없습니다.')),
-          );
+          showCustomSnackBar(
+              context, '실패', '해당 거래소에서 현재 가격을 불러오지 못하고 있어 알람을 등록할 수 없습니다.');
           return;
         } else if (alarmPrice == null) {
           // 알람 가격 정보가 잘못된 경우 ex. 숫자가 아니거나 값이 없는 경우
           log('[WARN][TickerAlarmFormScreen._addTickerAlarm] Add 버튼 활성화가 안되어있어야하는데 활성화되어 잘못 처리됨');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text(
-                    '잘못된 Alarm Price가 입력되었습니다. 정상적인 Alarm Price를 입력해주세요.')),
-          );
+          showCustomSnackBar(context, '실패',
+              '잘못된 Alarm Price가 입력되었습니다. 정상적인 Alarm Price를 입력해주세요.');
           return;
         } else {
           // 정상인 경우
@@ -130,10 +125,8 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
             // 하락 돌파시 알람
             priceStatusEnum = PriceStatusEnum.down;
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Alarm Price가 현재 가격과 같습니다. 다른 값으로 설정해주세요.')),
-            );
+            showCustomSnackBar(
+                context, '실패', 'Alarm Price가 현재 가격과 같습니다. 다른 값으로 설정해주세요.');
             return; // 동일하면 추가하지 않음
           }
         }
