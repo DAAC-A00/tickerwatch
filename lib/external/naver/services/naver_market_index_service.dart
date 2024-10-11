@@ -37,8 +37,18 @@ class NaverMarketIndexService {
               data.querySelector('.head_info .value')?.text.trim() ?? '';
           String change =
               data.querySelector('.head_info .change')?.text.trim() ?? '';
-          String trend =
-              data.querySelector('.head_info .blind')?.text.trim() ?? '';
+          PriceStatusEnum priceStatusEnum = data
+                      .querySelector('.head_info')
+                      ?.text
+                      .contains('º¸ÇÕ') ==
+                  true
+              ? PriceStatusEnum.stay
+              : data.querySelector('.head_info')?.text.contains('ÇÏ¶ô') == true
+                  ? PriceStatusEnum.down
+                  : data.querySelector('.head_info')?.text.contains('»ó½Â') ==
+                          true
+                      ? PriceStatusEnum.up
+                      : PriceStatusEnum.stay;
           String source =
               data.querySelector('.graph_info .source')?.text.trim() ?? '';
           String time =
@@ -64,12 +74,6 @@ class NaverMarketIndexService {
                                   : source.contains('¸ð´×½ºÅ¸')
                                       ? '모닝스타'
                                       : '';
-
-          PriceStatusEnum priceStatusEnum = trend == '´Þ·¯'
-              ? PriceStatusEnum.up
-              : trend == '¿ø'
-                  ? PriceStatusEnum.down
-                  : PriceStatusEnum.stay;
 
           double? price = double.tryParse(value.replaceAll(',', ''));
           double? changePrice = double.tryParse(
