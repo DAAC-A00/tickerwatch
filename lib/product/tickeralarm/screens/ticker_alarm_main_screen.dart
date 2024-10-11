@@ -135,9 +135,13 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                                 alignment: Alignment.centerLeft, // 왼쪽 정렬
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
-                                  child: Text(
-                                    '${ticker.recentData.price} ${ticker.recentData.changePercent24h}%',
-                                  ),
+                                  child: ticker.recentData.changePercent24h !=
+                                          ''
+                                      ? Text(
+                                          '${ticker.recentData.price} ${ticker.recentData.changePercent24h}%',
+                                        )
+                                      : Text(
+                                          '${ticker.recentData.price} ${ticker.recentData.changePercentUtc9}%'),
                                 ),
                               ),
                             ],
@@ -211,9 +215,13 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                                 alignment: Alignment.centerLeft, // 왼쪽 정렬
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown, // 공간에 맞게 자동으로 크기를 조정
-                                  child: Text(
-                                    '${ticker.recentData.price} ${ticker.recentData.changePercent24h}%',
-                                  ),
+                                  child: ticker.recentData.changePercent24h !=
+                                          ''
+                                      ? Text(
+                                          '${ticker.recentData.price} ${ticker.recentData.changePercent24h}%',
+                                        )
+                                      : Text(
+                                          '${ticker.recentData.price} ${ticker.recentData.changePercentUtc9}%'),
                                 ),
                               ),
                             ],
