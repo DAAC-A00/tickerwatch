@@ -75,7 +75,7 @@ class NaverMarketIndexService {
           double? changePrice = double.tryParse(
               priceStatusEnum == PriceStatusEnum.down
                   ? '-${change.replaceAll(',', '')}'
-                  : change.replaceAll(',', ''));
+                  : '+${change.replaceAll(',', '')}');
           double? changePercentUtc9 = price != null && changePrice != null
               ? changePrice / (price - changePrice) * 100
               : null;
