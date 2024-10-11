@@ -75,16 +75,21 @@ class NaverMarketIndexService {
           double? changePrice = double.tryParse(
               priceStatusEnum == PriceStatusEnum.down
                   ? '-${change.replaceAll(',', '')}'
-                  : '+${change.replaceAll(',', '')}');
-          double? changePercentUtc9 = price != null && changePrice != null
+                  : change.replaceAll(',', ''));
+          double? changePercentUtc9Double = price != null && changePrice != null
               ? changePrice / (price - changePrice) * 100
               : null;
+
+          final String changePercentUtc9 =
+              changePercentUtc9Double?.toStringAsFixed(2) ?? '';
 
           TickerInfoModel tickerInfo =
               _createTickerInfoModel(rawSymbol, source, count);
           TickerModel tickerModel = TickerModel(
             price: value,
-            changePercentUtc9: changePercentUtc9?.toStringAsFixed(2) ?? '',
+            changePercentUtc9: changePercentUtc9.substring(0, 1) == '-'
+                ? changePercentUtc9
+                : '+$changePercentUtc9',
             priceStatusEnum: priceStatusEnum,
             dataAt: time.length > 16
                 ? time.replaceAll('.', '-')
