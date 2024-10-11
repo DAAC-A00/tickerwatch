@@ -459,7 +459,6 @@ class TickerInfoModel {
           }
           break;
       }
-
       // unit & baseCode 분리
       _updateUnitAndBaseCode(unitAndBaseCode);
 
@@ -469,7 +468,6 @@ class TickerInfoModel {
       } else {
         paymentCode = quoteCode;
       }
-
       // 표기되는 symbol 제작
       symbol = unit == 1
           ? '${baseCode.split('_').first}/${quoteCode.split('_').first}'
