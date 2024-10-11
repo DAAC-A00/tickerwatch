@@ -32,35 +32,67 @@ class NaverMarketIndexService {
         List<TickerEntity> tickerList = [];
 
         for (var data in dataList) {
-          String currencyName = data.querySelector('h3')?.text.trim() ?? '';
-          String value = data.querySelector('.value')?.text.trim() ?? '';
-          String change = data.querySelector('.change')?.text.trim() ?? '';
-          String trend = data.querySelector('.blind')?.text.trim() ?? '';
-          log('trend: $trend');
-          String source = data.querySelector('.source')?.text.trim() ?? '';
-          String time = data.querySelector('.time')?.text.trim() ?? '';
-          String count = data.querySelector('.count .num')?.text.trim() ?? '';
+          String rawSymbol = data.querySelector('h3')?.text.trim() ?? '';
+          String value =
+              data.querySelector('.head_info .value')?.text.trim() ?? '';
+          String change =
+              data.querySelector('.head_info .change')?.text.trim() ?? '';
+          String trend =
+              data.querySelector('.head_info .blind')?.text.trim() ?? '';
+          String source =
+              data.querySelector('.graph_info .source')?.text.trim() ?? '';
+          String time =
+              data.querySelector('.graph_info .time')?.text.trim() ?? '';
+          String count =
+              data.querySelector('.graph_info .num')?.text.trim() ?? '';
 
-          double? price = double.tryParse(value.replaceAll(',', ''));
-          double? changePrice = double.tryParse(change.replaceAll(',', ''));
-          double? changePercentUtc9 = price != null && changePrice != null
-              ? changePrice / (price - changePrice) * 100
-              : null;
-          PriceStatusEnum priceStatusEnum = trend == '상승'
+          source = source.contains('ÇÏ³ªÀºÇà')
+              ? '하나은행'
+              : source.contains('½ÅÇÑÀºÇà')
+                  ? '신한은행'
+                  : source.contains('COMEX') ||
+                          source.contains('´º¿å»óÇ°°Å·¡¼Ò')
+                      ? 'COMEX(뉴욕상품거래소)'
+                      : source.contains('ÇÑ±¹¼®À¯°ø»ç') ||
+                              source.contains('Opinet')
+                          ? '한국석유공사 Opinet'
+                          : source.contains('NYMEX') ||
+                                  source.contains('´º¿å»ó¾÷°Å·¡¼Ò')
+                              ? 'NYMEX(뉴욕상업거래소)'
+                              : source.contains('ICE')
+                                  ? 'ICE'
+                                  : source.contains('¸ð´×½ºÅ¸')
+                                      ? '모닝스타'
+                                      : '';
+
+          PriceStatusEnum priceStatusEnum = trend == '´Þ·¯'
               ? PriceStatusEnum.up
-              : trend == '하락'
+              : trend == '¿ø'
                   ? PriceStatusEnum.down
                   : PriceStatusEnum.stay;
 
+          double? price = double.tryParse(value.replaceAll(',', ''));
+          double? changePrice = double.tryParse(
+              priceStatusEnum == PriceStatusEnum.down
+                  ? '-${change.replaceAll(',', '')}'
+                  : change.replaceAll(',', ''));
+          double? changePercentUtc9 = price != null && changePrice != null
+              ? changePrice / (price - changePrice) * 100
+              : null;
+
           TickerInfoModel tickerInfo =
-              _createTickerInfoModel(currencyName, source, count);
+              _createTickerInfoModel(rawSymbol, source, count);
           TickerModel tickerModel = TickerModel(
             price: value,
             changePercentUtc9: changePercentUtc9?.toStringAsFixed(2) ?? '',
             priceStatusEnum: priceStatusEnum,
             dataAt: time.length > 16
                 ? time.replaceAll('.', '-')
-                : '${time.replaceAll('.', '-')}:00',
+                : time.length > 13
+                    ? '${time.replaceAll('.', '-')}:59'
+                    : time.length > 10
+                        ? '${time.replaceAll('.', '-')}:59:59'
+                        : '${time.replaceAll('.', '-')} 23:59:59',
           );
 
           // FiatRatesModel 객체 추가 (실제 구현에 맞게 수정 필요)
