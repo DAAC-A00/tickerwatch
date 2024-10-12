@@ -40,7 +40,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 String content = '';
                 missingInfo.add('기본 Ticker 정보');
                 content = currentTicker.info.symbol.isEmpty
-                    ? '$content코드    ticker.info.sawSymbol\n'
+                    ? '$content코드    ticker.info.rawSymbol\n'
                     : content;
                 content = currentTicker.info.rawSymbol.isEmpty
                     ? '$content원본 코드    ticker.info.rawSymbol\n'
@@ -103,13 +103,13 @@ class AllTickerDetailScreen extends ConsumerWidget {
                     ? '$content최저가(24h)    ticker.recentData.lowPrice24h\n'
                     : content;
                 content = currentTicker.recentData.changePercent24h.isEmpty
-                    ? '$content변동률    ticker.recentData.changePercent24h\n'
+                    ? '$content변동률(24h)    ticker.recentData.changePercent24h\n'
                     : content;
                 content = currentTicker.recentData.volume24h.isEmpty
-                    ? '$content거래량    ticker.recentData.volume24h\n'
+                    ? '$content거래량(24h)    ticker.recentData.volume24h\n'
                     : content;
                 content = currentTicker.recentData.turnOver24h.isEmpty
-                    ? '$content거래대금    ticker.recentData.turnOver24h\n'
+                    ? '$content거래대금(24h)    ticker.recentData.turnOver24h\n'
                     : content;
                 content = currentTicker.recentData.prevPrice24h.isEmpty
                     ? '$content이전 가격(24h)    ticker.recentData.prevPrice24h\n'
@@ -131,6 +131,9 @@ class AllTickerDetailScreen extends ConsumerWidget {
                     : content;
                 content = currentTicker.recentData.volumeUtc0.isEmpty
                     ? '$content거래량(UTC0)    ticker.recentData.volumeUtc0\n'
+                    : content;
+                content = currentTicker.recentData.changePercentUtc9.isEmpty
+                    ? '$content변동률(UTC9)    ticker.recentData.changePercentUtc9\n'
                     : content;
                 content = currentTicker.recentData.ask1Price.isEmpty
                     ? '$content매도 1호가    ticker.recentData.ask1Price\n'
@@ -175,13 +178,13 @@ class AllTickerDetailScreen extends ConsumerWidget {
                     : contentBeforeData;
                 contentBeforeData = currentTicker
                         .beforeData.changePercent24h.isEmpty
-                    ? '$contentBeforeData변동률    ticker.beforeData.changePercent24h\n'
+                    ? '$contentBeforeData변동률(24h)    ticker.beforeData.changePercent24h\n'
                     : contentBeforeData;
                 contentBeforeData = currentTicker.beforeData.volume24h.isEmpty
-                    ? '$contentBeforeData거래량    ticker.beforeData.volume24h\n'
+                    ? '$contentBeforeData거래량(24h)    ticker.beforeData.volume24h\n'
                     : contentBeforeData;
                 contentBeforeData = currentTicker.beforeData.turnOver24h.isEmpty
-                    ? '$contentBeforeData거래대금    ticker.beforeData.turnOver24h\n'
+                    ? '$contentBeforeData거래대금(24h)    ticker.beforeData.turnOver24h\n'
                     : contentBeforeData;
                 contentBeforeData = currentTicker
                         .beforeData.prevPrice24h.isEmpty
@@ -231,6 +234,10 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 contentBeforeData = currentTicker
                         .beforeData.priceStatusEnum.name.isEmpty
                     ? '$contentBeforeData가격 상태    ticker.beforeData.priceStatusEnum.name\n'
+                    : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.changePercentUtc9.isEmpty
+                    ? '$contentBeforeData변동률(UTC9)    ticker.beforeData.changePercentUtc9\n'
                     : contentBeforeData;
                 missingInfo.add(contentBeforeData);
                 // BottomSheet 호출
@@ -301,11 +308,11 @@ class AllTickerDetailScreen extends ConsumerWidget {
             if (currentTicker.recentData.lowPrice24h.isNotEmpty)
               _buildRow('최저가(24h)', currentTicker.recentData.lowPrice24h),
             if (currentTicker.recentData.changePercent24h.isNotEmpty)
-              _buildRow('변동률', currentTicker.recentData.changePercent24h),
+              _buildRow('변동률(24h)', currentTicker.recentData.changePercent24h),
             if (currentTicker.recentData.volume24h.isNotEmpty)
-              _buildRow('거래량', currentTicker.recentData.volume24h),
+              _buildRow('거래량(24h)', currentTicker.recentData.volume24h),
             if (currentTicker.recentData.turnOver24h.isNotEmpty)
-              _buildRow('거래대금', currentTicker.recentData.turnOver24h),
+              _buildRow('거래대금(24h)', currentTicker.recentData.turnOver24h),
             if (currentTicker.recentData.prevPrice24h.isNotEmpty)
               _buildRow('이전 가격(24h)', currentTicker.recentData.prevPrice24h),
             if (currentTicker.recentData.changePercentUtc0.isNotEmpty)
@@ -321,6 +328,9 @@ class AllTickerDetailScreen extends ConsumerWidget {
               _buildRow('거래대금(UTC0)', currentTicker.recentData.turnOverUtc0),
             if (currentTicker.recentData.volumeUtc0.isNotEmpty)
               _buildRow('거래량(UTC0)', currentTicker.recentData.volumeUtc0),
+            if (currentTicker.recentData.changePercentUtc9.isNotEmpty)
+              _buildRow(
+                  '변동률(UTC9)', currentTicker.recentData.changePercentUtc9),
 
             // recentData인 TickerModel 추가 데이터 출력
             if (currentTicker.recentData.ask1Price.isNotEmpty)
@@ -351,11 +361,11 @@ class AllTickerDetailScreen extends ConsumerWidget {
             if (currentTicker.beforeData.lowPrice24h.isNotEmpty)
               _buildRow('최저가(24h)', currentTicker.beforeData.lowPrice24h),
             if (currentTicker.beforeData.changePercent24h.isNotEmpty)
-              _buildRow('변동률', currentTicker.beforeData.changePercent24h),
+              _buildRow('변동률(24h)', currentTicker.beforeData.changePercent24h),
             if (currentTicker.beforeData.volume24h.isNotEmpty)
-              _buildRow('거래량', currentTicker.beforeData.volume24h),
+              _buildRow('거래량(24h)', currentTicker.beforeData.volume24h),
             if (currentTicker.beforeData.turnOver24h.isNotEmpty)
-              _buildRow('거래대금', currentTicker.beforeData.turnOver24h),
+              _buildRow('거래대금(24h)', currentTicker.beforeData.turnOver24h),
             if (currentTicker.beforeData.prevPrice24h.isNotEmpty)
               _buildRow('이전 가격(24h)', currentTicker.beforeData.prevPrice24h),
             if (currentTicker.beforeData.changePercentUtc0.isNotEmpty)
@@ -371,6 +381,9 @@ class AllTickerDetailScreen extends ConsumerWidget {
               _buildRow('거래대금(UTC0)', currentTicker.beforeData.turnOverUtc0),
             if (currentTicker.beforeData.volumeUtc0.isNotEmpty)
               _buildRow('거래량(UTC0)', currentTicker.beforeData.volumeUtc0),
+            if (currentTicker.beforeData.changePercentUtc9.isNotEmpty)
+              _buildRow(
+                  '변동률(UTC9)', currentTicker.beforeData.changePercentUtc9),
 
             // beforeData인 TickerModel 추가 데이터 출력
             if (currentTicker.beforeData.ask1Price.isNotEmpty)
