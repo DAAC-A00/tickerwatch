@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/external/naver/schedulers/naver_finance_scheduler.dart';
+import 'package:tickerwatch/product/default/db/hive_adapters.dart';
 import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
-import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
-import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
-import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
-import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
 
 import 'external/bybit/schedulers/bybit_all_ticker_api_service.dart';
 import 'product/default/app_router.dart';
 import 'product/default/custom_theme.dart';
-import 'product/sample_person/person.dart';
 import 'product/tickers/states/ticker_provider.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -26,12 +22,7 @@ void main() async {
   );
   await Hive.initFlutter();
 
-  // Register Adapters
-  Hive.registerAdapter(PersonAdapter());
-  Hive.registerAdapter(TickerEntityAdapter());
-  Hive.registerAdapter(TickerModelAdapter());
-  Hive.registerAdapter(TickerInfoModelAdapter());
-  Hive.registerAdapter(TickerAlarmEntityAdapter());
+  registerHiveAdapters();
 
   runApp(const ProviderScope(child: MyApp()));
 }
