@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/actiontest/screens/action_test_main_screen.dart';
+import 'package:tickerwatch/product/watch/screens/watch_main_screen.dart';
 import '../../allticker/screens/all_ticker_main_screen.dart';
 import '../../default/handler/device_back_button_handler.dart';
 
@@ -53,6 +54,22 @@ class _AdminMainScreenState extends ConsumerState<AdminMainScreen> {
             },
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          DeviceBackButtonHandler.disable();
+          Navigator.of(context)
+              .push(
+            MaterialPageRoute(
+              builder: (context) => const WatchMainScreen(),
+            ),
+          )
+              .then((_) {
+            DeviceBackButtonHandler.enable();
+          });
+        },
+        tooltip: 'Go to New Screen',
+        child: const Icon(Icons.watch_later_outlined),
       ),
     );
   }
