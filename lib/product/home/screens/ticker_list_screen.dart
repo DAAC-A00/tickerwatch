@@ -39,9 +39,12 @@ class _TickerListScreenState extends ConsumerState<TickerListScreen> {
 
                   // 테두리 색상 초기화
                   Future.delayed(Duration(milliseconds: 200), () {
-                    setState(() {
-                      _borderColors[index] = Colors.transparent; // 색상 초기화
-                    });
+                    // 이 부분에서 setState를 호출하여 UI를 업데이트합니다.
+                    if (mounted) {
+                      setState(() {
+                        _borderColors[index] = Colors.transparent; // 색상 초기화
+                      });
+                    }
                   });
                 } else {
                   _borderColors[index] = Colors.transparent; // 가격이 동일할 경우
