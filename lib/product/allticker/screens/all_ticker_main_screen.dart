@@ -82,14 +82,74 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
               itemCount: filteredTickers.length,
               itemBuilder: (context, index) {
                 final ticker = filteredTickers[index];
+                double currentPrice =
+                    double.tryParse(ticker.recentData.price) ?? 0.0;
+                double previousPrice =
+                    double.tryParse(ticker.beforeData.price) ?? 0.0;
+
+                // 테두리 색상 결정
+                Color borderColor;
+                if (currentPrice > previousPrice) {
+                  borderColor = Colors.green; // 가격 상승
+                } else if (currentPrice < previousPrice) {
+                  borderColor = Colors.red; // 가격 하락
+                } else {
+                  borderColor = Colors.transparent; // 가격 동일
+                }
+
+                // changePercent 결정 및 글자 색상 설정
+                String changePercent =
+                    ticker.recentData.changePercent24h.isNotEmpty
+                        ? ticker.recentData.changePercent24h
+                        : ticker.recentData.changePercentUtc9;
+                Color textColor;
+                double changeValue = double.tryParse(changePercent) ?? 0.0;
+
+                if (changeValue > 0) {
+                  textColor = Colors.green; // 양수일 경우 초록색
+                } else if (changeValue < 0) {
+                  textColor = Colors.red; // 음수일 경우 빨간색
+                } else {
+                  textColor = Colors.grey; // 0.00일 경우 회색
+                }
+
                 return ListTile(
-                  title: Text(
-                      '${ticker.info.symbol} ${ticker.info.categoryExchangeEnum.name}'),
-                  subtitle: ticker.recentData.changePercent24h == ''
-                      ? Text(
-                          '${ticker.recentData.price} ${ticker.recentData.changePercentUtc9}')
-                      : Text(
-                          '${ticker.recentData.price} ${ticker.recentData.changePercent24h}'),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(ticker.info.symbol),
+                      // 가격과 변화율을 포함하는 AnimatedContainer
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 200),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: borderColor,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                ticker.recentData.price,
+                                style: TextStyle(color: textColor),
+                              ),
+                            ),
+                            SizedBox(width: 8), // 간격 추가
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                changePercent,
+                                style: TextStyle(color: textColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   onTap: () {
                     // ListTile 클릭 시 AllTickerDetailScreen으로 이동
                     Navigator.push(

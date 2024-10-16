@@ -248,7 +248,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
                           ),
                         ],
                       ),
-                      // TODO onTab 넣을 예정
+                      // TODO onTab 넣을 예정 - 검색 filter된 목록은 위치 수정이 불가능하니, 가능하도록 변경 예정
                     );
                   },
                 ),
