@@ -10,6 +10,7 @@ import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_info_model.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
+import 'package:tickerwatch/product/tickers/utils/ticker_utils.dart';
 
 class NaverMarketIndexService {
   static const ExchangeRawCategoryEnum exchangeRawCategoryEnum =
@@ -75,23 +76,21 @@ class NaverMarketIndexService {
                                       ? 'MorningStar(모닝스타)'
                                       : '';
 
-          double? price = double.tryParse(value.replaceAll(',', ''));
-          double? changePrice = double.tryParse(
-              priceStatusEnum == PriceStatusEnum.down
-                  ? '-${change.replaceAll(',', '')}'
-                  : change.replaceAll(',', ''));
-          double? changePercentUtc9Double = price != null && changePrice != null
-              ? changePrice / (price - changePrice) * 100
-              : null;
-
-          final String changePercentUtc9 =
-              changePercentUtc9Double?.toStringAsFixed(2) ?? '';
+          String changePercentUtc9 = TickerUtils.calculateChangePercent(
+            value.replaceAll(',', ''),
+            null,
+            null,
+            null,
+            priceStatusEnum == PriceStatusEnum.down
+                ? '-${change.replaceAll(',', '')}'
+                : change.replaceAll(',', ''),
+          );
 
           TickerInfoModel tickerInfo =
               _createTickerInfoModel(rawSymbol, source, count);
           TickerModel tickerModel = TickerModel(
             price: value,
-            changePercentUtc9: changePercentUtc9.substring(0, 1) == '-'
+            changePercentUtc9: priceStatusEnum == PriceStatusEnum.down
                 ? changePercentUtc9
                 : '+$changePercentUtc9',
             priceStatusEnum: priceStatusEnum,

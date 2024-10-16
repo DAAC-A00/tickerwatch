@@ -50,7 +50,7 @@ class BybitAllLinearApiService {
         String? price = TickerUtils.adjustPrice(
             data.lastPrice, data.bid1Price, data.ask1Price);
         String changePercent24h = TickerUtils.calculateChangePercent(
-            price, data.lastPrice, data.price24hPcnt, data.prevPrice24h);
+            price, data.lastPrice, data.price24hPcnt, data.prevPrice24h, null);
         PriceStatusEnum priceStatusEnum =
             TickerUtils.determinePriceStatus(changePercent24h);
 
@@ -61,9 +61,9 @@ class BybitAllLinearApiService {
             ask1Size: data.ask1Size ?? '',
             bid1Price: data.bid1Price ?? '',
             bid1Size: data.bid1Size ?? '',
-            changePercent24h: priceStatusEnum == PriceStatusEnum.up
-                ? '+$changePercent24h'
-                : changePercent24h,
+            changePercent24h: priceStatusEnum == PriceStatusEnum.down
+                ? changePercent24h
+                : '+$changePercent24h',
             prevPrice24h: data.prevPrice24h ?? '',
             highPrice24h: data.highPrice24h ?? '',
             lowPrice24h: data.lowPrice24h ?? '',

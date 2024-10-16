@@ -125,18 +125,16 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // ticker.info.symbol: 왼쪽 50%
                       Expanded(
-                        flex: 3, // 전체의 50% 공간
+                        flex: 3,
                         child: FittedBox(
                           fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
                           alignment: Alignment.centerLeft, // 왼쪽 정렬
                           child: Text(ticker.info.symbol),
                         ),
                       ),
-                      // ticker.recentData.price: 오른쪽 35%
                       Expanded(
-                        flex: 2, // 전체의 30% 공간
+                        flex: 2,
                         child: FittedBox(
                           fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
                           alignment: Alignment.centerRight, // 오른쪽 정렬
@@ -161,9 +159,8 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                           ),
                         ),
                       ),
-                      // changePercent: 오른쪽 15%
                       Expanded(
-                        flex: 1, // 전체의 20% 공간
+                        flex: 1,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal:
