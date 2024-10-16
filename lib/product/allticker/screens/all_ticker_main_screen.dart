@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_detail_screen.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
+import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 
 import '../../tickers/states/ticker_provider.dart';
 
@@ -36,6 +37,10 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tickerSetting = ref.watch(tickerSettingProvider);
+    final Color? upColor = tickerSetting.upColor;
+    final Color? downColor = tickerSetting.downColor;
+    final Color transparentColor = Colors.transparent;
     final tickers = ref.watch(tickerProvider);
 
     // 검색된 ticker 리스트
@@ -88,13 +93,13 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                     double.tryParse(ticker.beforeData.price) ?? 0.0;
 
                 // 테두리 색상 결정
-                Color borderColor;
+                Color borderColor = transparentColor;
                 if (currentPrice > previousPrice) {
-                  borderColor = Colors.green; // 가격 상승
+                  borderColor = upColor ?? transparentColor; // 가격 상승
                 } else if (currentPrice < previousPrice) {
-                  borderColor = Colors.red; // 가격 하락
+                  borderColor = downColor ?? transparentColor; // 가격 하락
                 } else {
-                  borderColor = Colors.transparent; // 가격 동일
+                  borderColor = transparentColor; // 가격 동일
                 }
 
                 // changePercent 결정 및 글자 색상 설정
@@ -102,13 +107,13 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                     ticker.recentData.changePercent24h.isNotEmpty
                         ? ticker.recentData.changePercent24h
                         : ticker.recentData.changePercentUtc9;
-                Color textColor;
+                Color? textColor;
                 double changeValue = double.tryParse(changePercent) ?? 0.0;
 
                 if (changeValue > 0) {
-                  textColor = Colors.green; // 양수일 경우 초록색
+                  textColor = upColor; // 양수일 경우 초록색
                 } else if (changeValue < 0) {
-                  textColor = Colors.red; // 음수일 경우 빨간색
+                  textColor = downColor; // 음수일 경우 빨간색
                 } else {
                   textColor = Colors.grey; // 0.00일 경우 회색
                 }
