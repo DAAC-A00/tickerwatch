@@ -43,7 +43,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     final Color transparentColor = Colors.transparent;
     final tickers = ref.watch(tickerProvider);
 
-    // 검색된 ticker 리스트
+// 검색된 ticker 리스트
     final filteredTickers = tickers.where((ticker) {
       return ticker.info.searchKeywords
           .toLowerCase()
@@ -92,7 +92,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 double previousPrice =
                     double.tryParse(ticker.beforeData.price) ?? 0.0;
 
-                // 테두리 색상 결정
+// 테두리 색상 결정
                 Color borderColor = transparentColor;
                 if (currentPrice > previousPrice) {
                   borderColor = upColor ?? transparentColor; // 가격 상승
@@ -102,7 +102,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                   borderColor = transparentColor; // 가격 동일
                 }
 
-                // changePercent 결정 및 글자 색상 설정
+// changePercent 결정 및 글자 색상 설정
                 String changePercent =
                     ticker.recentData.changePercent24h.isNotEmpty
                         ? ticker.recentData.changePercent24h
@@ -123,40 +123,41 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(ticker.info.symbol),
-                      // 가격과 변화율을 포함하는 AnimatedContainer
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 200),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: borderColor,
-                            width: 2,
+                      Row(
+                        children: [
+                          // 가격과 변화율을 포함하는 AnimatedContainer
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: borderColor,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  ticker.recentData.price,
+                                  style: TextStyle(color: textColor),
+                                ),
+                              ),
+                            ]),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                ticker.recentData.price,
-                                style: TextStyle(color: textColor),
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              changePercent,
+                              style: TextStyle(color: textColor),
                             ),
-                            SizedBox(width: 8), // 간격 추가
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                changePercent,
-                                style: TextStyle(color: textColor),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                   onTap: () {
-                    // ListTile 클릭 시 AllTickerDetailScreen으로 이동
+// ListTile 클릭 시 AllTickerDetailScreen으로 이동
                     Navigator.push(
                       context,
                       MaterialPageRoute(
