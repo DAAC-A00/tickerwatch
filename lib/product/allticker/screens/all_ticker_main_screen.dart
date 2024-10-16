@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_detail_screen.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
+import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 
 import '../../tickers/states/ticker_provider.dart';
 
@@ -42,6 +43,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     final Color? downColor = tickerSetting.downColor;
     final Color transparentColor = Colors.transparent;
     final tickers = ref.watch(tickerProvider);
+    final currentTextTheme = Theme.of(context).textTheme;
 
 // 검색된 ticker 리스트
     final filteredTickers = tickers.where((ticker) {
@@ -94,9 +96,11 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
 
 // 테두리 색상 결정
                 Color borderColor = transparentColor;
-                if (currentPrice > previousPrice) {
+                if (ticker.recentData.isUpdatedRecently &&
+                    currentPrice > previousPrice) {
                   borderColor = upColor ?? transparentColor; // 가격 상승
-                } else if (currentPrice < previousPrice) {
+                } else if (ticker.recentData.isUpdatedRecently &&
+                    currentPrice < previousPrice) {
                   borderColor = downColor ?? transparentColor; // 가격 하락
                 } else {
                   borderColor = transparentColor; // 가격 동일
@@ -108,14 +112,14 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                         ? ticker.recentData.changePercent24h
                         : ticker.recentData.changePercentUtc9;
                 Color? textColor;
-                double changeValue = double.tryParse(changePercent) ?? 0.0;
 
-                if (changeValue > 0) {
-                  textColor = upColor; // 양수일 경우 초록색
-                } else if (changeValue < 0) {
-                  textColor = downColor; // 음수일 경우 빨간색
+                if (ticker.recentData.priceStatusEnum == PriceStatusEnum.up) {
+                  textColor = upColor;
+                } else if (ticker.recentData.priceStatusEnum ==
+                    PriceStatusEnum.down) {
+                  textColor = downColor;
                 } else {
-                  textColor = Colors.grey; // 0.00일 경우 회색
+                  textColor = Colors.grey;
                 }
 
                 return ListTile(
@@ -125,25 +129,23 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                       Text(ticker.info.symbol),
                       Row(
                         children: [
-                          // 가격과 변화율을 포함하는 AnimatedContainer
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
+                          // 가격을 포함하는 Container에 테두리 추가
+                          Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: borderColor,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
+                                  color: borderColor,
+                                  width: 1), // 테두리 색상과 두께 설정
                             ),
-                            child: Row(children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  ticker.recentData.price,
-                                  style: TextStyle(color: textColor),
-                                ),
-                              ),
-                            ]),
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  (currentTextTheme.bodyMedium?.fontSize ??
+                                          18) /
+                                      3,
+                            ),
+                            child: Text(
+                              ticker.recentData.price,
+                              style: TextStyle(color: textColor),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
