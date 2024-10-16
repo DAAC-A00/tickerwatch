@@ -121,50 +121,69 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                 } else {
                   textColor = Colors.grey;
                 }
-
                 return ListTile(
                   title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(ticker.info.symbol),
-                      Row(
-                        children: [
-                          // 가격을 포함하는 Container에 테두리 추가
-                          Container(
+                      // ticker.info.symbol: 왼쪽 50%
+                      Expanded(
+                        flex: 3, // 전체의 50% 공간
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
+                          alignment: Alignment.centerLeft, // 왼쪽 정렬
+                          child: Text(ticker.info.symbol),
+                        ),
+                      ),
+                      // ticker.recentData.price: 오른쪽 35%
+                      Expanded(
+                        flex: 2, // 전체의 30% 공간
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
+                          alignment: Alignment.centerRight, // 오른쪽 정렬
+                          child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: borderColor,
                                   width: 1), // 테두리 색상과 두께 설정
                             ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  (currentTextTheme.bodyMedium?.fontSize ??
-                                          18) /
-                                      3,
-                            ),
-                            child: Text(
-                              ticker.recentData.price,
-                              style: TextStyle(color: textColor),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    (currentTextTheme.bodyMedium?.fontSize ??
+                                            18) /
+                                        3,
+                              ),
+                              child: Text(
+                                ticker.recentData.price,
+                                style: TextStyle(color: textColor),
+                              ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal:
-                                  (currentTextTheme.bodyMedium?.fontSize ??
-                                          18) /
-                                      3,
-                            ),
+                        ),
+                      ),
+                      // changePercent: 오른쪽 15%
+                      Expanded(
+                        flex: 1, // 전체의 20% 공간
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal:
+                                (currentTextTheme.bodyMedium?.fontSize ?? 18) /
+                                    3,
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
+                            alignment: Alignment.centerRight, // 오른쪽 정렬
                             child: Text(
                               changePercent,
                               style: TextStyle(color: textColor),
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
                   onTap: () {
-// ListTile 클릭 시 AllTickerDetailScreen으로 이동
+                    // ListTile 클릭 시 AllTickerDetailScreen으로 이동
                     Navigator.push(
                       context,
                       MaterialPageRoute(
