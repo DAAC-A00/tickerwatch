@@ -148,7 +148,12 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  (currentTextTheme.bodyMedium?.fontSize ??
+                                          18) /
+                                      3,
+                            ),
                             child: Text(
                               changePercent,
                               style: TextStyle(color: textColor),

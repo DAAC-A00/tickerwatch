@@ -82,7 +82,7 @@ class _TickerListScreenState extends ConsumerState<TickerListScreen> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: _borderColors[index] ?? Colors.transparent,
-                            width: 4,
+                            width: 1,
                           ),
                           borderRadius: BorderRadius.circular(8),
                         ),
