@@ -147,6 +147,14 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
     );
   }
 
+  void updateIsPercentSignEnabled(bool isEnable) {
+    _tickerSettingBox.put(
+        BoxSettingEnum.isPercentSignEnabled.name, isEnable.toString());
+    state = state.copyWith(
+      isPercentSignEnabled: isEnable,
+    );
+  }
+
   void updateBox(TickerSetting tickerSetting) {
     _tickerSettingBox.put(
       BoxSettingEnum.upColor.name,

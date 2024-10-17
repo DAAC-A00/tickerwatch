@@ -18,7 +18,7 @@ class PriceSampleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String changePercentText = isQuoteUnitEnabled != null
+    String priceText = isQuoteUnitEnabled != null
         ? isQuoteUnitEnabled!
             ? sampleText
             : sampleText.replaceAll('\$ ', '')
@@ -45,7 +45,7 @@ class PriceSampleWidget extends StatelessWidget {
                   : Border.all(),
             ), // Apply decoration conditionally
             child: Text(
-              changePercentText,
+              priceText,
               style: TextStyle(
                 // fontWeight: FontWeight.normal,
                 color: color,

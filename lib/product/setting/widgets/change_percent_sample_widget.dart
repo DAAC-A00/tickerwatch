@@ -5,38 +5,53 @@ import 'package:flutter/material.dart';
 class ChangePercentSampleWidget extends StatelessWidget {
   const ChangePercentSampleWidget({
     super.key,
-    required this.sampleIcon,
+    this.isUpIcon,
     required this.sampleColor,
     required this.sampleText,
     required this.isPercentEnabled,
   });
 
-  final IconData sampleIcon;
+  final bool? isUpIcon;
   final Color? sampleColor;
   final String sampleText;
-  final bool isPercentEnabled;
+  final bool? isPercentEnabled;
 
   @override
   Widget build(BuildContext context) {
-    String priceText =
-        isPercentEnabled ? sampleText : sampleText.replaceAll('%', '');
+    String priceText = isPercentEnabled == null
+        ? ''
+        : isPercentEnabled!
+            ? sampleText
+            : sampleText.replaceAll('%', '');
 
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Row(
-        children: [
-          Text(
-            priceText,
-            style: TextStyle(
-              color: sampleColor,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              Text(
+                priceText,
+                style: TextStyle(
+                  color: sampleColor,
+                ),
+              ),
+              isUpIcon == null
+                  ? Text(' ')
+                  : isUpIcon!
+                      ? Icon(
+                          Icons.arrow_drop_up,
+                          color: sampleColor,
+                        )
+                      : Icon(
+                          Icons.arrow_drop_down,
+                          color: sampleColor,
+                        )
+            ],
           ),
-          Icon(
-            sampleIcon,
-            color: sampleColor,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
