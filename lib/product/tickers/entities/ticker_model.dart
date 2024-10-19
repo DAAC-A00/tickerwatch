@@ -38,6 +38,7 @@ class TickerModel {
   // -- updatedAt : 해당 데이터가 본 프로그램 내에서 수정된 시점
   late String dataAt;
   late String _updatedAt;
+  bool isUpdatedRecently;
 
   PriceStatusEnum priceStatusEnum; // long, short, stay
 
@@ -63,6 +64,7 @@ class TickerModel {
     this.turnOverUtc0 = '',
     this.volumeUtc0 = '',
     this.changePercentUtc9 = '',
+    this.isUpdatedRecently = true,
     this.priceStatusEnum = PriceStatusEnum.stay,
     String? dataAt,
   }) {
@@ -100,6 +102,8 @@ class TickerModelAdapter extends TypeAdapter<TickerModel> {
       lowPriceUtc0: reader.readString(),
       turnOverUtc0: reader.readString(),
       volumeUtc0: reader.readString(),
+      changePercentUtc9: reader.readString(),
+      isUpdatedRecently: reader.readString() == 'true',
       priceStatusEnum: PriceStatusEnum.values[reader.readInt()],
       dataAt: reader.readString(),
     );
@@ -126,6 +130,8 @@ class TickerModelAdapter extends TypeAdapter<TickerModel> {
     writer.writeString(obj.lowPriceUtc0);
     writer.writeString(obj.turnOverUtc0);
     writer.writeString(obj.volumeUtc0);
+    writer.writeString(obj.changePercentUtc9);
+    writer.writeString(obj.isUpdatedRecently.toString());
     writer.writeInt(obj.priceStatusEnum.index);
     writer.writeString(obj.dataAt);
   }

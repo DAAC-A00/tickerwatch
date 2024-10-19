@@ -69,13 +69,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
                 const Spacer(),
                 const Spacer(),
                 ChangePercentSampleWidget(
-                    sampleIcon: Icons.arrow_drop_up,
+                    isUpIcon: true,
                     sampleColor: tickerSetting.upColor,
                     sampleText: '+0.73%',
                     isPercentEnabled: true),
                 const Spacer(),
                 ChangePercentSampleWidget(
-                    sampleIcon: Icons.arrow_drop_down,
+                    isUpIcon: false,
                     sampleColor: tickerSetting.downColor,
                     sampleText: '-0.24%',
                     isPercentEnabled: true)
@@ -136,6 +136,38 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             subtitle: Text(
               tickerSetting.isQuoteUnitSignEnabled != null
                   ? tickerSetting.isQuoteUnitSignEnabled!
+                      ? '  On'
+                      : '  Off'
+                  : '  Off',
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: ListTile(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Change'),
+                  ChangePercentSampleWidget(
+                    sampleText: '0.73%',
+                    sampleColor: tickerSetting.upColor,
+                    isPercentEnabled: tickerSetting.isPercentSignEnabled,
+                  ),
+                ],
+              ),
+              leading: const Icon(Icons.price_change),
+            ),
+          ),
+          buildSwitchListTile(
+            value: tickerSetting.isPercentSignEnabled,
+            onChanged: (bool value) {
+              tickerSettingNotifier.updateIsPercentSignEnabled(value);
+            },
+            title: '  Percent',
+            subtitle: Text(
+              tickerSetting.isPercentSignEnabled != null
+                  ? tickerSetting.isPercentSignEnabled!
                       ? '  On'
                       : '  Off'
                   : '  Off',

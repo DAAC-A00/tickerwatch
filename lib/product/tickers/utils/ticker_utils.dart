@@ -21,26 +21,43 @@ class TickerUtils {
   }
 
   static String calculateChangePercent(String? price, String? lastPrice,
-      String? price24hPcnt, String? prevPrice24h) {
-    String changePercent24h;
-    double? changepercent24hDouble = double.tryParse(price24hPcnt ?? '');
+      String? changePercent, String? prevPrice, String? changePrice) {
+    // changePercent : 0.35, 0.00, -0.42 형태로 return되기 때문에, 저장할때 priceStatusEnum != PriceStatusEnum.down인 경우 +를 붙여서 사용해야함 (up, stay일때 + 표기)
+    String finalChangePercent;
+    double? changepercentDouble = double.tryParse(changePercent ?? '');
 
     if (price == lastPrice) {
-      changePercent24h = changepercent24hDouble != null
-          ? (changepercent24hDouble * 100).toStringAsFixed(2)
+      finalChangePercent = changepercentDouble != null
+          ? (changepercentDouble * 100).toStringAsFixed(2)
           : '';
     } else {
-      double? prevPrice = double.tryParse(prevPrice24h ?? '');
       double? priceDouble = double.tryParse(price ?? '');
-      if (prevPrice != null && priceDouble != null) {
-        double changePrice = priceDouble - prevPrice;
-        changePercent24h = (changePrice / prevPrice * 100).toStringAsFixed(2);
+      if (priceDouble != null) {
+        if (changePrice != null) {
+          double? changePriceDouble = double.tryParse(changePrice);
+          if (changePriceDouble != null) {
+            double prevPriceDouble = priceDouble - changePriceDouble;
+            finalChangePercent =
+                (changePriceDouble / prevPriceDouble * 100).toStringAsFixed(2);
+          } else {
+            finalChangePercent = '';
+          }
+        } else {
+          double? prevPriceDouble = double.tryParse(prevPrice ?? '');
+          if (prevPriceDouble != null) {
+            double changePrice = priceDouble - prevPriceDouble;
+            finalChangePercent =
+                (changePrice / prevPriceDouble * 100).toStringAsFixed(2);
+          } else {
+            finalChangePercent = '';
+          }
+        }
       } else {
-        changePercent24h = '';
+        finalChangePercent = '';
       }
     }
 
-    return changePercent24h;
+    return finalChangePercent;
   }
 
   static PriceStatusEnum determinePriceStatus(String changePercent24h) {

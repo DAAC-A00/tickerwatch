@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tickerwatch/product/default/db/box_enum.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_model.dart';
-import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
 
 import '../entities/ticker_entity.dart';
 
@@ -35,23 +34,6 @@ class TickerNotifier extends StateNotifier<List<TickerEntity>> {
     state = _tickerBox.values.toList();
   }
 
-  void updateBox(TickerEntity updatedTicker) {
-    // 기존 데이터에서 업데이트할 항목을 찾기
-    final index = state.indexWhere((ticker) =>
-        ticker.info.exchangeRawCategoryEnum ==
-            updatedTicker.info.exchangeRawCategoryEnum &&
-        ticker.info.rawSymbol == updatedTicker.info.rawSymbol);
-
-    if (index != -1) {
-      // 해당 인덱스가 있으면 수정
-      _tickerBox.putAt(index, updatedTicker);
-    } else {
-      // 없으면 추가
-      _tickerBox.add(updatedTicker);
-    }
-    state = _tickerBox.values.toList();
-  }
-
   void updateAllBox(List<TickerEntity> updatedTickerList) {
     for (var updatedTicker in updatedTickerList) {
       final index = state.indexWhere((ticker) =>
@@ -60,24 +42,27 @@ class TickerNotifier extends StateNotifier<List<TickerEntity>> {
           ticker.info.rawSymbol == updatedTicker.info.rawSymbol);
 
       if (index != -1) {
-        // 해당 인덱스가 있으면 수정
+        // 기존에 저장된 recentData는 beforeData로 이동
         updatedTicker.beforeData = _tickerBox.getAt(index)?.recentData ??
             TickerModel(
-                price: '',
-                lastPrice: '',
-                ask1Price: '',
-                ask1Size: '',
-                bid1Price: '',
-                bid1Size: '',
-                changePercent24h: '',
-                prevPrice24h: '',
-                highPrice24h: '',
-                lowPrice24h: '',
-                turnOver24h: '',
-                volume24h: '',
-                priceStatusEnum: PriceStatusEnum
-                    .stay); // recentData 업데이트 전에, 기존의 recentData를 beforeData로 복사
-        _tickerBox.putAt(index, updatedTicker); // recentDat와 beforeData 수정 적용
+                price:
+                    ''); // recentData 업데이트 전에, 기존의 recentData를 beforeData로 복사
+
+        // 해당 인덱스가 있으면 수정
+        if (updatedTicker.recentData.price == updatedTicker.beforeData.price) {
+          // 가격 변동이 없으면 false 상태 유지
+          updatedTicker.recentData.isUpdatedRecently = false;
+        } else {
+          // 가격 변동이 있으면 true로 변경
+          updatedTicker.recentData.isUpdatedRecently = true;
+        }
+
+        _tickerBox.putAt(index, updatedTicker); // recentDat 수정 적용
+        // 0.2초 후에 isUpdatedRecently를 false로 설정
+        Future.delayed(Duration(milliseconds: 200), () {
+          updatedTicker.recentData.isUpdatedRecently = false;
+          _tickerBox.putAt(index, updatedTicker); // 상태 업데이트
+        });
       } else {
         // 없으면 추가
         _tickerBox.add(updatedTicker);

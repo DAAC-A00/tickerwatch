@@ -156,6 +156,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 content = currentTicker.recentData.priceStatusEnum.name.isEmpty
                     ? '$content가격 상태    ticker.recentData.priceStatusEnum.name\n'
                     : content;
+                // 무조건 값을 가지는 currentTicker.recentData.isUpdatedRecently 정보는 여기에서 노출하지 않음
                 content.length <= 2
                     ? missingInfo.add(content)
                     : missingInfo.add(content.substring(
@@ -213,6 +214,10 @@ class AllTickerDetailScreen extends ConsumerWidget {
                 contentBeforeData = currentTicker.beforeData.volumeUtc0.isEmpty
                     ? '$contentBeforeData거래량(UTC0)    ticker.beforeData.volumeUtc0\n'
                     : contentBeforeData;
+                contentBeforeData = currentTicker
+                        .beforeData.changePercentUtc9.isEmpty
+                    ? '$contentBeforeData변동률(UTC9)    ticker.beforeData.changePercentUtc9\n'
+                    : contentBeforeData;
                 contentBeforeData = currentTicker.beforeData.ask1Price.isEmpty
                     ? '$contentBeforeData매도 1호가    ticker.beforeData.ask1Price\n'
                     : contentBeforeData;
@@ -235,10 +240,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
                         .beforeData.priceStatusEnum.name.isEmpty
                     ? '$contentBeforeData가격 상태    ticker.beforeData.priceStatusEnum.name\n'
                     : contentBeforeData;
-                contentBeforeData = currentTicker
-                        .beforeData.changePercentUtc9.isEmpty
-                    ? '$contentBeforeData변동률(UTC9)    ticker.beforeData.changePercentUtc9\n'
-                    : contentBeforeData;
+                // 무조건 값을 가지는 currentTicker.recentData.isUpdatedRecently 정보는 여기에서 노출하지 않음
                 missingInfo.add(contentBeforeData);
                 // BottomSheet 호출
                 showCustomModalBottomSheet(
@@ -346,6 +348,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
             if (currentTicker.recentData.updatedAt.isNotEmpty)
               _buildRow('업데이트 시점', currentTicker.recentData.updatedAt),
             _buildRow('가격 상태', currentTicker.recentData.priceStatusEnum.name),
+            _buildRow('근 0.x초 이내 변경 여부',
+                currentTicker.recentData.isUpdatedRecently.toString()),
 
             // beforeData인 TickerModel의 데이터 출력
             const ListTile(
@@ -398,6 +402,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
               _buildRow('데이터 기록 시점', currentTicker.beforeData.dataAt),
             if (currentTicker.beforeData.updatedAt.isNotEmpty)
               _buildRow('업데이트 시점', currentTicker.beforeData.updatedAt),
+            _buildRow('근 0.x초 이내 변경 여부',
+                currentTicker.beforeData.isUpdatedRecently.toString()),
             _buildRow('가격 상태', currentTicker.beforeData.priceStatusEnum.name),
           ],
         ),
