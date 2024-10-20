@@ -58,13 +58,13 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
     switch (isPercentSignEnabled) {
       case null:
       case false:
-        symbolFlex = 3;
-        priceFlex = 2;
-        changePercentFlex = 1;
+        symbolFlex = 29;
+        priceFlex = 20;
+        changePercentFlex = 11;
       case true:
-        symbolFlex = 14;
-        priceFlex = 10;
-        changePercentFlex = 6;
+        symbolFlex = 27;
+        priceFlex = 19;
+        changePercentFlex = 14;
     }
 
     // ticker 데이터 가져오기

@@ -38,7 +38,10 @@ class ChangePercentSampleWidget extends StatelessWidget {
                 ),
               ),
               isUpIcon == null
-                  ? Text(' ')
+                  ? Icon(
+                      Icons.arrow_drop_up,
+                      color: sampleColor,
+                    )
                   : isUpIcon!
                       ? Icon(
                           Icons.arrow_drop_up,
