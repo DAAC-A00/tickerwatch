@@ -1,9 +1,13 @@
 // custom_modal_bottom_sheet.dart
 
 import 'package:flutter/material.dart';
+import 'package:tickerwatch/product/default/handler/device_back_button_handler.dart';
 
 void showCustomModalBottomSheet(
     BuildContext context, String title, List<String> contentList) {
+  DeviceBackButtonHandler
+      .disable(); // bottomSheet가 main화면에서 나타나면 뒤로가기 물리 버튼을 비활성화
+
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -51,7 +55,10 @@ void showCustomModalBottomSheet(
         ),
       );
     },
-  );
+  ).whenComplete(() {
+    DeviceBackButtonHandler
+        .enable(); // bottomSheet가 main화면에서 사라지면 뒤로가기 물리 버튼을 활성화
+  });
 }
 
 // content 리스트를 받아서 Text 위젯으로 변환하는 메서드
