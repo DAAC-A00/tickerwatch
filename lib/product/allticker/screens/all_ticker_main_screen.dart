@@ -45,9 +45,27 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
 
     // ticker 설정 정보 가져오기
     final tickerSetting = ref.watch(tickerSettingProvider);
-    final bool? isBorderEnabled = tickerSetting.isBorderEnabled;
+    // -- color 정보 가져오기
     final Color? upColor = tickerSetting.upColor;
     final Color? downColor = tickerSetting.downColor;
+    // -- 테두리 활성화 여부 가져오기
+    final bool? isBorderEnabled = tickerSetting.isBorderEnabled;
+    // -- 변동률에 %기호 표기 여부 가져오기
+    final bool? isPercentSignEnabled = tickerSetting.isPercentSignEnabled;
+    late int symbolFlex;
+    late int priceFlex;
+    late int changePercentFlex;
+    switch (isPercentSignEnabled) {
+      case null:
+      case false:
+        symbolFlex = 29;
+        priceFlex = 20;
+        changePercentFlex = 11;
+      case true:
+        symbolFlex = 27;
+        priceFlex = 19;
+        changePercentFlex = 14;
+    }
 
     // ticker 데이터 가져오기
     final tickers = ref.watch(tickerProvider);
@@ -125,11 +143,15 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                   borderColor = transparentColor;
                 }
 
-// changePercent 결정 및 글자 색상 설정
+                // changePercent 결정 및 글자 색상 설정
                 String changePercent =
                     ticker.recentData.changePercent24h.isNotEmpty
                         ? ticker.recentData.changePercent24h
                         : ticker.recentData.changePercentUtc9;
+                changePercent =
+                    isPercentSignEnabled == null || !isPercentSignEnabled
+                        ? changePercent
+                        : '$changePercent%';
                 Color? textColor;
 
                 if (ticker.recentData.priceStatusEnum == PriceStatusEnum.up) {
@@ -145,7 +167,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
-                        flex: 3,
+                        flex: symbolFlex,
                         child: FittedBox(
                           fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
                           alignment: Alignment.centerLeft, // 왼쪽 정렬
@@ -153,7 +175,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                         ),
                       ),
                       Expanded(
-                        flex: 2,
+                        flex: priceFlex,
                         child: FittedBox(
                           fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
                           alignment: Alignment.centerRight, // 오른쪽 정렬
@@ -179,7 +201,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                         ),
                       ),
                       Expanded(
-                        flex: 1,
+                        flex: changePercentFlex,
                         child: FittedBox(
                           fit: BoxFit.scaleDown, // 텍스트가 길어질 경우 크기 조정
                           alignment: Alignment.centerRight, // 오른쪽 정렬
