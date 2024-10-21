@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/default/handler/device_back_button_handler.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
@@ -35,10 +36,13 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
   }
 
   void _navigateToAddTickerAlarm() {
+    DeviceBackButtonHandler.disable();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const TickerAlarmFormScreen()),
-    ); // 추가하기 화면으로 이동
+    ).then((_) {
+      DeviceBackButtonHandler.enable();
+    });
   }
 
   @override

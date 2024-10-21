@@ -38,10 +38,8 @@ class PriceSampleWidget extends StatelessWidget {
               border: isBorderEnabled != null
                   ? isBorderEnabled!
                       ? Border.all(
-                          color: color != null
-                              ? color!
-                              : Colors.transparent.withOpacity(0))
-                      : Border.all(color: Colors.transparent.withOpacity(0))
+                          color: color != null ? color! : Colors.transparent)
+                      : Border.all(color: Colors.transparent)
                   : Border.all(),
             ), // Apply decoration conditionally
             child: Text(
