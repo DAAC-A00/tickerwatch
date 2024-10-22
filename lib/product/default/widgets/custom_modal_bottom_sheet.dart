@@ -5,10 +5,11 @@ import 'package:tickerwatch/product/default/handler/device_back_button_handler.d
 
 void showCustomModalBottomSheet(
     BuildContext context, String title, List<String> contentList,
-    {bool isBackButtonHandle = false}) {
-  isBackButtonHandle
-      ? DeviceBackButtonHandler.disable()
-      : null; // bottomSheet가 main화면에서 나타나면 뒤로가기 물리 버튼을 비활성화
+    {bool isTmpBackButtonDisable = false}) {
+  if (isTmpBackButtonDisable) {
+    // DefaultScreen 화면에서 bottomSheet 노출시 true로 설정
+    DeviceBackButtonHandler.disable(); // bottomSheet가 닫히면 뒤로가기 물리 버튼을 비활성화
+  }
 
   showModalBottomSheet(
     isScrollControlled: true,
@@ -58,9 +59,10 @@ void showCustomModalBottomSheet(
       );
     },
   ).whenComplete(() {
-    isBackButtonHandle
-        ? DeviceBackButtonHandler.enable()
-        : null; // bottomSheet가 main화면에서 사라지면 뒤로가기 물리 버튼을 활성화
+    if (isTmpBackButtonDisable) {
+      // DefaultScreen 화면에서 bottomSheet 노출시 true로 설정
+      DeviceBackButtonHandler.enable(); // bottomSheet가 닫히면 뒤로가기 물리 버튼을 재활성화
+    }
   });
 }
 
