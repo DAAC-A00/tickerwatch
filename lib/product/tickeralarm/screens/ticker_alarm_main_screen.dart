@@ -100,8 +100,9 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () =>
-                showCustomModalBottomSheet(context, 'ℹ️ 유의사항', contentList),
+            onPressed: () => showCustomModalBottomSheet(
+                context, 'ℹ️ 유의사항', contentList,
+                isBackButtonHandle: true),
           ),
         ],
       ),
