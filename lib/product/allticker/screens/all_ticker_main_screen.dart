@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/allticker/screens/all_ticker_detail_screen.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
+import 'package:tickerwatch/product/setting/states/common_setting_provider.dart';
 import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 import 'package:tickerwatch/product/tickers/entities/ticker_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/price_status_enum.dart';
@@ -40,11 +41,13 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
   @override
   Widget build(BuildContext context) {
     // theme 가져오기
+    // final ColorScheme currentTheme = Theme.of(context).colorScheme;
     final currentTextTheme = Theme.of(context).textTheme;
     final Color transparentColor = Colors.transparent;
 
     // ticker 설정 정보 가져오기
     final tickerSetting = ref.watch(tickerSettingProvider);
+    final commonSetting = ref.watch(commonSettingProvider);
     // -- color 정보 가져오기
     final Color? upColor = tickerSetting.upColor;
     final Color? downColor = tickerSetting.downColor;
@@ -152,15 +155,20 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                     isPercentSignEnabled == null || !isPercentSignEnabled
                         ? changePercent
                         : '$changePercent%';
-                Color? textColor;
+                Color? priceColor;
+                Color? changePercentColor;
 
                 if (ticker.recentData.priceStatusEnum == PriceStatusEnum.up) {
-                  textColor = upColor;
+                  priceColor = upColor;
+                  changePercentColor = upColor;
                 } else if (ticker.recentData.priceStatusEnum ==
                     PriceStatusEnum.down) {
-                  textColor = downColor;
+                  priceColor = downColor;
+                  changePercentColor = downColor;
                 } else {
-                  textColor = Colors.grey;
+                  priceColor =
+                      commonSetting.isLightMode ? Colors.black : Colors.white;
+                  changePercentColor = Colors.grey;
                 }
                 return ListTile(
                   title: Row(
@@ -194,7 +202,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                               ),
                               child: Text(
                                 ticker.recentData.price,
-                                style: TextStyle(color: textColor),
+                                style: TextStyle(color: priceColor),
                               ),
                             ),
                           ),
@@ -219,7 +227,7 @@ class _AllTickerMainScreenState extends ConsumerState<AllTickerMainScreen> {
                               ),
                               child: Text(
                                 changePercent,
-                                style: TextStyle(color: textColor),
+                                style: TextStyle(color: changePercentColor),
                               ),
                             ),
                           ),
