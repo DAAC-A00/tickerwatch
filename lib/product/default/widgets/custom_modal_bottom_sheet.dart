@@ -1,9 +1,16 @@
 // custom_modal_bottom_sheet.dart
 
 import 'package:flutter/material.dart';
+import 'package:tickerwatch/product/default/handler/device_back_button_handler.dart';
 
 void showCustomModalBottomSheet(
-    BuildContext context, String title, List<String> contentList) {
+    BuildContext context, String title, List<String> contentList,
+    {bool isTmpBackButtonDisable = false}) {
+  if (isTmpBackButtonDisable) {
+    // DefaultScreen 화면에서 bottomSheet 노출시 true로 설정
+    DeviceBackButtonHandler.disable(); // bottomSheet가 닫히면 뒤로가기 물리 버튼을 비활성화
+  }
+
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -51,7 +58,12 @@ void showCustomModalBottomSheet(
         ),
       );
     },
-  );
+  ).whenComplete(() {
+    if (isTmpBackButtonDisable) {
+      // DefaultScreen 화면에서 bottomSheet 노출시 true로 설정
+      DeviceBackButtonHandler.enable(); // bottomSheet가 닫히면 뒤로가기 물리 버튼을 재활성화
+    }
+  });
 }
 
 // content 리스트를 받아서 Text 위젯으로 변환하는 메서드
