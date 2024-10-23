@@ -6,8 +6,8 @@ import 'package:tickerwatch/product/default/handler/device_back_button_handler.d
 Future<void> showCustomSelectModalBottomSheet(
     BuildContext context,
     String title,
-    List<int> values, // int 값 리스트로 변경
-    Function(int) onValueSelected, // 선택된 값을 처리할 콜백 추가
+    List<String> values,
+    Function(String) onValueSelected, // 선택된 값을 처리할 콜백 추가
     {bool isTmpBackButtonDisable = false}) async {
   if (isTmpBackButtonDisable) {
     DeviceBackButtonHandler.disable();
@@ -46,7 +46,7 @@ Future<void> showCustomSelectModalBottomSheet(
               ),
               SizedBox(height: bodySmall),
               ...values.map((value) => ListTile(
-                    title: Text('${(value / 1000)} s'),
+                    title: Text(value),
                     onTap: () {
                       onValueSelected(value); // 선택된 값 처리
                       Navigator.of(context).pop(); // 바텀 시트 닫기

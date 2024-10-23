@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
+import 'package:tickerwatch/product/default/widgets/custom_select_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/default/widgets/custom_snack_bar.dart';
 import 'package:tickerwatch/product/tickeralarm/entities/ticker_alarm_entity.dart';
 import 'package:tickerwatch/product/tickers/enums/category_exchange_enum.dart';
@@ -244,23 +245,34 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    DropdownButton<CategoryExchangeEnum>(
-                      value: selectedCategoryExchangeEnum,
-                      hint: const Text('Select Category'),
-                      items: availableCategoryExchangeEnumList
-                          .map((CategoryExchangeEnum categoryExchangeEnum) {
-                        return DropdownMenuItem<CategoryExchangeEnum>(
-                          value: categoryExchangeEnum,
-                          child: Text(categoryExchangeEnum.getDescription),
+                    TextButton(
+                      onPressed: () {
+                        showCustomSelectModalBottomSheet(
+                          context,
+                          'Select Category',
+                          availableCategoryExchangeEnumList
+                              .map((e) => e
+                                  .getDescription) // CategoryExchangeEnum의 설명을 문자열로 전달
+                              .toList(),
+                          (value) {
+                            setState(() {
+                              selectedCategoryExchangeEnum =
+                                  availableCategoryExchangeEnumList.firstWhere(
+                                      (e) =>
+                                          e.getDescription ==
+                                          value); // 선택된 enum으로 설정
+                              _loadAvailableSymbolList(_searchController.text);
+                            });
+                          },
                         );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCategoryExchangeEnum = value;
-                          _loadAvailableSymbolList(_searchController.text);
-                        });
                       },
+                      child: Text(
+                        selectedCategoryExchangeEnum != null
+                            ? selectedCategoryExchangeEnum!.getDescription
+                            : 'Select Category',
+                      ),
                     ),
+
                     const SizedBox(height: 16),
                     TextField(
                       controller: _searchController,

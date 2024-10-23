@@ -157,10 +157,13 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
                 showCustomSelectModalBottomSheet(
                   context,
                   '  Select Blink Seconds',
-                  [100, 200, 300, 500, 1000], // 선택 가능한 값들
-                  (int selectedValue) {
-                    tickerSettingNotifier
-                        .updateBorderBlinkMilliseconds(selectedValue);
+                  ['0.1', '0.2', '0.3', '0.5', '1.0'], // 선택 가능한 값들
+                  (String selectedValue) {
+                    int? selectedMilliSeconds = int.tryParse(selectedValue);
+                    selectedMilliSeconds != null
+                        ? tickerSettingNotifier
+                            .updateBorderBlinkMilliseconds(selectedMilliSeconds)
+                        : null;
                   },
                 );
               },
