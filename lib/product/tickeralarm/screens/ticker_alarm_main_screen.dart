@@ -78,6 +78,7 @@ class _TickerAlarmMainScreenState extends ConsumerState<TickerAlarmMainScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // 뒤로가기 버튼 미노출
         title: TextField(
           controller: _searchController,
           onChanged: (value) {
