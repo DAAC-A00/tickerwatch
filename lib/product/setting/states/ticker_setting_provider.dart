@@ -55,6 +55,7 @@ final TickerSetting defaultTickerSetting = TickerSetting(
   upColor: null,
   downColor: null,
   isBorderEnabled: null,
+  borderBlinkMilliseconds: null,
   isPriceBackgroundAlarmEnabled: null,
   isQuoteUnitSignEnabled: null,
   isPercentSignEnabled: null,
@@ -86,6 +87,11 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
               (defaultTickerSetting.isBorderEnabled ?? true).toString(),
         )! ==
         true.toString();
+    final int? borderBlinkMilliseconds = int.tryParse(_tickerSettingBox.get(
+      BoxSettingEnum.borderBlinkMilliseconds.name,
+      defaultValue:
+          (defaultTickerSetting.borderBlinkMilliseconds ?? 200).toString(),
+    )!);
     final bool isPriceBackgroundAlarmEnabled = _tickerSettingBox.get(
           BoxSettingEnum.isPriceBackgroundAlarmEnabled.name,
           defaultValue:
@@ -110,6 +116,7 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
       upColor: _stringToColor(upColorString, isLightMode),
       downColor: _stringToColor(downColorString, isLightMode),
       isBorderEnabled: isBorderEnabled,
+      borderBlinkMilliseconds: borderBlinkMilliseconds,
       isPriceBackgroundAlarmEnabled: isPriceBackgroundAlarmEnabled,
       isQuoteUnitSignEnabled: isQuoteUnitSignEnabled,
       isPercentSignEnabled: isPercentSignEnabled,
@@ -145,6 +152,13 @@ class TickerSettingNotifier extends StateNotifier<TickerSetting> {
     state = state.copyWith(
       isBorderEnabled: isEnable,
     );
+  }
+
+  void updateBorderBlinkMilliseconds(int? milliseconds) {
+    final newMilliseconds = milliseconds ?? 200;
+    _tickerSettingBox.put(BoxSettingEnum.borderBlinkMilliseconds.name,
+        newMilliseconds.toString());
+    state = state.copyWith(borderBlinkMilliseconds: newMilliseconds);
   }
 
   void updateIsPercentSignEnabled(bool isEnable) {

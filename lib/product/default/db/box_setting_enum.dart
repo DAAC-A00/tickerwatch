@@ -5,6 +5,7 @@ enum BoxSettingEnum {
   upColor,
   downColor,
   isBorderEnabled,
+  borderBlinkMilliseconds,
   isPriceBackgroundAlarmEnabled,
   isQuoteUnitSignEnabled,
   isPercentSignEnabled,
@@ -27,6 +28,8 @@ extension BoxSettingEnumExtension on BoxSettingEnum {
         return 'downColor';
       case BoxSettingEnum.isBorderEnabled:
         return 'isBorderEnabled';
+      case BoxSettingEnum.borderBlinkMilliseconds:
+        return 'borderBlinkMilliseconds';
       case BoxSettingEnum.isPriceBackgroundAlarmEnabled:
         return 'isPriceBackgroundAlarmEnabled';
       case BoxSettingEnum.isQuoteUnitSignEnabled:

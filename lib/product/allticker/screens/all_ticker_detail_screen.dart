@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tickerwatch/external/default/exchange_raw_category_enum.dart';
 import 'package:tickerwatch/product/default/widgets/custom_modal_bottom_sheet.dart';
+import 'package:tickerwatch/product/setting/states/ticker_setting_provider.dart';
 import 'package:tickerwatch/product/tickers/enums/category_enum.dart';
 import 'package:tickerwatch/product/tickers/enums/option_type_enum.dart';
 import '../../tickers/entities/ticker_entity.dart';
@@ -18,6 +19,7 @@ class AllTickerDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // tickerProvider에서 모든 ticker 값을 가져옵니다.
     final tickers = ref.watch(tickerProvider);
+    final tickerSetting = ref.watch(tickerSettingProvider);
 
     // 현재 ticker 정보를 찾습니다.
     final currentTicker = tickers.firstWhere(
@@ -348,7 +350,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
             if (currentTicker.recentData.updatedAt.isNotEmpty)
               _buildRow('업데이트 시점', currentTicker.recentData.updatedAt),
             _buildRow('가격 상태', currentTicker.recentData.priceStatusEnum.name),
-            _buildRow('근 0.x초 이내 변경 여부',
+            _buildRow(
+                '근 ${(tickerSetting.borderBlinkMilliseconds ?? 200) / 1000}초 이내 변경 여부',
                 currentTicker.recentData.isUpdatedRecently.toString()),
 
             // beforeData인 TickerModel의 데이터 출력
@@ -402,7 +405,8 @@ class AllTickerDetailScreen extends ConsumerWidget {
               _buildRow('데이터 기록 시점', currentTicker.beforeData.dataAt),
             if (currentTicker.beforeData.updatedAt.isNotEmpty)
               _buildRow('업데이트 시점', currentTicker.beforeData.updatedAt),
-            _buildRow('근 0.x초 이내 변경 여부',
+            _buildRow(
+                '근 ${(tickerSetting.borderBlinkMilliseconds ?? 200) / 1000}초 이내 변경 여부',
                 currentTicker.beforeData.isUpdatedRecently.toString()),
             _buildRow('가격 상태', currentTicker.beforeData.priceStatusEnum.name),
           ],

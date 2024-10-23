@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tickerwatch/product/default/widgets/custom_select_modal_bottom_sheet.dart';
 import 'package:tickerwatch/product/setting/entities/ticker_setting.dart';
 
 import '../states/ticker_setting_provider.dart';
@@ -113,21 +114,6 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
             ),
           ),
           buildSwitchListTile(
-            value: tickerSetting.isBorderEnabled,
-            onChanged: (bool value) {
-              tickerSettingNotifier.updateIsBorderEnabled(value);
-            },
-            title: '  Blink Border',
-            subtitle: Text(
-              tickerSetting.isBorderEnabled != null
-                  ? tickerSetting.isBorderEnabled!
-                      ? '  On'
-                      : '  Off'
-                  : '  Off',
-              style: const TextStyle(fontWeight: FontWeight.normal),
-            ),
-          ),
-          buildSwitchListTile(
             value: tickerSetting.isQuoteUnitSignEnabled,
             onChanged: (bool value) {
               tickerSettingNotifier.updateIsQuoteUnitSignEnabled(value);
@@ -142,6 +128,44 @@ class _SettingScreenState extends ConsumerState<TickerSettingScreen> {
               style: const TextStyle(fontWeight: FontWeight.normal),
             ),
           ),
+          buildSwitchListTile(
+            value: tickerSetting.isBorderEnabled,
+            onChanged: (bool value) {
+              tickerSettingNotifier.updateIsBorderEnabled(value);
+            },
+            title: '  Border Blink ',
+            subtitle: Text(
+              tickerSetting.isBorderEnabled != null
+                  ? tickerSetting.isBorderEnabled!
+                      ? '  On'
+                      : '  Off'
+                  : '  Off',
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+          ),
+
+          if (tickerSetting.isBorderEnabled == true) ...[
+            ListTile(
+              title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('  Border Blink Milliseconds'),
+                    Text(
+                        '${(tickerSetting.borderBlinkMilliseconds ?? 200) / 1000} s')
+                  ]),
+              onTap: () {
+                showCustomSelectModalBottomSheet(
+                  context,
+                  '  Select Blink Seconds',
+                  [100, 200, 300, 500, 1000], // 선택 가능한 값들
+                  (int selectedValue) {
+                    tickerSettingNotifier
+                        .updateBorderBlinkMilliseconds(selectedValue);
+                  },
+                );
+              },
+            ),
+          ],
           Padding(
             padding: const EdgeInsets.only(top: 24),
             child: ListTile(
