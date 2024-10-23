@@ -102,6 +102,7 @@ class _TickerAlarmScreeFormnState extends ConsumerState<TickerAlarmFormScreen> {
         final selectedTicker = matchingTickers.first;
 
         final alarmPrice = double.tryParse(_alarmPriceController.text);
+        log('selectedTicker.recentData.price: ${selectedTicker.recentData.price}');
         final currentPrice = double.tryParse(selectedTicker.recentData.price);
         // priceStatusEnum 설정
         PriceStatusEnum priceStatusEnum;

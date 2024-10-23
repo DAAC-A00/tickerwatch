@@ -34,8 +34,13 @@ class NaverMarketIndexService {
 
         for (var data in dataList) {
           String rawSymbol = data.querySelector('h3')?.text.trim() ?? '';
-          String value =
-              data.querySelector('.head_info .value')?.text.trim() ?? '';
+          String value = data
+                  .querySelector('.head_info .value')
+                  ?.text
+                  .trim()
+                  .replaceAll(',',
+                      '') ?? // text에서 ,를 없애는 방법으로, double.tryParse에서 null이 안나오고 정상적으로 double parse가 되는 형태로 만들기
+              '';
           String change =
               data.querySelector('.head_info .change')?.text.trim() ?? '';
           PriceStatusEnum priceStatusEnum = data
